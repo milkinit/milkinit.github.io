@@ -1,255 +1,347 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>milkinit.d</title>
-  <meta name="description" content="A small personal website.">
+        <title>milkinit.d</title>
 
-  <style>
-    :root {
-      --bg: #0d0d14;
-      --red: #ac3232;
-      --dark-red: #52263e;
-      --pink: #d96b78;
-      --text: #d8bfc5;
-      --muted: #8f6f78;
+        <style>
+            :root {
+                --bg: #0e0f14;
+                --red: #ac3232;
+                --dark-red: #52263e;
+                --pink: #d96b78;
+                --text: #d8bfc5;
+                --muted: #8f6f78;
 
-      --mono: "Courier New", monospace;
-      --serif: Georgia, serif;
-    }
+                --mono: "Courier New", monospace;
+                --serif: Georgia, serif;
+            }
 
-    * {
-      box-sizing: border-box;
-    }
+            * {
+                box-sizing: border-box;
+            }
 
-    html {
-      scroll-behavior: smooth;
-    }
+            html {
+                scroll-behavior: smooth;
+            }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--mono);
-    }
+            body {
+                margin: 0;
+                min-height: 100vh;
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--mono);
+            }
 
-    main {
-      width: min(900px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 40px 0;
-    }
+            main {
+                width: min(900px, calc(100% - 40px));
+                margin: 0 auto;
+                padding: 40px 0;
+            }
 
-    /* Header */
+            /* Header */
 
-    .page-header {
-      padding: 28px 0;
-      border-bottom: 1px solid var(--dark-red);
-    }
+            .page-header {
+                padding: 28px 0;
+                border-bottom: 1px solid var(--dark-red);
+            }
 
-    .title-block h1 {
-      margin: 0;
-      color: var(--red);
-      font-family: var(--serif);
-      font-size: clamp(30px, 6vw, 56px);
-      font-weight: normal;
-      letter-spacing: 0.08em;
-      line-height: 1.1;
-      text-shadow: 0 0 10px rgba(172, 50, 50, 0.8);
-    }
+            .title-block h1 {
+                margin: 0;
+                color: var(--red);
+                font-family: var(--serif);
+                font-size: clamp(30px, 6vw, 56px);
+                font-weight: normal;
+                letter-spacing: 0.08em;
+                line-height: 1.1;
+                text-shadow: 0 0 10px rgba(172, 50, 50, 0.8);
+            }
 
-    .about-me {
-      margin: 10px 0 0;
-      color: var(--pink);
-      font-size: 16px;
-      letter-spacing: 0.2em;
-    }
+            .about-me {
+                margin: 10px 0 0;
+                color: var(--pink);
+                font-size: 16px;
+                letter-spacing: 0.2em;
+            }
 
-    .subtitle {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-    }
+            .subtitle {
+                margin: 8px 0 0;
+                color: var(--muted);
+                font-size: 11px;
+                letter-spacing: 0.12em;
+            }
 
-    /* Links */
+            /* Navigation */
 
-    a {
-      color: var(--pink);
-      text-decoration: none;
-      transition:
-        color 0.2s ease,
-        text-shadow 0.2s ease,
-        border-color 0.2s ease;
-    }
+            .navigation {
+                display: flex;
+                gap: 24px;
+                margin-top: 25px;
+                flex-wrap: wrap;
+            }
 
-    a:hover {
-      color: #ff9aa6;
-      text-shadow: 0 0 8px var(--pink);
-    }
+            .navigation a {
+                position: relative;
+                display: inline-block;
+                padding: 6px 0 6px 20px;
+                color: var(--muted);
+                background: transparent;
+                border: none;
+                font-size: 12px;
+                letter-spacing: 0.12em;
+                text-decoration: none;
+                text-shadow: none;
+                transition:
+                    color 0.2s ease,
+                    text-shadow 0.2s ease;
+            }
 
-    /* Project sections */
+            .navigation a::before {
+                content: ">";
+                position: absolute;
+                left: 0;
+                color: var(--red);
+                opacity: 0;
+                transform: translateX(-8px);
+                transition:
+                    opacity 0.2s ease,
+                    transform 0.2s ease;
+            }
 
-    .secare {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 30px;
-      align-items: center;
-      padding: 30px 0;
-      border-bottom: 1px solid var(--dark-red);
-    }
+            .navigation a:hover {
+                color: var(--pink);
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                text-shadow: 0 0 8px var(--pink);
+            }
 
-    .image-placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 150px;
-      border: 1px solid var(--red);
-      background:
-        linear-gradient(
-          135deg,
-          rgba(172, 50, 50, 0.12),
-          rgba(82, 38, 62, 0.25)
-        );
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      box-shadow:
-        inset 0 0 20px rgba(82, 38, 62, 0.5),
-        0 0 10px rgba(172, 50, 50, 0.25);
-    }
+            .navigation a:hover::before {
+                opacity: 1;
+                transform: translateX(0);
+            }
 
-    .image-placeholder::before {
-      content: "[ ";
-      color: var(--red);
-    }
+            /* General links */
 
-    .image-placeholder::after {
-      content: " ]";
-      color: var(--red);
-    }
+            a {
+                color: var(--pink);
+                text-decoration: none;
+                transition:
+                    color 0.2s ease,
+                    text-shadow 0.2s ease,
+                    border-color 0.2s ease;
+            }
 
-    .label {
-      color: var(--text);
-      font-size: 13px;
-      line-height: 1.6;
-    }
+            a:hover {
+                color: #ff9aa6;
+                text-shadow: 0 0 8px var(--pink);
+            }
 
-    .label a {
-      display: inline-block;
-      margin-bottom: 8px;
-      border-bottom: 1px solid transparent;
-      color: var(--red);
-      font-family: var(--serif);
-      font-size: 22px;
-      letter-spacing: 0.08em;
-    }
+            /* Archive sections */
 
-    .label a:hover {
-      border-color: var(--pink);
-    }
+            .archive-section {
+                padding-top: 45px;
+            }
 
-    /* Footer */
+            .archive-title {
+                margin: 0 0 5px;
+                color: var(--red);
+                font-family: var(--serif);
+                font-size: 25px;
+                font-weight: normal;
+                letter-spacing: 0.06em;
+            }
 
-    .site-footer {
-      padding: 35px 0 10px;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-align: center;
-    }
+            .archive-description {
+                margin: 0 0 20px;
+                color: var(--muted);
+                font-size: 12px;
+                letter-spacing: 0.08em;
+            }
 
-    /* Mobile layout */
+            /* Projects */
 
-    @media (max-width: 600px) {
-      main {
-        width: min(100% - 28px, 900px);
-        padding: 20px 0;
-      }
+            .project {
+                padding: 25px 0;
+                border-top: 1px solid var(--dark-red);
+            }
 
-      .page-header {
-        padding-top: 15px;
-      }
+            .project-number {
+                margin-bottom: 8px;
+                color: var(--muted);
+                font-size: 11px;
+                letter-spacing: 0.2em;
+            }
 
-      .title-block h1 {
-        font-size: 30px;
-      }
+            .project h3 {
+                margin: 0 0 8px;
+                font-family: var(--serif);
+                font-size: 17px;
+                font-weight: normal;
+                letter-spacing: 0.08em;
+            }
 
-      .about-me {
-        font-size: 13px;
-      }
+            .project h3 a {
+                color: var(--red);
+            }
 
-      .subtitle {
-        font-size: 9px;
-      }
+            .project p {
+                max-width: 650px;
+                margin: 0;
+                color: var(--text);
+                font-size: 13px;
+                line-height: 1.6;
+            }
 
-      .secare {
-        grid-template-columns: 1fr;
-        gap: 18px;
-        padding: 25px 0;
-      }
+            /* Empty archive section */
 
-      .image-placeholder {
-        min-height: 120px;
-      }
+            .empty-archive {
+                padding: 25px 0;
+                border-top: 1px solid var(--dark-red);
+                color: var(--muted);
+                font-size: 13px;
+                font-style: italic;
+            }
 
-      .label a {
-        font-size: 20px;
-      }
-    }
-  </style>
-</head>
+            /* Archive image */
 
-<body>
-  <main>
-    <header class="page-header">
-      <div class="title-block">
-        <h1>milkinit.d</h1>
-        <p class="about-me">REVERSE ENGINEER</p>
-        <p class="subtitle">PROJECT ARCHIVE</p>
-      </div>
-    </header>
+            .archive-image {
+                display: block;
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                margin: 45px 0 0;
+                border: 1px solid var(--dark-red);
+            }
 
-    <section class="secare">
-      <div class="image-placeholder">
-        01
-      </div>
+            /* Footer */
 
-      <div class="label">
-        <a href="https://github.com/milkinit/DDot-Lain">
-          DDot-Lain
-        </a>
+            .site-footer {
+                padding: 50px 0 10px;
+                color: var(--muted);
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-align: center;
+            }
 
-        <div>
-          A lightweight Debian-based desktop environment inspired by
-          Serial Experiments Lain.
-        </div>
-      </div>
-    </section>
+            /* Mobile layout */
 
-    <section class="secare">
-      <div class="image-placeholder">
-        02
-      </div>
+            @media (max-width: 600px) {
+                main {
+                    width: min(100% - 28px, 900px);
+                    padding: 20px 0;
+                }
 
-      <div class="label">
-        <a href="https://github.com/milkinit/AniScraper">
-          AniScraper
-        </a>
+                .page-header {
+                    padding-top: 15px;
+                }
 
-        <div>
-          A CLI tool that scrapes MyAnimeList's top anime rankings and
-          randomly picks one for you to watch — no more endless scrolling.
-        </div>
-      </div>
-    </section>
+                .title-block h1 {
+                    font-size: 30px;
+                }
 
-    <footer class="site-footer">
-      <p>milkinit.d // end of transmission</p>
-    </footer>
-  </main>
-</body>
+                .about-me {
+                    font-size: 13px;
+                }
+
+                .subtitle {
+                    font-size: 9px;
+                }
+
+                .navigation {
+                    gap: 8px;
+                    margin-top: 20px;
+                }
+
+                .navigation a {
+                    padding: 8px 10px;
+                    font-size: 9px;
+                }
+
+                .archive-section {
+                    padding-top: 35px;
+                }
+
+                .archive-title {
+                    font-size: 22px;
+                }
+
+                .project h3 {
+                    font-size: 16px;
+                }
+
+                .archive-image {
+                    width: 100%;
+                    max-width: 100%;
+                    height: auto;
+                    margin-top: 35px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <main>
+            <header class="page-header">
+                <div class="title-block">
+                    <h1>milkinit.d</h1>
+                    <p class="about-me">REVERSE ENGINEER</p>
+                    <p class="subtitle">PROJECT ARCHIVE</p>
+                </div>
+                <nav class="navigation">
+                    <a href="#reverse-engineering">REVERSE ENGINEERING</a>
+                    <a href="#projects">PROJECTS</a>
+                </nav>
+            </header>
+
+            <!-- Reverse-engineering archive -->
+
+            <section class="archive-section" id="reverse-engineering">
+                <h2 class="archive-title">Reverse Engineering Archive</h2>
+
+                <p class="archive-description">ANALYSIS / LOW-LEVEL RESEARCH / SECURITY / RECONSTRUCTION</p>
+
+                <div class="empty-archive">No entries yet.</div>
+            </section>
+
+            <img class="archive-image" src="banner.png" alt="Archive banner" />
+
+            <!-- Non-reverse-engineering archive -->
+
+            <section class="archive-section" id="projects">
+                <h2 class="archive-title">Non-Reverse Engineering Archive</h2>
+
+                <p class="archive-description">GENERAL PROJECTS / TOOLS / EXPERIMENTS</p>
+
+                <article class="project">
+                    <div class="project-number">01</div>
+
+                    <h3>
+                        <a href="https://github.com/milkinit/DDot-Lain"> DDot-Lain </a>
+                    </h3>
+
+                    <p>A lightweight Debian-based desktop environment inspired by Serial Experiments Lain.</p>
+                </article>
+
+                <article class="project">
+                    <div class="project-number">02</div>
+
+                    <h3>
+                        <a href="https://github.com/milkinit/AniScraper"> AniScraper </a>
+                    </h3>
+
+                    <p>
+                        A CLI tool that scrapes MyAnimeList's top anime rankings and randomly picks one for you to watch
+                        — no more endless scrolling.
+                    </p>
+                </article>
+            </section>
+
+            <footer class="site-footer">
+                <p>milkinit.d // bottom of glass</p>
+            </footer>
+        </main>
+    </body>
 </html>
