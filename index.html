@@ -1,11 +1,12 @@
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>milkinit.d</title>
-    <meta name="description" content="A small personal website.">
-    <style>
-            /* =========================
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    milkinit.d
+  </title>
+  <meta name="description" content="A small personal website.">
+  <style>
+    /* =========================
                Main color variables
             ========================= */
             
@@ -283,35 +284,65 @@
                 .label a {
             font-size: 20px;
                 }
+                
+            .back-link {  
+                position: absolute;  
+                top: 25px;  
+                left: 25px;  
+                color: #ac3232;  
+                text-decoration: none;  
+                font-size: 1rem;
             }
-
-</style>
+                
+            .back-link:hover {  
+                color: #52263e;
+            }
+                
+            .profile-picture {
+                position: fixed;
+                top: 25px;
+                right: 25px;
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+  </style>
 </head>
-
 <body>
-
-    <main class="site">
-        <center>
-            <img src="pfp.jpg">
-        </center>
-<section class="secare">
-    <div class="image-placeholder">01</div>
-    <div class="label">
-<a href="https://github.com/milkinit/DDot-Lain">DDot-Lain</a><br>
-A lightweight Debian-based desktop<br>environment inspired by Serial Experiments Lain.
-    </div>
-</section>
-
-<section class="secare">
-    <div class="image-placeholder">02</div>
-    <div class="label">
-<a href="https://github.com/milkinit/AniScraper">AniScraper</a><br>
-A CLI tool that scrapes MyAnimeList's top anime rankings and <br>randomly picks one for you to watch - no more endless scrolling.
-    </div>
-</section>
-
-    </main>
-
+  <main class="site">
+    <a class="back-link" href="../">
+      &lt; back
+    </a>
+    <img class="profile-picture" src="pfp.jpg" alt="Profile picture">
+    <section class="secare">
+      <div class="image-placeholder">
+        01
+      </div>
+      <div class="label">
+        <a href="https://github.com/milkinit/DDot-Lain">
+          DDot-Lain
+        </a>
+        <br>
+        A lightweight Debian-based desktop
+        <br>
+        environment inspired by Serial Experiments Lain.
+      </div>
+    </section>
+    <section class="secare">
+      <div class="image-placeholder">
+        02
+      </div>
+      <div class="label">
+        <a href="https://github.com/milkinit/AniScraper">
+          AniScraper
+        </a>
+        <br>
+        A CLI tool that scrapes MyAnimeList's top anime rankings and
+        <br>
+        randomly picks one for you to watch - no more endless scrolling.
+      </div>
+    </section>
+  </main>
 </body>
-
 </html>
