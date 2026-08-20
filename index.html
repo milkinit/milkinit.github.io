@@ -8,7 +8,7 @@
 
         <style>
             :root {
-                --bg: #0e0f14;
+                --bg: #0d0e13;
                 --red: #ac3232;
                 --dark-red: #52263e;
                 --pink: #d96b78;
@@ -21,6 +21,7 @@
 
             * {
                 box-sizing: border-box;
+                cursor: url("assets/cursor.png"), auto;
             }
 
             html {
@@ -145,6 +146,21 @@
                 padding-top: 45px;
             }
 
+            .archive-heading {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .icon {
+                width: 32px;
+                height: 32px;
+		margin-bottom: 10px;
+                flex-shrink: 0;
+                object-fit: contain;
+                image-rendering: pixelated;
+            }
+
             .archive-title {
                 margin: 0 0 5px;
                 color: var(--red);
@@ -215,6 +231,16 @@
                 margin: 45px 0 0;
                 border: 1px solid var(--dark-red);
             }
+		
+	    .archive-image2 {
+		position: absolute;
+		top:60px;
+                width: 900px;
+                max-width: 100%;
+                height: auto;
+		z-index:-1;
+            }
+
 
             /* Footer */
 
@@ -264,6 +290,15 @@
                     padding-top: 35px;
                 }
 
+                .archive-heading {
+                    gap: 8px;
+                }
+
+                .icon {
+                    width: 24px;
+                    height: 24px;
+                }
+
                 .archive-title {
                     font-size: 22px;
                 }
@@ -287,54 +322,116 @@
             <header class="page-header">
                 <div class="title-block">
                     <h1>milkinit</h1>
-                    <p class="about-me">REVERSE ENGINEER</p>
+                    <p class="about-me">Vulnerbility Researcher</p>
                     <p class="subtitle">PROJECT ARCHIVE</p>
                 </div>
+
                 <nav class="navigation">
-                    <a href="#reverse-engineering">REVERSE ENGINEERING</a>
-                    <a href="#projects">PROJECTS</a>
+                    <a href="#vulnerability-research">
+                        VULNERABILITY RESEARCH
+                    </a>
+
+                    <a href="#projects">
+                        PROJECTS
+                    </a>
+
+		    <a href="https://github.com/milkinit">
+		    	GITHUB
+		    </a>
                 </nav>
             </header>
+            <img
+                class="archive-image2"
+                src="assets/banner2.png"
+                alt="Archive banner"
+            />
+                
+            <!-- Vulnerability Research archive -->
 
-            <!-- Reverse-engineering archive -->
+            <section
+                class="archive-section"
+                id="vulnerability-research"
+            >
+                <div class="archive-heading">
+                    <img
+                        class="icon"
+                        src="assets/icon.png"
+                        alt=""
+                    />
 
-            <section class="archive-section" id="reverse-engineering">
-                <h2 class="archive-title">Reverse Engineering Archive</h2>
+                    <h2 class="archive-title">
+                        Vulnerability Research Archive
+                    </h2>
+                </div>
 
-                <p class="archive-description">ANALYSIS / LOW-LEVEL RESEARCH / SECURITY / RECONSTRUCTION</p>
+                <p class="archive-description">
+                    REVERSE ENGINEERING / ANALYSIS / LOW-LEVEL RESEARCH /
+                    SECURITY / RECONSTRUCTION
+                </p>
 
-                <div class="empty-archive">No entries yet.</div>
+                <div class="empty-archive">
+                    No entries yet.
+                </div>
             </section>
 
-            <img class="archive-image" src="banner.png" alt="Archive banner" />
+            <img
+                class="archive-image"
+                src="assets/banner.png"
+                alt="Archive banner"
+            />
 
-            <!-- Non-reverse-engineering archive -->
+            <!-- General projects archive -->
 
-            <section class="archive-section" id="projects">
-                <h2 class="archive-title">Non-Reverse Engineering Archive</h2>
+            <section
+                class="archive-section"
+                id="projects"
+            >
+                <div class="archive-heading">
+                    <img
+                        class="icon"
+                        src="assets/icon.png"
+                        alt=""
+                    />
+                    <h2 class="archive-title">
+                        Projects Archive
+                    </h2>
+                </div>
 
-                <p class="archive-description">GENERAL PROJECTS / TOOLS / EXPERIMENTS</p>
+                <p class="archive-description">
+                    GENERAL PROJECTS / TOOLS / EXPERIMENTS
+                </p>
 
                 <article class="project">
-                    <div class="project-number">01</div>
+                    <div class="project-number">
+                        01
+                    </div>
 
                     <h3>
-                        <a href="https://github.com/milkinit/DDot-Lain"> DDot-Lain </a>
-                    </h3>
-
-                    <p>A lightweight Debian-based desktop environment inspired by Serial Experiments Lain.</p>
-                </article>
-
-                <article class="project">
-                    <div class="project-number">02</div>
-
-                    <h3>
-                        <a href="https://github.com/milkinit/AniScraper"> AniScraper </a>
+                        <a href="https://github.com/milkinit/DDot-Lain">
+                            DDot-Lain
+                        </a>
                     </h3>
 
                     <p>
-                        A CLI tool that scrapes MyAnimeList's top anime rankings and randomly picks one for you to watch
-                        — no more endless scrolling.
+                        A lightweight Debian-based desktop environment
+                        inspired by Serial Experiments Lain.
+                    </p>
+                </article>
+
+                <article class="project">
+                    <div class="project-number">
+                        02
+                    </div>
+
+                    <h3>
+                        <a href="https://github.com/milkinit/AniScraper">
+                            AniScraper
+                        </a>
+                    </h3>
+
+                    <p>
+                        A CLI tool that scrapes MyAnimeList's top anime
+                        rankings and randomly picks one for you to watch.
                     </p>
                 </article>
             </section>
@@ -345,3 +442,4 @@
         </main>
     </body>
 </html>
+
