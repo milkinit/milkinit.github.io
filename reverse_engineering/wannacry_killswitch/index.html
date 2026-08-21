@@ -380,11 +380,35 @@
                 .project h3 {
                     font-size: 16px;
                 }
+				.fig_img {
+                    max-width: 100%;
+                    margin-top: 8px;
+                    margin-bottom: 8px;
+                }
             }
         </style>
     </head>
-
     <body>
+	<script>
+		  const overlay = document.getElementById('figOverlay');
+		  const overlayImg = overlay.querySelector('img');
+		
+		  document.querySelectorAll('.fig_img').forEach(img => {
+		    img.addEventListener('click', () => {
+		      overlayImg.src = img.src;
+		      overlayImg.alt = img.alt;
+		      overlay.classList.add('active');
+		    });
+		  });
+		
+		  overlay.addEventListener('click', () => {
+		    overlay.classList.remove('active');
+		  });
+		
+		  document.addEventListener('keydown', (e) => {
+		    if (e.key === 'Escape') overlay.classList.remove('active');
+		  });
+	</script>
     <main>
         <header class="page-header">
             <div class="title-block">
@@ -602,12 +626,14 @@ PE32 executable (GUI) Intel 80386, for MS Windows,
 
                 <img
                     class="fig_img"
+					id="figOverlay"
                     src="wireshark1.png"
                     alt="Wireshark capture showing the kill-switch DNS request"
                 >
 
                 <img
                     class="fig_img"
+					id="figOverlay"
                     src="wireshark2.png"
                     alt="Wireshark capture showing related kill-switch traffic"
                 >
@@ -674,12 +700,14 @@ PE32 executable (GUI) Intel 80386, for MS Windows,
 
                 <img
                     class="fig_img"
+					id="figOverlay"
                     src="patch1.png"
                     alt="Debugger showing the kill-switch branch"
                 >
 
                 <img
                     class="fig_img"
+					id="figOverlay"
                     src="patch2.png"
                     alt="Modified conditional branch in the debugger"
                 >
