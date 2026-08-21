@@ -334,8 +334,17 @@
                 font-size: 11px;
                 letter-spacing: 0.12em;
                 text-align: center;
-            }
+	        }
+	        /* Archive image */
 
+            .archive-image {
+                display: block;
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                margin: 45px 0 0;
+                border: 1px solid var(--dark-red);
+            }
             /* Mobile layout */
 
             @media (max-width: 600px) {
@@ -396,6 +405,12 @@
                 th, td {
                     padding: 7px 8px;
                 }
+				.archive-image {
+                    width: 100%;
+                    max-width: 100%;
+                    height: auto;
+                    margin-top: 35px;
+                }
             }
         </style>
     </head>
@@ -427,6 +442,11 @@
         </header>
 		<div id="summary"></div>
 		<h2 style="text-align:center;" class="archive-title">[ DISCLAIMER: For Defensive Use Only ]</h2>
+		<img
+                class="archive-image"
+                src="/assets/banner2.png"
+                alt="Archive banner"
+        />
 		<!-- Summary -->
         <section class="archive-section">
             <div class="archive-heading">
