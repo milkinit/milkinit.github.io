@@ -1,1 +1,731 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>WannaCry Kill-Switch // Milk outside a file of init.d outside a init.d of milk</title>
+        <link rel="icon" type="image/x-icon" href="/assets/icon2.png">
+        <style>
+            :root {
+                --bg: #0d0e13;
+                --red: #ac3232;
+                --dark-red: #52263e;
+                --pink: #d96b78;
+                --text: #d8bfc5;
+                --muted: #8f6f78;
 
+                --mono: "Courier New", monospace;
+                --serif: Georgia, serif;
+            }
+            * {
+                box-sizing: border-box;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+	
+	    .fig_img {
+                    border: 1px solid var(--pink);
+		    max-width:900px;
+		    margin:0 auto;
+		    display:block;
+		    margin-top:10px;
+		    margin-bottom:10px;
+	    }
+            body {
+                margin: 0;
+                min-height: 100vh;
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--mono);
+            }
+
+            main {
+                width: min(900px, calc(100% - 40px));
+                margin: 0 auto;
+                padding: 40px 0;
+            }
+
+            /* Header */
+
+            .page-header {
+                padding: 28px 0;
+                border-bottom: 1px solid var(--dark-red);
+            }
+
+            .title-block h1 {
+                margin: 0;
+                color: var(--red);
+                font-family: var(--serif);
+                font-size: clamp(30px, 6vw, 56px);
+                font-weight: normal;
+                letter-spacing: 0.08em;
+                line-height: 1.1;
+                text-shadow: 0 0 10px rgba(172, 50, 50, 0.8);
+            }
+
+            .about-me {
+                margin: 10px 0 0;
+                color: var(--pink);
+                font-size: 16px;
+                letter-spacing: 0.2em;
+            }
+
+            .subtitle {
+                margin: 8px 0 0;
+                color: var(--muted);
+                font-size: 11px;
+                letter-spacing: 0.12em;
+            }
+
+            /* Verdict strip */
+
+            .verdict-strip {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 22px;
+            }
+
+            .verdict-strip span {
+                border: 1px solid var(--dark-red);
+                padding: 5px 11px;
+                font-size: 11px;
+                letter-spacing: 0.08em;
+                color: var(--text);
+            }
+
+            .verdict-strip span.hot {
+                color: var(--red);
+                border-color: var(--red);
+            }
+
+            /* Navigation */
+
+            .navigation {
+                display: flex;
+                gap: 24px;
+                margin-top: 25px;
+                flex-wrap: wrap;
+            }
+
+            .navigation a {
+                position: relative;
+                display: inline-block;
+                padding: 6px 0 6px 20px;
+                color: var(--muted);
+                background: transparent;
+                border: none;
+                font-size: 12px;
+                letter-spacing: 0.12em;
+                text-decoration: none;
+                text-shadow: none;
+                transition:
+                    color 0.2s ease,
+                    text-shadow 0.2s ease;
+            }
+
+            .navigation a::before {
+                content: ">";
+                position: absolute;
+                left: 0;
+                color: var(--red);
+                opacity: 0;
+                transform: translateX(-8px);
+                transition:
+                    opacity 0.2s ease,
+                    transform 0.2s ease;
+            }
+
+            .navigation a:hover {
+                color: var(--pink);
+                text-shadow: 0 0 8px var(--pink);
+            }
+
+            .navigation a:hover::before {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            /* General links */
+
+            a {
+                color: var(--pink);
+                text-decoration: none;
+                transition:
+                    color 0.2s ease,
+                    text-shadow 0.2s ease,
+                    border-color 0.2s ease;
+            }
+
+            a:hover {
+                color: #ff9aa6;
+                text-shadow: 0 0 8px var(--pink);
+            }
+
+            /* Archive sections */
+
+            .archive-section {
+                padding-top: 45px;
+            }
+
+            .archive-heading {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .archive-title {
+                margin: 0 0 5px;
+                color: var(--red);
+                font-family: var(--serif);
+                font-size: 25px;
+                font-weight: normal;
+                letter-spacing: 0.06em;
+            }
+
+            .archive-description {
+                margin: 0 0 20px;
+                color: var(--muted);
+                font-size: 12px;
+                letter-spacing: 0.08em;
+            }
+
+            /* Projects (sub-entries within an archive section) */
+
+            .project {
+                padding: 25px 0;
+                border-top: 1px solid var(--dark-red);
+            }
+
+            .project-number {
+                margin-bottom: 8px;
+                color: var(--muted);
+                font-size: 11px;
+                letter-spacing: 0.2em;
+            }
+
+            .project h3 {
+                margin: 0 0 10px;
+                font-family: var(--serif);
+                font-size: 17px;
+                font-weight: normal;
+                letter-spacing: 0.08em;
+                color: var(--red);
+            }
+
+            .project p {
+                max-width: 900px;
+                margin: 0 0 12px;
+                color: var(--text);
+                font-size: 13px;
+                line-height: 1.7;
+            }
+
+            .project ul, .project ol {
+                margin: 0 0 12px;
+                padding-left: 20px;
+                color: var(--text);
+                font-size: 13px;
+                line-height: 1.8;
+            }
+
+            .project li::marker {
+                color: var(--pink);
+            }
+
+            /* Terminal / code blocks */
+
+            .term {
+                background: #08090c;
+                border: 1px solid var(--dark-red);
+                padding: 14px 16px;
+                margin: 5px 0;
+                font-size: 12px;
+                line-height: 1.7;
+                overflow-x: auto;
+                color: #b9a9ad;
+                white-space: pre;
+            }
+
+            .term .hl { color: var(--pink); }
+            .term .ok { color: #9bd08a; }
+            .term .warn { color: #d0a75c; }
+            .term .bad { color: var(--red); }
+            .term .dim { color: var(--muted); }
+	    
+            .cap{
+		text-align: center;
+                font-size: 10.5px;
+                color: var(--muted);
+                letter-spacing: 0.06em;
+                font-style: italic;
+            }
+
+            .cap b { color: var(--muted); font-style: normal; }
+
+            /* Findings callout */
+
+            .finding {
+                border-left: 2px solid var(--red);
+                background: rgba(172, 50, 50, 0.07);
+                padding: 12px 16px;
+                margin: 14px 0;
+                font-size: 12.5px;
+                color: var(--text);
+                line-height: 1.7;
+            }
+
+            .finding .flabel {
+                display: block;
+                color: var(--red);
+                font-size: 10.5px;
+                letter-spacing: 0.12em;
+                margin-bottom: 6px;
+            }
+
+            /* Tables */
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 8px 0 18px;
+                font-size: 12.5px;
+            }
+
+            th {
+                text-align: left;
+                color: var(--muted);
+                font-size: 10.5px;
+                letter-spacing: 0.08em;
+                border-bottom: 1px solid var(--dark-red);
+                padding: 8px 10px;
+            }
+
+            td {
+                padding: 9px 10px;
+                border-bottom: 1px solid #26141d;
+                color: var(--text);
+            }
+
+            td.hash {
+                color: var(--pink);
+                word-break: break-all;
+                font-size: 11px;
+            }
+
+            /* Empty archive section */
+
+            .empty-archive {
+                padding: 25px 0;
+                border-top: 1px solid var(--dark-red);
+                color: var(--muted);
+                font-size: 13px;
+                font-style: italic;
+            }
+
+            /* Footer */
+
+            .site-footer {
+                padding: 50px 0 10px;
+                color: var(--muted);
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-align: center;
+            }
+
+            /* Mobile layout */
+
+            @media (max-width: 600px) {
+                main {
+                    width: min(100% - 28px, 900px);
+                    padding: 20px 0;
+                }
+
+                .page-header {
+                    padding-top: 15px;
+                }
+
+                .title-block h1 {
+                    font-size: 30px;
+                }
+
+                .about-me {
+                    font-size: 13px;
+                }
+
+                .subtitle {
+                    font-size: 9px;
+                }
+
+                .navigation {
+                    gap: 8px;
+                    margin-top: 20px;
+                }
+
+                .navigation a {
+                    padding: 8px 10px;
+                    font-size: 9px;
+                }
+
+                .archive-section {
+                    padding-top: 35px;
+                }
+
+                .archive-title {
+                    font-size: 22px;
+                }
+
+                .project h3 {
+                    font-size: 16px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+    <main>
+        <header class="page-header">
+            <div class="title-block">
+                <h1>wannacry</h1>
+                <p class="about-me">Kill-Switch Analysis Report</p>
+                <p class="subtitle">RANSOMWARE-WORM // KILL-SWITCH STUDY // 2025</p>
+            </div>
+
+            <div class="verdict-strip">
+                <span class="hot">focus: kill switch</span>
+                <span>32-bit windows pe</span>
+                <span>hardcoded domain check</span>
+                <span>wininet api sequence</span>
+            </div>
+
+            <nav class="navigation">
+                <a href="#summary">SUMMARY</a>
+                <a href="#static">STATIC ANALYSIS</a>
+                <a href="#code">CODE ANALYSIS</a>
+                <a href="#dynamic">DYNAMIC ANALYSIS</a>
+                <a href="#patch">PATCH ANALYSIS</a>
+                <a href="#ioc">IOC</a>
+                <a href="#appendix">APPENDIX</a>
+            </nav>
+        </header>
+
+        <!-- Summary -->
+        <section class="archive-section" id="summary">
+            <div class="archive-heading">
+                <h2 class="archive-title">Summary</h2>
+            </div>
+
+            <p class="archive-description">
+                ANALYSIS SCOPE / KILL-SWITCH BEHAVIOR
+            </p>
+
+            <article class="project">
+                <div class="project-number">01 // Scope</div>
+                <h3>Overview</h3>
+
+                <p>
+                    This report examines WannaCry's hardcoded-domain kill switch.
+                    The analysis focuses on how the sample checks whether the
+                    domain is reachable and how the result influences execution.
+                </p>
+
+                <p>
+                    Static analysis identified the domain string and the WinINet
+                    API sequence used to contact it. Dynamic analysis was then
+                    used to observe the sample's behavior when the domain lookup
+                    succeeded and when it was unavailable.
+                </p>
+
+                <div class="finding">
+                    <span class="flabel">SCOPE</span>
+                    This report does not analyze WannaCry's encryption,
+                    persistence, resource extraction, network propagation, or
+                    dropped payloads in detail.
+                </div>
+            </article>
+        </section>
+
+        <!-- Static Analysis -->
+        <section class="archive-section" id="static">
+            <div class="archive-heading">
+                <h2 class="archive-title">Static Analysis</h2>
+            </div>
+
+            <p class="archive-description">
+                SAMPLE IDENTIFICATION / STRINGS / PE STRUCTURE
+            </p>
+
+            <article class="project">
+                <div class="project-number">01</div>
+                <h3>Sample identification</h3>
+
+                <p>
+                    The analyzed sample was identified as a 32-bit Windows
+                    Portable Executable:
+                </p>
+
+                <div class="term">Ransomware.wannacry.exe.malz:
+PE32 executable (GUI) Intel 80386, for MS Windows,
+4 sections</div>
+
+                <p>
+                    SHA-256:
+		</p>
+
+                <div class="term"><span class="hl">24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c</span></div>
+
+                <p class="cap">
+                    Sample architecture and SHA-256 identifier.
+                </p>
+            </article>
+
+            <article class="project">
+                <div class="project-number">02</div>
+                <h3>Hardcoded domain</h3>
+
+                <p>
+                    FLOSS string extraction revealed the following hardcoded
+                    domain:
+                </p>
+
+                <div class="term"><span class="hl">http://www.iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea.com</span></div>
+
+                <p>
+                    The domain was selected for the sample's connectivity check.
+                    Its presence alone does not prove the complete runtime
+                    behavior, so the control flow and dynamic results were
+                    examined separately.
+                </p>
+
+                <p class="cap">
+                    Hardcoded domain identified during string analysis.
+                </p>
+            </article>
+        </section>
+
+        <!-- Code Analysis -->
+        <section class="archive-section" id="code">
+            <div class="archive-heading">
+                <h2 class="archive-title">Code Analysis</h2>
+            </div>
+
+            <p class="archive-description">
+                CONTROL FLOW / WININET / EXECUTION GATE
+            </p>
+
+            <article class="project">
+                <div class="project-number">01</div>
+                <h3>Network-check sequence</h3>
+
+                <p>
+                    The sample uses a WinINet call sequence to test whether the
+		    hardcoded domain can be reached (check Microsoft's <a href="https://learn.microsoft.com/en-us/windows/win32/wininet/about-wininet">documentation</a> for more information):
+                </p>
+
+                <div class="term"><span class="step">1.</span><span class="hl">InternetOpenA</span>
+<span class="dim">→ initialize an Internet session</span><br>
+<span class="step">2.</span><span class="hl">InternetOpenUrlA</span>
+<span class="dim">→ request the hardcoded domain</span><br>
+<span class="step">3.</span><span class="hl">InternetCloseHandle</span>
+<span class="dim">→ close the returned handle</span><br>
+<span class="step">4.</span><span class="hl">test / conditional branch</span>
+<span class="dim">→ evaluate whether the request succeeded</span></div>
+
+                <p class="cap">
+                    Simplified execution flow of the kill-switch check.
+                </p>
+            </article>
+
+            <article class="project">
+                <div class="project-number">02</div>
+                <h3>Conditional branch</h3>
+
+                <p>
+                    The returned network handle is tested before the sample
+                    continues through its normal execution path:
+                </p>
+
+		<div class="term">004081a3<span class="hl">  test</span>  edi, edi<br>004081a5  <span class="hl">jne</span>   0x4081bc  <span class="dim">  ; non-null result diverts execution</span></div>
+
+                <div class="finding">
+                    <span class="flabel">STATIC FINDING</span>
+                    The network result acts as an execution gate. A successful
+                    request and a failed request follow different control-flow
+                    paths. The exact effect of the alternate path should be
+                    described as confirmed only where it was observed during
+                    dynamic analysis.
+                </div>
+            </article>
+        </section>
+
+        <!-- Dynamic Analysis -->
+        <section class="archive-section" id="dynamic">
+            <div class="archive-heading">
+                <h2 class="archive-title">Dynamic Analysis</h2>
+            </div>
+
+            <p class="archive-description">
+                DNS RESOLUTION / EXECUTION BEHAVIOR / ISOLATED TESTING
+            </p>
+
+            <article class="project">
+                <div class="project-number">01</div>
+                <h3>Kill-switch confirmation</h3>
+
+                <p>
+                    In an isolated REMnux VM, that is running INetSim, the domain
+                    lookup was allowed to succeed. Wireshark captured the DNS
+                    request associated with the hardcoded domain.
+                </p>
+
+                <img
+                    class="fig_img"
+                    src="wireshark1.png"
+                    alt="Wireshark capture showing the kill-switch DNS request"
+                >
+
+                <img
+                    class="fig_img"
+                    src="wireshark2.png"
+                    alt="Wireshark capture showing related kill-switch traffic"
+                >
+
+                <p class="cap">
+                    Wireshark capture of the kill-switch DNS lookup.
+                </p>
+
+                <p>
+                    The sample then followed the alternate execution path
+                    instead of continuing through its normal payload flow,
+		    causing the payload to self-distruct instead.
+                    This dynamic result supports the conclusion that the
+                    domain check functions as an execution gate.
+                </p>
+            </article>
+
+            <article class="project">
+                <div class="project-number">02</div>
+                <h3>Behavior when the domain is unavailable</h3>
+
+                <p>
+                    When the simulated network was disabled and the domain could
+                    not be reached, the sample continued beyond the connectivity
+                    check. This result is consistent with the branch behavior
+                    identified during static analysis.
+                </p>
+
+                <div class="finding">
+                    <span class="flabel">DYNAMIC FINDING</span>
+                    Domain reachability changed the sample's execution path.
+                    The test supports the interpretation that the hardcoded
+                    domain operates as a kill switch rather than as a normal
+                    command-and-control dependency.
+                </div>
+            </article>
+        </section>
+
+        <!-- Patch Analysis -->
+        <section class="archive-section" id="patch">
+            <div class="archive-heading">
+                <h2 class="archive-title">Patch Analysis</h2>
+            </div>
+
+            <p class="archive-description">
+                DEBUGGER-ASSISTED CONTROL-FLOW TEST
+            </p>
+
+            <article class="project">
+                <div class="project-number">01</div>
+                <h3>Patching the conditional branch</h3>
+
+                <p>
+                    A breakpoint was placed before the network-check result was
+                    evaluated. The conditional branch was then modified at
+                    runtime so execution would continue regardless of the DNS
+                    result.
+                </p>
+
+                <img
+                    class="fig_img"
+                    src="patch1.png"
+                    alt="Debugger showing the kill-switch branch"
+                >
+
+                <img
+                    class="fig_img"
+                    src="patch2.png"
+                    alt="Modified conditional branch in the debugger"
+                >
+
+                <p class="cap">
+                    Modifying the conditional branch used by the kill switch.
+                </p>
+
+                <div class="finding">
+                    <span class="flabel">RESULT</span>
+                    With the branch modified, the sample continued execution
+                    while the domain was reachable. This confirms the network 
+		    check is strictly an execution gate, not a functional 
+		    dependency: payload logic is otherwise independent of 
+		    network availability. </div>
+            </article>
+        </section>
+
+        <!-- IOC -->
+        <section class="archive-section" id="ioc">
+            <div class="archive-heading">
+                <h2 class="archive-title">Indicator of Compromise</h2>
+            </div>
+
+            <p class="archive-description">
+                KILL-SWITCH DOMAIN
+            </p>
+
+            <table>
+                <tr>
+                    <th>Category</th>
+                    <th>Indicator</th>
+                    <th>Notes</th>
+                </tr>
+                <tr>
+                    <td>Network</td>
+                    <td>
+                        iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea.com
+                    </td>
+                    <td>
+                        Hardcoded domain used by the connectivity check
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Appendix -->
+        <section class="archive-section" id="appendix">
+            <div class="archive-heading">
+                <h2 class="archive-title">Appendix A — Callback URL</h2>
+            </div>
+
+            <table>
+                <tr>
+                    <th>URL</th>
+                    <th>Port</th>
+                </tr>
+                <tr>
+                    <td>
+                        hxxp://www.iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea[.]com
+                    </td>
+                    <td>80</td>
+                </tr>
+            </table>
+        </section>
+
+        <footer class="site-footer">
+            <p>
+                wannacry.d // kill-switch analysis report // v1.0 // milkinit
+            </p>
+        </footer>
+    </main>
+</body>
+</html>
