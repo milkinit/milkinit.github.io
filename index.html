@@ -145,7 +145,14 @@
             .archive-section {
                 padding-top: 45px;
             }
-
+			
+            .archive-description {
+                margin: 0 0 20px;
+                color: var(--muted);
+                font-size: 12px;
+                letter-spacing: 0.08em;
+            }
+			
             .archive-heading {
                 display: flex;
                 align-items: center;
@@ -155,7 +162,7 @@
             .icon {
                 width: 32px;
                 height: 32px;
-		margin-bottom: 9px;
+				margin-bottom: 9px;
                 flex-shrink: 0;
                 object-fit: contain;
                 image-rendering: pixelated;
@@ -308,12 +315,7 @@
                     <p class="about-me">Vulnerbility Researcher</p>
                     <p class="subtitle">SECURITY PROJECT ARCHIVE</p>
                 </div>
-
-                <nav class="navigation">
-                    <a href="#windows-research">
-                        WINDOWS RESEARCH
-                    </a>
-
+				
 		    <a href="https://github.com/milkinit">
 		    	GITHUB
 		    </a>
@@ -329,7 +331,6 @@
             <!-- Vulnerability Research archive -->
             <section
                 class="archive-section"
-                id="windows-research"
             >
                 <div class="archive-heading">
                     <img
@@ -339,11 +340,16 @@
                     />
 
                     <h2 class="archive-title">
-                        Windows Research
+                        Vulnerability Research
                     </h2>
                 </div>
-
-                <article class="project">
+			
+                <p class="archive-description">
+                    SECURITY RESEARCH / ANALYSIS / LOW-LEVEL RESEARCH /
+                    SECURITY / RECONSTRUCTION
+                </p>
+                
+				<article class="project">
                     <div class="project-number">
                         01
                     </div>
@@ -355,7 +361,7 @@
                     </h3>
 
                     <p>
-                        Analysis report of the WannaCry's kill-switch mechanism.
+                        Reverse engineer of the WannaCry's kill-switch mechanism.
                     </p>
                 </article>
             </section>
