@@ -1,3 +1,7 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <pre>
 import "pe"
 
 rule Ransomware_WannaCry_Yara_Rules
@@ -37,3 +41,6 @@ rule Ransomware_WannaCry_Yara_Rules
             2 of ($wncry_*, $payload_*, $crypto_*)
         )
 }
+  </pre>
+</body>
+</html>
