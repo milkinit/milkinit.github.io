@@ -1,0 +1,39 @@
+import "pe"
+
+rule Ransomware_WannaCry_Yara_Rules
+{
+    meta:
+        author: "milkinit"
+        reference = "WananCry 2017 outbreak"
+        data = "2025-12-22"
+        description = "Detects WananCry ransomware based on unique static artifacts"
+        tags = "ransomware, wannacry"
+        
+    strings:
+        /* MZ bytes */
+        $mz = { 4D 5A }
+
+        /* .wnry file extension */
+        $wncry_ext = ".wnry" ascii wide
+
+        /* Payload */
+        $payload_taskdl = "taskdl.exe" ascii wide
+        $payload_taskse = "taskse.exe" ascii wide
+
+        /* Cryptography */
+        $crypto_file = "WanaCrypt0r" ascii wide
+
+        /* DNS query */
+        $dns_query = "http://www.iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea.com" ascii
+
+    condition:
+        /* Enforcing pe structure */
+        ($mz at 0 or pe.is_pe) and
+        /* String analysis indicator detection */
+        (
+            /* Kill-switch domain */
+            $dns_query or
+            /* floss/string output indicator */
+            2 of ($wncry_*, $payload_*, $crypto_*)
+        )
+}
