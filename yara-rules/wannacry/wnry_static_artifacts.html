@@ -32,7 +32,8 @@ rule Ransomware_WannaCry_Yara_Rules
 
         /* DNS query */
         $dns_query = "http://www.iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea.com" ascii
-
+        /* PRECAUTION: DANGEROUS LINK */
+    
     condition:
         /* Enforcing pe structure */
         ($mz at 0 or pe.is_pe) and
