@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <title>WannaCry Static Yara-Rules // Milk outside a file of init.d outside a init.d of milk</title>
+  <link rel="icon" type="image/x-icon" href="assets/icon2.png">
 </head>
 <body>
   <pre>
@@ -45,6 +47,6 @@ rule Ransomware_WannaCry_Yara_Rules
             2 of ($wncry_*, $payload_*, $crypto_*)
         )
 }
-  </pre>
+</pre>
 </body>
 </html>
