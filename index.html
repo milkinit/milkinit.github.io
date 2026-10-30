@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="assets/icon2.png">
+    <title>Milk outside a file of init.d outside a init.d of milk</title>
+
+    <style>
+        :root {
+            --bg: #0d0e13;
+            --red: #ac3232;
+            --dark-red: #52263e;
+            --pink: #d96b78;
+            --text: #d8bfc5;
+            --muted: #8f6f78;
+            --mono: "Courier New", monospace;
+            --serif: Georgia, serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            cursor: url("assets/cursor.png"), auto;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--mono);
+        }
+
+        main {
+            width: min(900px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        /* Header */
+
+        .page-header {
+            padding: 28px 0;
+            border-bottom: 1px solid var(--dark-red);
+        }
+
+        .title-block h1 {
+            margin: 0;
+            color: var(--red);
+            font-family: var(--serif);
+            font-size: clamp(30px, 6vw, 56px);
+            font-weight: normal;
+            letter-spacing: 0.08em;
+            line-height: 1.1;
+            text-shadow: 0 0 10px rgba(172, 50, 50, 0.8);
+        }
+
+        .about-me {
+            margin: 10px 0 0;
+            color: var(--pink);
+            font-size: 16px;
+            letter-spacing: 0.2em;
+        }
+
+        .subtitle {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 0.12em;
+        }
+
+        /* Navigation */
+
+        .navigation {
+            display: flex;
+            gap: 24px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .navigation a {
+            position: relative;
+            display: inline-block;
+            padding: 6px 0 6px 20px;
+            color: var(--muted);
+            background: transparent;
+            border: none;
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-decoration: none;
+            text-shadow: none;
+            transition:
+                color 0.2s ease,
+                text-shadow 0.2s ease;
+        }
+
+        .navigation a::before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            color: var(--red);
+            opacity: 0;
+            transform: translateX(-8px);
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .navigation a:hover {
+            color: var(--pink);
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            text-shadow: 0 0 8px var(--pink);
+        }
+
+        .navigation a:hover::before {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* General links */
+
+        a {
+            color: var(--pink);
+            text-decoration: none;
+            transition:
+                color 0.2s ease,
+                text-shadow 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        a:hover {
+            color: #ff9aa6;
+            text-shadow: 0 0 8px var(--pink);
+        }
+
+        /* Archive sections */
+
+        .archive-section {
+            padding-top: 45px;
+        }
+
+        .archive-description {
+            margin: 0 0 20px;
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: 0.08em;
+        }
+
+        .archive-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 9px;
+            flex-shrink: 0;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        .archive-title {
+            margin: 0 0 5px;
+            color: var(--red);
+            font-family: var(--serif);
+            font-size: 25px;
+            font-weight: normal;
+            letter-spacing: 0.06em;
+        }
+
+        /* Projects */
+
+        .project {
+            padding: 25px 0;
+            border-top: 1px solid var(--dark-red);
+        }
+
+        .project-number {
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 0.2em;
+        }
+
+        .project h3 {
+            margin: 0 0 8px;
+            font-family: var(--serif);
+            font-size: 17px;
+            font-weight: normal;
+            letter-spacing: 0.08em;
+            max-width: 100%;
+            overflow-wrap: anywhere;
+        }
+
+        .project h3 a {
+            color: var(--red);
+        }
+
+        .project p {
+            max-width: 650px;
+            margin: 0;
+            color: var(--text);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Empty archive section */
+
+        .empty-archive {
+            padding: 25px 0;
+            border-top: 1px solid var(--dark-red);
+            color: var(--muted);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        /* Archive image */
+
+        .archive-image {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            margin: 45px 0 0;
+            border: 1px solid var(--dark-red);
+        }
+
+        /* Milk image */
+        .milk {
+            width: 50px;
+            height: 100%;
+            flex-shrink: 0;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+        
+        /* Footer */
+
+        .site-footer {
+            padding: 50px 0 10px;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-align: center;
+        }
+
+        /* Mobile layout */
+
+        @media (max-width: 600px) {
+            main {
+                width: min(100% - 28px, 900px);
+                padding: 20px 0;
+            }
+
+            .page-header {
+                padding-top: 15px;
+            }
+
+            .title-block h1 {
+                font-size: 30px;
+            }
+
+            .about-me {
+                font-size: 13px;
+            }
+
+            .subtitle {
+                font-size: 9px;
+            }
+
+            .navigation {
+                gap: 8px;
+                margin-top: 20px;
+            }
+
+            .navigation a {
+                padding: 8px 10px;
+                font-size: 9px;
+            }
+
+            .archive-section {
+                padding-top: 35px;
+            }
+
+            .archive-heading {
+                gap: 8px;
+            }
+
+            .icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            .archive-title {
+                font-size: 22px;
+            }
+
+            .project h3 {
+                font-size: 16px;
+            }
+
+            .archive-image {
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                margin-top: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <header class="page-header">
+            <div class="title-block">
+            <div class="archive-heading">
+                <img class="milk" src="assets/milkinit.png" alt="" />
+                <h1 class="archive-title">
+                    milkinit
+                </h1>
+            </div>
+                <p class="subtitle">RESEARCH/PROJECT ARCHIVE</p>
+	    </div>
+            <nav class="navigation">
+                <a href="https://github.com/milkinit">
+                    GITHUB
+                </a>
+                <a href="#vulnerbility-research">
+                    VULNERBILITY-RESEARCH
+                </a>
+                <a href="#system-software">
+                    SYSTEM-SOFTWARE
+                </a>
+            </nav>
+        </header>
+        <img class="archive-image" src="assets/banner2.png" alt="Archive banner" />
+        <!-- Vulnerbility Research archive -->
+        <section class="archive-section" id="vulnerbility-research">
+            <div class="archive-heading">
+                <img class="icon" src="assets/icon.png" alt="" />
+                <h2 class="archive-title">
+                    Vulnerbility Research
+                </h2>
+            </div>
+            <p class="archive-description">
+                CVE / EXPLOITS / VULNERABILITIES / DISCOVERY / REVERSE-ENGINEERING / MALWARE-RESEARCH / DETECTION
+            </p>
+            <article class="project">
+                <div class="project-number">
+                    07
+                </div>
+
+                <h3>
+                    <a href="https://github.com/milkinit/pwnable.kr/">
+                        Pwnable.kr
+                    </a>
+                </h3>
+
+                <p>
+                    Write-up repositroy for pwnable.kr challenges.
+                </p>
+            </article>
+             <article class="project">
+                <div class="project-number">
+                    06
+                </div>
+
+                <h3>
+                    <a href="https://github.com/milkinit/malware-research/tree/main/shellcode">
+                        Shellcode-repo
+                    </a>
+                </h3>
+
+                <p>
+                    Repository for practicing writing shellcode.
+                </p>
+            </article>
+            <article class="project">
+                <div class="project-number">
+                    05
+                </div>
+                <h3>
+                    <a
+                        href="https://github.com/milkinit/malware-research/tree/main/blog/c2-framework/understanding-c2-framework">
+                        Intro: Understanding C2 Framework
+                    </a>
+                </h3>
+
+                <p>
+                    Understanding how C2 (command-and-control) frameworks work.
+                </p>
+            </article>
+            <article class="project">
+                <div class="project-number">
+                    05
+                </div>
+
+                <h3>
+                    <a
+                        href="https://github.com/milkinit/malware-research/tree/main/blog/linux-maldev/ptrace-process-injector">
+                        Linux Maldev: ptrace
+                    </a>
+                </h3>
+
+                <p>
+                    Understanding linux process injection with ptrace.
+                </p>
+            </article>
+            <article class="project">
+                <div class="project-number">
+                    04
+                </div>
+
+                <h3>
+                    <a href="https://github.com/milkinit/cve-disclosures/tree/main/IoT/CVE-2026-79589">
+                        CVE-2026-79589
+                    </a>
+                </h3>
+
+                <p>
+                    Vulnerbility-type: Missing Authentication for Critical Function.
+                </p>
+            </article>
+            <article class="project">
+                <div class="project-number">
+                    03
+                </div>
+
+                <h3>
+                    <a href="https://github.com/milkinit/cve-disclosures/tree/main/IoT/CVE-2026-79588">
+                        CVE-2026-79588
+                    </a>
+                </h3>
+
+                <p>
+                    Vulnerbility-type: Cleartext Transmission of Sensitive Information.
+                </p>
+            </article>
+            <article class="project">
+                <div class="project-number">
+                    02
+                </div>
+                <h3>
+                    <a
+                        href="https://github.com/milkinit/malware-research/blob/main/wannacry/yara-rules/static_artifacts.yara">
+                        WannaCry Yara Rules
+                    </a>
+                </h3>
+
+                <p>
+                    Yara rules for static artifacts in WannaCry.
+                </p>
+            </article>
+            <article class="project">
+                <div class="project-number">
+                    01
+                </div>
+
+                <h3>
+                    <a href="https://github.com/milkinit/malware-research/tree/main/wannacry/killswitch-analysis">
+                        WannaCry Kill-switch
+                    </a>
+                </h3>
+
+                <p>
+                    Reverse engineering report of WannaCry's kill-switch mechanism.
+                </p>
+            </article>
+	</section>
+
+            <img class="archive-image" src="assets/banner.png" alt="Archive banner" />
+
+	<section class="archive-section" id="system-software">
+            <!-- Software / System archive -->
+                <div class="archive-heading">
+                    <img class="icon" src="assets/icon.png" alt="" />
+                    <h2 class="archive-title">
+                     System • Software  
+                    </h2>
+                </div>
+
+                <p class="archive-description">
+                    OPERATING SYSTEMS / SCRIPTS / CONFIGURATIONS / SOFTWARE / HARDWARE
+                </p>
+                <article class="project">
+                    <div class="project-number">
+                        04
+                    </div>
+
+                    <h3>
+                        <a href="https://github.com/milkinit/my-ghidra-theme/tree/main">
+                            My Ghidra Theme
+                        </a>
+                    </h3>
+
+                    <p>
+                        Ghidra theme based off of webpage color scheme.
+                    </p>
+                </article>
+                <article class="project">
+                    <div class="project-number">
+                        03
+                    </div>
+
+                    <h3>
+                        <a href="https://github.com/milkinit/ddot-lain">
+                            Ddot Lain
+                        </a>
+                    </h3>
+
+                    <p>
+                        A lightweight Debian-based desktop environment inspired by Serial Experiments Lain.
+                    </p>
+                </article>
+                <article class="project">
+                    <div class="project-number">
+                        02
+                    </div>
+
+                    <h3>
+                        <a href="https://github.com/milkinit/aniscraper">
+                            AniScraper
+                        </a>
+                    </h3>
+
+                    <p>
+                        CLI tool that scrapes MyAnimeList's top anime rankings and randomly picks one for you to watch.
+                    </p>
+                </article>
+                <article class="project">
+                    <div class="project-number">
+                        01
+                    </div>
+
+                    <h3>
+                        <a href="https://github.com/milkinit/http-server">
+                            HTTP Server
+                        </a>
+                    </h3>
+
+                    <p>
+                        HTTP server programmed in C.
+                    </p>
+                </article>
+	</section>
+
+	    <img class="archive-image" src="assets/banner3.png" alt="Archive banner" />
+            <footer class="site-footer">
+                <p>milkinit.d // bottom of glass</p>
+            </footer>
+    </main>
+</body>
+</html>
