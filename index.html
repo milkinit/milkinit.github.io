@@ -8,8 +8,10 @@
 <title>milkinit.d / archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
 <link rel="icon" type="image/x-icon" href="assets/icon.png">
+<link rel="preload" as="image" href="assets/milkchan-closed.png">
+<link rel="preload" as="image" href="assets/milkchan-open.png">
 <style>
 /* milkinit: one consistent fluid layout from small phones to television screens */
 :root{
@@ -89,8 +91,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 .interlude::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(13,14,19,.16),transparent 58%),linear-gradient(0deg,rgba(13,14,19,.42),transparent 62%);pointer-events:none}
 .interlude::after{content:"";position:absolute;inset:0;z-index:1;box-shadow:inset 0 0 64px 12px rgba(13,14,19,.38);pointer-events:none}
 .character-layer{position:absolute;z-index:2;left:clamp(-12px,1.2vw,18px);bottom:-2px;width:min(53%,520px);height:100%;pointer-events:none}
-.character-layer img{position:absolute;left:0;bottom:0;display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;object-position:left bottom;image-rendering:pixelated;visibility:hidden;transition:none}
-.character-layer img.active{visibility:visible}
+.character-layer img{position:absolute;left:0;bottom:0;display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;object-position:left bottom;image-rendering:pixelated;visibility:visible;opacity:0;transition:none;will-change:opacity;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+/* Keep both textures loaded; switch both sprite layers in one style update. */
+#milkchan-closed{opacity:1}
+.character-layer[data-expression="open"] #milkchan-closed{opacity:0}
+.character-layer[data-expression="open"] #milkchan-open{opacity:1}
 /* The milk itself is a single unframed button; the prompt is beneath it. */
 .milk-interaction{appearance:none;position:absolute;z-index:3;top:clamp(27px,4vw,46px);right:clamp(19px,4vw,46px);width:clamp(165px,25%,246px);aspect-ratio:252 / 188;height:auto;display:block;padding:0;margin:0;background:transparent;border:0;touch-action:manipulation;box-shadow:none;transform:none}
 .milk-interaction canvas{display:block;width:100%;height:100%;image-rendering:pixelated;pointer-events:none}
@@ -224,6 +229,305 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 
 
 .skip-link:focus{position:fixed;top:9px;left:9px;z-index:1000;width:auto;height:auto;padding:10px 16px;clip:auto;background:var(--bg);border:1px solid var(--red);color:var(--text);margin:0}
+
+/* Mini GitHub reader — monochrome void, solid frame, readable code. */
+.project h3 a[aria-haspopup="dialog"]{cursor:pointer}
+.readme-dialog{
+  position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;
+  padding:0;margin:0;border:0;overflow:hidden;color:var(--text);
+  background:#000;opacity:0;transition:opacity .22s ease;
+}
+.readme-dialog::backdrop{background:#000}
+.readme-dialog.is-visible{opacity:1}
+.readme-cosmos{
+  position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#000;
+}
+.readme-cosmos-canvas{display:block;width:100%;height:100%;image-rendering:pixelated;opacity:.96}
+.readme-window{
+  position:relative;z-index:1;width:100%;height:100%;display:grid;place-items:center;
+  padding:clamp(14px,3vw,42px);background:transparent;
+}
+.readme-dialogue{
+  position:relative;z-index:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;
+  width:min(1120px,100%);height:min(790px,calc(100dvh - 58px));
+  padding:clamp(16px,2.1vw,26px);
+  border:4px solid var(--red);
+  border-image-source:url('assets/dialogue-frame.png');border-image-slice:19;
+  border-image-width:4px;border-image-repeat:stretch;
+  background:#0b0a10;box-shadow:2px 3px 0 rgba(0,0,0,.6);
+}
+.repo-header{display:flex;justify-content:space-between;align-items:start;gap:16px;flex:none;padding:0 40px 17px 0}
+.repo-eyebrow{font:500 10px/1.6 'IBM Plex Mono',var(--mono);letter-spacing:.12em;color:#947079;margin:0 0 6px}
+.readme-window-title{margin:0;font:normal clamp(21px,2.65vw,32px)/1.04 var(--serif);letter-spacing:-.038em;color:#f0e1e3;overflow-wrap:anywhere;text-wrap:balance;text-shadow:0 1px 0 rgba(172,50,50,.18)}
+.readme-window-title::before{content:''}
+.readme-close{position:absolute;top:clamp(8px,1.2vw,14px);right:clamp(10px,1.4vw,16px);min-width:38px;min-height:38px;padding:0;border:0;background:transparent;color:#c6585d;cursor:pointer;font:28px/1 var(--mono)}
+.readme-close:hover,.readme-close:focus-visible{color:#ffbdc2;background:#23141d}
+.repo-location{display:flex;align-items:center;gap:12px;min-height:43px;padding:4px 0 10px;border-bottom:1px solid #452a34;flex:none}
+.repo-back{border:1px solid #663441;color:#e5b0b6;background:transparent;min-height:30px;padding:5px 9px;font:500 11px/1 'IBM Plex Mono',var(--mono);white-space:nowrap}
+.repo-back:not(:disabled):hover,.repo-back:not(:disabled):focus-visible{background:#30202b;color:#ffe1e4;cursor:pointer}
+.repo-back:disabled{opacity:.35;cursor:default}
+.repo-crumbs{display:flex;align-items:center;gap:4px;min-width:0;flex-wrap:wrap;max-height:76px;overflow:auto;color:#a4828c;font:500 12px/1.6 'IBM Plex Mono',var(--mono)}
+.repo-crumbs button{border:0;background:transparent;padding:4px 3px;color:#c38b95;font:inherit;cursor:pointer;max-width:100%;overflow-wrap:anywhere;text-align:left}
+.repo-crumbs button:hover,.repo-crumbs button:focus-visible{color:#ffc7cd;text-decoration:underline}
+.repo-crumbs .repo-crumb-current{color:#ffe0e4}
+.repo-separator{color:#643b48;margin:0 2px}
+.repo-layout{display:grid;grid-template-columns:minmax(190px,34%) minmax(0,1fr);min-height:0;flex:1;border-bottom:1px solid #452a34}
+.repo-tree{min-width:0;min-height:0;overflow:hidden;border-right:1px solid #452a34;display:flex;flex-direction:column}
+.repo-section-heading{display:flex;justify-content:space-between;gap:6px;align-items:center;color:#a97d87;font:500 10px/1.6 'IBM Plex Mono',var(--mono);letter-spacing:.08em;flex:none;padding:12px 9px 11px 0}
+.repo-file-list{min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 8px 10px 0;scrollbar-width:thin;scrollbar-color:#73313d #111016}
+.repo-entry{width:100%;min-height:37px;display:flex;align-items:start;gap:9px;padding:8px 6px;border:0;border-bottom:1px solid #2a1e2a;background:transparent;text-align:left;color:#ddbec5;cursor:pointer;font:400 12px/1.55 'IBM Plex Mono',var(--mono)}
+.repo-entry:hover,.repo-entry:focus-visible{color:#fff1f3;background:#251b26}
+.repo-entry.active{background:#321e2b;color:#ffd3d8;border-left:2px solid #ac3232;padding-left:4px}
+.repo-entry-icon{display:block;flex:none;width:19px;font:500 10px/1.8 'IBM Plex Mono',var(--mono);color:#d26c78;text-align:center}
+.repo-entry-name{flex:1;min-width:0;overflow-wrap:anywhere;word-break:break-word}
+.repo-entry-size{flex:none;font-size:10px;color:#866b74}
+.repo-directory-message{padding:10px 4px;color:#b997a0;font:12px/1.8 'IBM Plex Mono',var(--mono)}
+.repo-preview{min-height:0;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+.repo-preview-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 10px 18px;flex:none;color:#c38b95;font:500 11px/1.5 'IBM Plex Mono',var(--mono);border-bottom:1px solid #30212d}
+.repo-preview-heading span:first-child{overflow-wrap:anywhere;min-width:0}
+.repo-file-kind{flex:none;font-size:9px;letter-spacing:.05em;color:#876c74}
+.repo-preview-scroll{overflow:auto;min-height:0;flex:1;overscroll-behavior:contain;padding:17px 8px 20px 18px;scrollbar-width:thin;scrollbar-color:#73313d #111016}
+.repo-preview-content{color:#e1cbd1;font:400 14px/1.82 'IBM Plex Mono',ui-monospace,Consolas,monospace;overflow-wrap:anywhere}
+.repo-preview-content > :first-child{margin-top:0}
+.repo-preview-content h1,.repo-preview-content h2,.repo-preview-content h3,.repo-preview-content h4{color:#e19aa4;font-family:'IBM Plex Mono',ui-monospace,Consolas,monospace;font-weight:600;line-height:1.45;overflow-wrap:anywhere}
+.repo-preview-content h1{font-size:22px;margin:0 0 18px}
+.repo-preview-content h2{font-size:17px;margin:26px 0 12px}
+.repo-preview-content h3,.repo-preview-content h4{font-size:15px;margin:20px 0 10px}
+.repo-preview-content p{margin:0 0 16px}
+.repo-preview-content a{color:#f1adb6;text-decoration:underline;text-underline-offset:3px}
+.repo-preview-content a:hover{color:#fff1ee}
+.repo-preview-content ul,.repo-preview-content ol{padding-left:26px;margin:10px 0 16px}
+.repo-preview-content li{margin-bottom:8px}
+.repo-preview-content li::marker{color:var(--red)}
+.repo-preview-content pre{max-width:100%;overflow:auto;padding:13px;background:#0d0c13;border:1px solid #4b2c3b;font:12.5px/1.65 'IBM Plex Mono',var(--mono);tab-size:4;color:#e8c5ce}
+.repo-preview-content code{font:12.5px/1.65 'IBM Plex Mono',var(--mono);color:#f0b9c3;overflow-wrap:anywhere}
+.repo-preview-content :not(pre)>code{background:#24121f;padding:1px 3px}
+.repo-preview-content pre code{color:inherit;overflow-wrap:normal;white-space:pre}
+/* Images render at their natural aspect ratio, without cropping or full-size decode jank. */
+.repo-preview-content img{display:block;max-width:100%;max-height:70vh;width:auto;height:auto;margin:16px auto;object-fit:contain;background:#08080c}
+.repo-preview-content .repo-image-error{font:12px/1.6 'IBM Plex Mono',var(--mono);color:#b9929b;text-align:center}
+.repo-preview-content blockquote{margin:12px 0;padding:2px 0 2px 12px;border-left:2px solid var(--red);color:#c4919b}
+.repo-preview-content table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse;margin:12px 0;font:12px/1.55 'IBM Plex Mono',var(--mono)}
+.repo-preview-content th,.repo-preview-content td{padding:7px 8px;border:1px solid #643342}
+.repo-preview-content hr{border:0;border-top:1px solid #642535;margin:18px 0}
+.repo-preview-content input[type=checkbox]{accent-color:var(--red)}
+.repo-preview-content details{border:1px solid #65273a;padding:6px;margin:8px 0}
+.repo-preview-content summary{cursor:pointer;color:#d8787c}
+.repo-empty-kicker{font:500 11px/1.7 'IBM Plex Mono',var(--mono);letter-spacing:.08em;color:#ac6976;margin:0 0 16px}
+.repo-hint{color:#ba9da5;font:13px/1.9 'IBM Plex Mono',var(--mono)}
+.repo-file-subtitle{color:#98747d;margin:0 0 13px;font:12px/1.5 'IBM Plex Mono',var(--mono)}
+.repo-footer{flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:13px;color:#ae8991;font:11px/1.6 'IBM Plex Mono',var(--mono)}
+.repo-footer a{color:#d88993;white-space:nowrap;text-decoration:none}
+.repo-footer a:hover,.repo-footer a:focus-visible{text-decoration:underline;color:#ffd0d6}
+.repo-status{overflow-wrap:anywhere}
+/* Portal entry: one image drawn from the site's original void atlas.
+   Only a composited transform/opacity is animated (no new drawing loop). */
+.void-entry{
+  position:absolute;inset:0;z-index:10;display:grid;place-items:center;
+  background:#000;opacity:0;visibility:hidden;pointer-events:none;overflow:hidden;
+}
+.void-entry-portal{
+  position:relative;display:block;width:min(88vmin,760px);aspect-ratio:1;
+  background:radial-gradient(circle at center,#000 0 13%,transparent 30% 100%),
+    conic-gradient(from 20deg,#09070c,#471624,#100d18,#542235,#0b0811,#451523,#09070c);
+  border-radius:50%;overflow:hidden;
+  -webkit-mask-image:radial-gradient(circle,#000 0 52%,transparent 71%);
+  mask-image:radial-gradient(circle,#000 0 52%,transparent 71%);
+}
+.void-entry-canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
+.readme-dialog.is-entering .void-entry{
+  visibility:visible;pointer-events:auto;
+  animation:void-cover-reveal 650ms linear both;
+}
+.readme-dialog.is-entering .void-entry-portal{
+  animation:void-plunge 650ms cubic-bezier(.22,.04,.34,1) both;
+}
+@keyframes void-plunge{
+  0%{transform:scale(.3) rotate(-15deg);opacity:.7}
+  44%{opacity:1}
+  100%{transform:scale(5.8) rotate(24deg);opacity:.08}
+}
+@keyframes void-cover-reveal{
+  0%,73%{opacity:1}
+  100%{opacity:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .readme-dialog.is-entering .void-entry,
+  .readme-dialog.is-entering .void-entry-portal{animation:none;visibility:hidden}
+}
+@media(max-width:720px){
+  .readme-window{padding:10px}
+  .readme-dialogue{width:100%;height:calc(100dvh - 20px);padding:12px;border-width:3px;border-image-width:3px}
+  .repo-header{padding:2px 34px 9px 0}.repo-eyebrow{font-size:9px;margin-bottom:4px}
+  .readme-window-title{font-size:18px;line-height:1.08}
+  .readme-close{right:6px;top:6px;min-width:34px;min-height:34px}
+  .repo-location{gap:6px;align-items:flex-start;min-height:38px;padding:4px 0 7px}
+  .repo-crumbs{font-size:11px;max-height:56px}
+  .repo-layout{grid-template-columns:1fr;grid-template-rows:minmax(122px,35%) minmax(0,1fr)}
+  .repo-tree{border-right:0;border-bottom:1px solid #452a34}
+  .repo-section-heading{padding:7px 0 6px}.repo-file-list{padding-right:0}
+  .repo-entry{min-height:33px;padding:7px 5px;font-size:11.5px}
+  .repo-preview-heading{padding:9px 0 8px;font-size:10.5px}
+  .repo-preview-scroll{padding:11px 3px 16px 0}
+  .repo-preview-content{font-size:12px;line-height:1.85}
+  .repo-preview-content h1{font-size:18px}.repo-preview-content h2{font-size:15px}.repo-preview-content h3,.repo-preview-content h4{font-size:13px}
+  .repo-footer{font-size:10px;padding-top:8px;flex-wrap:wrap}
+}
+@media(max-width:360px){.repo-entry{font-size:11px}.repo-preview-content{font-size:11.5px}}
+@media(prefers-reduced-motion:reduce){.readme-dialog{transition:none}}
+
+
+/* Void reader: black/white only. All original site colors remain unchanged. */
+.readme-dialog{
+  --void-fg:#f4f4f4;
+  --void-muted:#b3b3b3;
+  --void-dim:#858585;
+  --void-rule:#303030;
+  --void-panel:#060606;
+  color:var(--void-fg);
+}
+.readme-window{background:transparent}
+.readme-dialogue{
+  border:2px solid rgba(244,244,244,.86);
+  border-image:none;
+  background:var(--void-panel);
+  box-shadow:0 15px 45px rgba(0,0,0,.62);
+}
+/* Unbroken white frame; no decorative dotted pseudo-element. */
+.readme-dialogue::before{content:none;display:none}
+.readme-dialog .repo-eyebrow{color:var(--void-dim)}
+.readme-dialog .readme-window-title{color:#fff;text-shadow:none;letter-spacing:-.035em}
+.readme-dialog .readme-close{color:#fff}
+.readme-dialog .readme-close:hover,
+.readme-dialog .readme-close:focus-visible{color:#fff;background:#252525}
+.readme-dialog .repo-location,
+.readme-dialog .repo-layout{border-bottom-color:var(--void-rule)}
+.readme-dialog .repo-tree{border-right-color:var(--void-rule)}
+.readme-dialog .repo-section-heading,
+.readme-dialog .repo-preview-heading{color:#d0d0d0}
+.readme-dialog .repo-preview-heading{border-bottom-color:var(--void-rule)}
+.readme-dialog .repo-back{color:var(--void-fg);border-color:#666;background:#101010}
+.readme-dialog .repo-back:not(:disabled):hover,
+.readme-dialog .repo-back:not(:disabled):focus-visible{background:#292929;color:#fff}
+.readme-dialog .repo-crumbs,
+.readme-dialog .repo-entry-size,
+.readme-dialog .repo-file-kind{color:var(--void-muted)}
+.readme-dialog .repo-crumbs button{color:#dadada}
+.readme-dialog .repo-crumbs button:hover,
+.readme-dialog .repo-crumbs button:focus-visible{color:#fff}
+.readme-dialog .repo-crumbs .repo-crumb-current{color:#fff}
+.readme-dialog .repo-separator{color:#747474}
+.readme-dialog .repo-entry{color:#ededed;border-bottom-color:#242424}
+.readme-dialog .repo-entry:hover,
+.readme-dialog .repo-entry:focus-visible{background:#1e1e1e;color:#fff}
+.readme-dialog .repo-entry.active{background:#262626;color:#fff;border-left-color:#f4f4f4}
+.readme-dialog .repo-entry-icon{color:#ddd}
+.readme-dialog .repo-directory-message,
+.readme-dialog .repo-hint,
+.readme-dialog .repo-file-subtitle,
+.readme-dialog .repo-status,
+.readme-dialog .repo-footer{color:#bbb}
+.readme-dialog .repo-preview-content{color:#eee}
+.readme-dialog .repo-preview-content h1,
+.readme-dialog .repo-preview-content h2,
+.readme-dialog .repo-preview-content h3,
+.readme-dialog .repo-preview-content h4{color:#fff}
+.readme-dialog .repo-preview-content a,
+.readme-dialog .repo-footer a{color:#f4f4f4}
+.readme-dialog .repo-preview-content a:hover,
+.readme-dialog .repo-footer a:hover{color:#fff}
+.readme-dialog .repo-preview-content li::marker{color:#ddd}
+.readme-dialog .repo-preview-content pre{background:#0c0c0c;border-color:#4a4a4a;color:#eee}
+.readme-dialog .repo-preview-content code{color:#f1f1f1}
+.readme-dialog .repo-preview-content :not(pre)>code{background:#282828}
+.readme-dialog .repo-preview-content img{background:#0a0a0a}
+.readme-dialog .repo-preview-content .repo-image-error{color:#bbb}
+.readme-dialog .repo-preview-content blockquote{border-left-color:#ddd;color:#bbb}
+.readme-dialog .repo-preview-content th,
+.readme-dialog .repo-preview-content td{border-color:#555}
+.readme-dialog .repo-preview-content hr{border-top-color:#444}
+.readme-dialog .repo-preview-content input[type=checkbox]{accent-color:#ddd}
+.readme-dialog .repo-preview-content details{border-color:#444}
+.readme-dialog .repo-preview-content summary{color:#eee}
+.readme-dialog .repo-empty-kicker{color:#ccc}
+.readme-dialog .repo-file-list,
+.readme-dialog .repo-preview-scroll{scrollbar-color:#666 #090909}
+.readme-dialog .void-entry-portal{
+  background:radial-gradient(circle at center,#000 0 15%,transparent 34% 100%),
+    conic-gradient(from 20deg,#0c0811,#6e1832,#170b16,#9d2940,#100810,#6c1831,#0c0811);
+}
+.readme-dialog .void-entry-canvas{filter:none}
+/* The same red portal artwork turns into white dust over the plunge. */
+.readme-dialog.is-entering .void-entry-portal{
+  animation:
+    void-plunge 1450ms cubic-bezier(.18,.07,.23,1) both,
+    void-red-to-white 1450ms ease-in-out both;
+}
+.readme-dialog.is-entering .void-entry{
+  animation:void-cover-reveal 1450ms linear both;
+}
+@keyframes void-red-to-white{
+  0%{filter:grayscale(0) saturate(1.45) brightness(1.12) contrast(1.08)}
+  24%{filter:grayscale(0) saturate(1.4) brightness(1.2) contrast(1.08)}
+  50%{filter:grayscale(.42) saturate(1.1) brightness(1.42) contrast(1.12)}
+  78%{filter:grayscale(.83) saturate(.75) brightness(1.75) contrast(1.25)}
+  100%{filter:grayscale(1) saturate(0) brightness(2) contrast(1.35)}
+}
+/* Hold the portal on screen through the color transition, then reveal the file browser. */
+@keyframes void-cover-reveal{
+  0%,79%{opacity:1}
+  100%{opacity:0}
+}
+@keyframes void-plunge{
+  0%{transform:scale(.36) rotate(-12deg);opacity:.9}
+  45%{transform:scale(1.5) rotate(2deg);opacity:1}
+  82%{transform:scale(3.4) rotate(14deg);opacity:1}
+  100%{transform:scale(5.8) rotate(24deg);opacity:.14}
+}
+/* A white targeting ring replaces the page's red cursor only after entering the void. */
+@media(pointer:fine){
+  .readme-dialog,.readme-dialog *{cursor:url("assets/cursor2.png") 16 16, crosshair!important}
+  .readme-dialog :is(button,a,summary){cursor:url("assets/cursor2.png") 16 16,pointer!important}
+}
+@media(max-width:720px){
+  .readme-dialogue{border:2px solid rgba(244,244,244,.86);border-image:none}
+  .readme-dialog .repo-tree{border-right:0;border-bottom:1px solid var(--void-rule)}
+}
+
+/* Keep the original red homepage portal. Entry alone gradually becomes white. */
+.void-space canvas{filter:none}
+
+
+/* Fullscreen image enlargement for repository previews. */
+.repo-preview-content img{cursor:zoom-in;transition:outline-color .14s ease}
+.repo-preview-content img:focus-visible{outline:2px solid #fff;outline-offset:5px}
+.repo-image-lightbox{
+  position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;
+  margin:0;padding:clamp(12px,2vw,28px);border:0;background:#000;color:#f5f5f5;
+  overflow:auto;overscroll-behavior:contain;
+}
+.repo-image-lightbox::backdrop{background:rgba(0,0,0,.96)}
+.repo-image-lightbox[open]{display:grid;place-items:center}
+.repo-image-lightbox-inner{width:min(100%,1600px);min-height:0;display:flex;flex-direction:column;align-items:center;gap:14px}
+.repo-image-lightbox-toolbar{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;
+  color:#e5e5e5;font:500 clamp(12px,1.2vw,15px)/1.5 'IBM Plex Mono',var(--mono)
+}
+.repo-image-lightbox-toolbar>span:first-child{min-width:0;overflow-wrap:anywhere}
+.repo-image-lightbox-actions{flex:none;display:flex;gap:clamp(12px,2vw,24px);align-items:center}
+.repo-image-lightbox-actions :is(a,button){color:#fafafa;border:0;background:none;padding:8px 0;font:inherit;cursor:pointer;text-decoration:none;white-space:nowrap}
+.repo-image-lightbox-actions :is(a,button):hover{color:#bdbdbd;text-decoration:underline}
+.repo-image-lightbox img{
+  display:block;max-width:100%;max-height:calc(100dvh - 116px);width:auto;height:auto;
+  object-fit:contain;image-rendering:auto;box-shadow:0 0 0 1px #303030;
+  cursor:zoom-out;
+}
+@media(max-width:600px){
+  .repo-image-lightbox{padding:12px}
+  .repo-image-lightbox-toolbar{align-items:start;flex-direction:column;gap:5px}
+  .repo-image-lightbox-actions{width:100%;justify-content:space-between}
+  .repo-image-lightbox img{max-height:calc(100dvh - 150px)}
+}
 </style>
 </head>
 <body>
@@ -249,9 +553,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 </div></section>
 <section class="interlude scene" id="milk-scene" aria-label="Milk scene">
 <canvas class="milk-backdrop" id="milk-backdrop" aria-hidden="true"></canvas>
-<div class="character-layer" aria-hidden="true">
-<img src="assets/milkchan-closed.png" alt="" id="milkchan-closed" class="active">
-<img src="assets/milkchan-open.png" alt="" id="milkchan-open">
+<div class="character-layer" data-expression="closed" aria-hidden="true">
+<img src="assets/milkchan-closed.png" alt="" loading="eager" decoding="sync" id="milkchan-closed" class="active">
+<img src="assets/milkchan-open.png" alt="" loading="eager" decoding="sync" id="milkchan-open">
 </div>
 <button class="milk-interaction" id="milk-interaction" type="button" aria-label="Drink the milk; it refills automatically"><canvas id="milk-canvas" width="252" height="188" aria-hidden="true"></canvas><span class="milk-hint" id="milk-hint" aria-live="polite">click / tap to drink</span></button>
 <div class="milk-dialogue" role="note" aria-label="- Drink the milk... make sure you're not allergic.">
@@ -271,6 +575,58 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 </section>
 <footer class="footer"><span>milkinit.d // bottom of glass</span><a href="#home">RETURN TO START ↑</a></footer>
 </main>
+
+<!-- A compact GitHub-style directory browser, with the site's original dialogue frame. -->
+<dialog class="readme-dialog" id="readme-dialog" aria-labelledby="readme-title">
+  <div class="readme-cosmos" aria-hidden="true"><canvas class="readme-cosmos-canvas" id="readme-cosmos-canvas" width="640" height="360"></canvas></div>
+  <div class="void-entry" id="void-entry" aria-hidden="true">
+    <div class="void-entry-portal"><canvas class="void-entry-canvas" id="void-entry-canvas" width="336" height="336"></canvas></div>
+  </div>
+  <div class="readme-window">
+    <section class="readme-dialogue" aria-label="Repository file browser">
+      <header class="repo-header">
+        <div><p class="repo-eyebrow">ARCHIVE / REPOSITORY</p><h2 class="readme-window-title" id="readme-title">Project files</h2></div>
+        <button class="readme-close" id="readme-close" type="button" aria-label="Close repository browser">×</button>
+      </header>
+      <nav class="repo-location" aria-label="Repository folder path">
+        <button class="repo-back" id="repo-back" type="button">← UP</button>
+        <div class="repo-crumbs" id="repo-breadcrumbs"></div>
+      </nav>
+      <div class="repo-layout">
+        <aside class="repo-tree" aria-label="Repository files">
+          <div class="repo-section-heading"><span>FILES / FOLDERS</span><span id="repo-count"></span></div>
+          <div class="repo-file-list" id="repo-directory"></div>
+        </aside>
+        <section class="repo-preview" aria-label="File preview">
+          <div class="repo-preview-heading"><span id="repo-preview-name">Select a file</span><span class="repo-file-kind" id="repo-preview-kind">PREVIEW</span></div>
+          <div class="repo-preview-scroll" id="repo-preview-scroll" tabindex="0">
+            <div class="repo-preview-content" id="repo-preview-content"></div>
+          </div>
+        </section>
+      </div>
+      <footer class="repo-footer">
+        <span class="repo-status" id="repo-status" role="status" aria-live="polite">READY</span>
+        <a id="readme-source-link" href="https://github.com/milkinit" target="_blank" rel="noopener noreferrer">OPEN ON GITHUB ↗&#xFE0E;</a>
+      </footer>
+    </section>
+  </div>
+</dialog>
+
+<!-- Click-to-zoom for images in Markdown READMEs and repository files. -->
+<dialog class="repo-image-lightbox" id="repo-image-lightbox" aria-label="Enlarged repository image">
+  <div class="repo-image-lightbox-inner">
+    <header class="repo-image-lightbox-toolbar">
+      <span id="repo-image-lightbox-title">Image preview</span>
+      <span class="repo-image-lightbox-actions">
+        <a id="repo-image-lightbox-original" href="#" target="_blank" rel="noopener noreferrer">OPEN ORIGINAL ↗&#xFE0E;</a>
+        <button type="button" id="repo-image-lightbox-close" aria-label="Close enlarged image">× CLOSE</button>
+      </span>
+    </header>
+    <img id="repo-image-lightbox-image" alt="" decoding="async">
+  </div>
+</dialog>
+<script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
 <script>
 (()=>{'use strict';
 const $=(sel,root=document)=>root.querySelector(sel), $$=(sel,root=document)=>[...root.querySelectorAll(sel)];
@@ -418,22 +774,33 @@ if(milkLine){
 }
 const milkButton=$('#milk-interaction'),milkHint=$('#milk-hint'),milkPrompt=$('#milk-prompt');
 const milkchanClosed=$('#milkchan-closed'),milkchanOpen=$('#milkchan-open'),milkScene=$('#milk-scene');
-const milkchanReady = Promise.all([
-    milkchanClosed.decode(),
-    milkchanOpen.decode()
-]);
+// Decode both sprites before the first swap; catch decode errors rather than
+// accidentally disabling drinking when an image decoder refuses the promise.
+const milkchanLayer=$('.character-layer');
+const milkchanReady=Promise.all([milkchanClosed,milkchanOpen].map(async img=>{
+  if(!img)return;
+  try{if(typeof img.decode==='function')await img.decode()}catch{}
+}));
+let milkClickPending=false;
 function milkStage(stage){milk.stage=stage;milk.elapsed=0;
  const labels={idle:'click / tap to drink',drinking:'drinking...',empty:'empty',refilling:'refilling...'};
  milkHint.textContent=labels[stage];
  milkButton.setAttribute('aria-label',stage==='idle'?'Drink the milk; it refills automatically':labels[stage]);
  if(milkPrompt)milkPrompt.disabled=stage!=='idle';
- if(milkchanClosed&&milkchanOpen){
-   const open = stage==='drinking';
-   milkchanOpen.classList.toggle('active', open);
-   milkchanClosed.classList.toggle('active', !open);
- }
+  // One atomic style change; don't hide/reveal two separate DOM nodes.
+  if(milkchanLayer)milkchanLayer.dataset.expression=stage==='drinking'?'open':'closed';
 }
-async function drinkMilk() {if (milk.stage !== 'idle') return; await milkchanReady;if (milk.stage !== 'idle') return;milkStage('drinking');milk.shake = Math.max(milk.shake, 10);bgBoost = 1;}
+async function drinkMilk(){
+  if(milk.stage!=='idle'||milkClickPending)return;
+  milkClickPending=true;
+  try{
+    await milkchanReady;
+    if(milk.stage!=='idle')return;
+    milkStage('drinking');
+    milk.shake=Math.max(milk.shake,10);
+    bgBoost=1;
+  }finally{milkClickPending=false}
+}
 milkButton.addEventListener('click',drinkMilk);if(milkPrompt)milkPrompt.addEventListener('click',drinkMilk);
 function updateMilk(dt){
  if(milk.stage==='idle')return;
@@ -454,8 +821,524 @@ function updateMilk(dt){
 window.addEventListener('scroll',()=>{const now=window.scrollY,delta=now-scrollY;scrollY=now;if(delta>0){impulse=Math.min(1,impulse+Math.min(.12,delta/1800));milk.shake=Math.min(14,milk.shake+Math.min(2.3,delta/140))}else{impulse*=.85}},{passive:true});
 window.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;mouseTX=e.clientX/innerWidth-.5;mouseTY=e.clientY/innerHeight-.5},{passive:true});
 if('IntersectionObserver' in window){const obs=new IntersectionObserver(entries=>entries.forEach(e=>{const p=ports.find(p=>p.el===e.target);if(p)p.visible=e.isIntersecting}),{rootMargin:'200px'});ports.forEach(p=>obs.observe(p.el))}
-function tick(t){const dt=Math.min(.05,previous?(t-previous)/1000:.016);previous=t;drawElapsed+=dt;const drawDue=drawElapsed>=(innerWidth>=1500?1/24:1/30);if(drawDue)drawElapsed=0;bgBoost*=Math.exp(-dt*.8);bgClock+=dt*(1+bgBoost*.72);bgElapsed+=dt;if(bgElapsed>(reduced?3:1/18)){if(milkSceneVisible&&!document.hidden)paintMilkBackdrop(reduced?0:bgClock);bgElapsed=0;}impulse*=Math.exp(-dt*1.5);const target=.60+impulse*.48;speed+=(target-speed)*(1-Math.exp(-dt*1.9));mouseX+=(mouseTX-mouseX)*(1-Math.exp(-dt*2));mouseY+=(mouseTY-mouseY)*(1-Math.exp(-dt*2));milk.tilt+=(milk.target-milk.tilt)*(1-Math.exp(-dt*2.2));milk.shake*=Math.exp(-dt*2.0);updateMilk(dt);for(const p of ports){if(!reduced)p.phase=(p.phase+dt*speed)%frameCount;if(drawDue&&(p.visible||t===0)&&!document.hidden)drawVoid(p)}if(drawDue&&milkSceneVisible&&!document.hidden)drawMilk(dt,reduced?0:t/1000);requestAnimationFrame(tick)}
-requestAnimationFrame(tick);
+let sceneRaf=0;
+function tick(t){if(readmeDialog.open){sceneRaf=0;previous=0;return}
+ const dt=Math.min(.05,previous?(t-previous)/1000:.016);previous=t;drawElapsed+=dt;const drawDue=drawElapsed>=((innerWidth<700||window.matchMedia('(pointer:coarse)').matches)?1/20:1/24);if(drawDue)drawElapsed=0;bgBoost*=Math.exp(-dt*.8);bgClock+=dt*(1+bgBoost*.72);bgElapsed+=dt;if(bgElapsed>(reduced?3:1/18)){if(milkSceneVisible&&!document.hidden)paintMilkBackdrop(reduced?0:bgClock);bgElapsed=0;}impulse*=Math.exp(-dt*1.5);const target=.60+impulse*.48;speed+=(target-speed)*(1-Math.exp(-dt*1.9));mouseX+=(mouseTX-mouseX)*(1-Math.exp(-dt*2));mouseY+=(mouseTY-mouseY)*(1-Math.exp(-dt*2));milk.tilt+=(milk.target-milk.tilt)*(1-Math.exp(-dt*2.2));milk.shake*=Math.exp(-dt*2.0);updateMilk(dt);for(const p of ports){if(!reduced)p.phase=(p.phase+dt*speed)%frameCount;if(drawDue&&(p.visible||t===0)&&!document.hidden)drawVoid(p)}if(drawDue&&milkSceneVisible&&!document.hidden)drawMilk(dt,reduced?0:t/1000);sceneRaf=requestAnimationFrame(tick)}
+
+// Small GitHub file browser: folders first, optional README preview, file navigation.
+// The site only reads public repositories. Existing project names remain the triggers.
+const readmeDialog=$('#readme-dialog'),readmeTitle=$('#readme-title'),readmeClose=$('#readme-close');
+const repoBack=$('#repo-back'),repoBreadcrumbs=$('#repo-breadcrumbs'),repoCount=$('#repo-count');
+const repoDirectory=$('#repo-directory'),repoPreviewName=$('#repo-preview-name'),repoPreviewKind=$('#repo-preview-kind');
+const repoPreviewScroll=$('#repo-preview-scroll'),repoPreviewContent=$('#repo-preview-content');
+const repoStatus=$('#repo-status'),repoSource=$('#readme-source-link');
+const repoCache=new Map();
+let repoNav=0,repoCurrent=null,repoPath='',repoFile='',repoRows=[],repoTrigger=null,closeTimer=null,voidEntryTimer=null;
+const reducedEntry=window.matchMedia('(prefers-reduced-motion: reduce)');
+const voidEntryCanvas=$('#void-entry-canvas');
+const readmeCosmosCanvas=$('#readme-cosmos-canvas');
+let cosmosRaf=0,cosmosPrevious=0,cosmosStep=0;
+const cosmosReduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Deterministic coordinates: no flickering random scatter between frames.
+const cosmosRandom=i=>{
+  const v=Math.sin(i*127.1+31.9)*43758.5453123;
+  return v-Math.floor(v);
+};
+const cosmosDust=Array.from({length:2350},(_,i)=>({
+  x:cosmosRandom(i*3+1),y:cosmosRandom(i*3+2),phase:cosmosRandom(i*3+3),
+  band:i%7,opacity:i%5,size:i%23===0?2:1
+}));
+function sizeReadmeCosmos(){
+  if(!readmeCosmosCanvas)return;
+  const rect=readmeDialog.getBoundingClientRect();
+  // Render at lower resolution to keep the granular pixel look and minimize GPU work.
+  const targetW=Math.max(340,Math.min(860,Math.round(rect.width*.65)));
+  const targetH=Math.max(220,Math.min(540,Math.round(rect.height*.65)));
+  if(readmeCosmosCanvas.width!==targetW||readmeCosmosCanvas.height!==targetH){
+    readmeCosmosCanvas.width=targetW;readmeCosmosCanvas.height=targetH;
+  }
+}
+function drawReadmeCosmosFrame(now){
+  if(!readmeDialog.open||!readmeCosmosCanvas){cosmosRaf=0;return}
+  cosmosRaf=requestAnimationFrame(drawReadmeCosmosFrame);
+  if(document.hidden)return;
+  const dt=Math.min(.08,cosmosPrevious?(now-cosmosPrevious)/1000:.016);
+  cosmosPrevious=now; cosmosStep+=dt;
+  if(!cosmosReduced&&cosmosStep<1/15)return;
+  cosmosStep=0;
+  const ctx=readmeCosmosCanvas.getContext('2d',{alpha:false});
+  if(!ctx)return;
+  const w=readmeCosmosCanvas.width,h=readmeCosmosCanvas.height;
+  const t=cosmosReduced?0:now*.001;
+  ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);
+  ctx.imageSmoothingEnabled=false;
+
+  // EarthBound-esque waves: no centered, circular event horizon.
+  // Discrete, near-white dust follows two broad, slow-moving ribbons.
+  const alphas=[.24,.34,.44,.54,.68];
+  for(let bucket=0;bucket<alphas.length;bucket++){
+    ctx.fillStyle=`rgba(244,244,244,${alphas[bucket]})`;
+    for(const p of cosmosDust){
+      if(p.opacity!==bucket)continue;
+      let nx=p.x;
+      nx=(nx+Math.sin(t*.10+p.phase*6.283)*.018+1)%1;
+      const wave=Math.sin(nx*7.7+t*.25+p.phase*1.8)*.035
+        +Math.cos(nx*14.0-t*.17+p.phase*2.0)*.016;
+      // Side-to-side waves with scattered stars, never one hard geometric ring.
+      let ny=p.y;
+      if(p.band<4)ny=.10+p.y*.36+wave;
+      else if(p.band<6)ny=.71+p.y*.22+wave*.7;
+      else ny=p.y+wave*.38;
+      ny=(ny+1)%1;
+      const x=Math.round(nx*w),y=Math.round(ny*h);
+      ctx.fillRect(x,y,p.size,p.size);
+    }
+  }
+  // Thin drifting tracer curves crossing the edges of the void, not a circle.
+  ctx.lineWidth=.75;
+  for(let k=0;k<6;k++){
+    ctx.strokeStyle=`rgba(245,245,245,${.07+(k%3)*.055})`;
+    ctx.beginPath();
+    for(let j=0;j<=70;j++){
+      const u=j/70;
+      const y=h*(.12+k*.073+.075*Math.sin(u*8.6+t*(.12+k*.018)+k*.95)
+        +.023*Math.cos(u*19-t*.17+k));
+      const x=u*w;
+      if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+}
+function startReadmeCosmos(){
+  if(!readmeCosmosCanvas)return;
+  sizeReadmeCosmos();
+  cancelAnimationFrame(cosmosRaf);cosmosRaf=0;cosmosPrevious=0;cosmosStep=0;
+  cosmosRaf=requestAnimationFrame(drawReadmeCosmosFrame);
+}
+function stopReadmeCosmos(){
+  cancelAnimationFrame(cosmosRaf);cosmosRaf=0;cosmosPrevious=0;cosmosStep=0;
+}
+window.addEventListener('resize',()=>{if(readmeDialog.open)sizeReadmeCosmos()},{passive:true});
+function drawVoidEntry(){
+  const ctx=voidEntryCanvas.getContext('2d',{alpha:true});
+  if(!ctx)return;
+  ctx.clearRect(0,0,336,336);
+  ctx.imageSmoothingEnabled=false;
+  try{
+    if(atlas.complete&&atlas.naturalWidth>=frameSize){
+      const i=Math.floor(ports[0]?.phase||0)%frameCount;
+      ctx.drawImage(atlas,(i%cols)*frameSize,Math.floor(i/cols)*frameSize,frameSize,frameSize,0,0,336,336);
+    }else if(poster.complete&&poster.naturalWidth){
+      ctx.drawImage(poster,0,0,336,336);
+    }
+  }catch{/* The CSS vortex is the fallback while the artwork loads. */}
+}
+
+const TEXT_EXT=/\.(?:md|markdown|mdown|mdx|rst|txt|text|json|jsonc|yaml|yml|xml|toml|ini|conf|cfg|config|env|py|rb|js|mjs|cjs|ts|tsx|jsx|css|scss|html?|sh|bash|zsh|fish|c|h|cc|cpp|hpp|go|rs|java|kt|swift|cs|php|sql|lua|pl|asm|s|ps1|bat|cmd|yara|yar|rules|log|csv|tsv|diff|patch|gradle|properties|service|desktop|dockerfile|gitignore|gitattributes|editorconfig)$/i;
+const IMAGE_EXT=/\.(?:png|jpe?g|gif|webp|bmp|avif|svg)$/i;
+const MARKDOWN_EXT=/\.(?:md|markdown|mdown|mdx)$/i;
+const DOC_NAMES=/^(?:readme|license|licence|makefile|dockerfile|containerfile|cmakelists\.txt|requirements\.txt|gemfile|procfile|justfile|go\.mod|cargo\.toml|package\.json|\.gitignore|\.dockerignore)$/i;
+const sizeLabel=n=>n<1024?`${n} B`:n<1024*1024?`${Math.round(n/1024)} KB`:`${(n/1048576).toFixed(1)} MB`;
+const humanPath=parts=>parts.filter(Boolean).join('/');
+const pathParts=path=>path.split('/').filter(Boolean);
+const encodePath=path=>pathParts(path).map(encodeURIComponent).join('/');
+
+function parseRepoLink(link){
+  try{
+    const url=new URL(link.href);
+    if(url.hostname!=='github.com')return null;
+    const parts=url.pathname.split('/').filter(Boolean).map(decodeURIComponent);
+    if(parts.length<2)return null;
+    const [owner,repo]=parts;
+    if(!/^[\w.-]+$/.test(owner)||!/^[\w.-]+$/.test(repo))return null;
+    const kind=parts[2];
+    const branch=(kind==='tree'||kind==='blob')&&parts.length>3?parts[3]:'';
+    const path=branch?parts.slice(4).join('/'):'';
+    const directFile=kind==='blob'?path:'';
+    const folder=directFile?pathParts(path).slice(0,-1).join('/'):path;
+    return {owner,repo,branch,folder,directFile,projectUrl:link.href};
+  }catch{return null}
+}
+function setRepoStatus(message){repoStatus.textContent=message}
+function repoApiUrl(loc,path){
+  const base=`https://api.github.com/repos/${encodeURIComponent(loc.owner)}/${encodeURIComponent(loc.repo)}/contents`;
+  const url=base+(path?'/'+encodePath(path):'');
+  return url+(loc.branch?'?ref='+encodeURIComponent(loc.branch):'');
+}
+async function repoContents(loc,path){
+  const key=repoApiUrl(loc,path);
+  if(repoCache.has(key))return repoCache.get(key);
+  const response=await fetch(key,{headers:{Accept:'application/vnd.github+json'}});
+  if(response.status===403||response.status===429){
+    const remaining=response.headers.get('x-ratelimit-remaining');
+    throw new Error(remaining==='0'?'GitHub API rate limit reached. Open this folder on GitHub or try again later.':'GitHub temporarily limited this request. Open it on GitHub to continue.');
+  }
+  if(response.status===404)throw new Error('This folder or file was not found (or the repository is private).');
+  if(!response.ok)throw new Error(`GitHub could not load these files (HTTP ${response.status}).`);
+  const data=await response.json();
+  repoCache.set(key,data);return data;
+}
+function buildRepoUrl(loc,path,kind='tree'){
+  if(!path)return `https://github.com/${encodeURIComponent(loc.owner)}/${encodeURIComponent(loc.repo)}`;
+  if(!loc.branch)return loc.projectUrl; // No known branch; keep a verified link.
+  return `https://github.com/${encodeURIComponent(loc.owner)}/${encodeURIComponent(loc.repo)}/${kind}/${encodeURIComponent(loc.branch)}/${encodePath(path)}`;
+}
+function makeCrumb(label,path,current=false){
+  const button=document.createElement('button');
+  button.type='button';button.textContent=label;button.className=current?'repo-crumb-current':'';
+  if(current)button.setAttribute('aria-current','location');
+  button.addEventListener('click',()=>browseRepoFolder(path));
+  return button;
+}
+function renderRepoCrumbs(){
+  repoBreadcrumbs.replaceChildren();
+  if(!repoCurrent)return;
+  const loc=repoCurrent;
+  const segments=pathParts(repoPath);
+  repoBreadcrumbs.append(makeCrumb(loc.repo,'',!segments.length));
+  let prefix='';
+  for(let i=0;i<segments.length;i++){
+    const slash=document.createElement('span');slash.className='repo-separator';slash.textContent='/';repoBreadcrumbs.append(slash);
+    prefix=humanPath([prefix,segments[i]]);
+    repoBreadcrumbs.append(makeCrumb(segments[i],prefix,i===segments.length-1));
+  }
+  if(repoFile){
+    const sep=document.createElement('span');sep.textContent='/';sep.className='repo-separator';repoBreadcrumbs.append(sep);
+    const name=document.createElement('span');name.className='repo-crumb-current';name.textContent=repoFile.split('/').pop();repoBreadcrumbs.append(name);
+  }
+  repoBack.disabled=segments.length===0;
+}
+function setRepoPreview(heading,kind,description){
+  repoPreviewName.textContent=heading;repoPreviewKind.textContent=kind;
+  repoPreviewContent.replaceChildren();
+  if(description){const el=document.createElement('p');el.className='repo-hint';el.textContent=description;repoPreviewContent.append(el)}
+  repoPreviewScroll.scrollTop=0;
+}
+function drawRepoList(){
+  repoDirectory.replaceChildren();
+  for(const item of repoRows){
+    const btn=document.createElement('button');btn.type='button';btn.className='repo-entry'+(item.path===repoFile?' active':'');
+    const icon=document.createElement('span');icon.className='repo-entry-icon';icon.textContent=item.type==='dir'?'▸':'·';icon.setAttribute('aria-hidden','true');
+    const name=document.createElement('span');name.className='repo-entry-name';name.textContent=item.name;
+    btn.append(icon,name);
+    if(item.type!=='dir'&&typeof item.size==='number'){
+      const size=document.createElement('span');size.className='repo-entry-size';size.textContent=sizeLabel(item.size);btn.append(size);
+    }
+    btn.setAttribute('aria-label',`${item.type==='dir'?'Open folder':'Preview file'} ${item.name}`);
+    btn.addEventListener('click',()=>item.type==='dir'?browseRepoFolder(item.path):openRepoFile(item));
+    repoDirectory.append(btn);
+  }
+  if(!repoRows.length){const blank=document.createElement('p');blank.className='repo-directory-message';blank.textContent='No files found in this directory.';repoDirectory.append(blank)}
+  repoCount.textContent=`${repoRows.length} items`;
+}
+function showRepoError(err,title='Unable to load folder'){
+  setRepoPreview(title,'ERROR',err instanceof Error?err.message:String(err));
+  setRepoStatus('UNAVAILABLE / OPEN ON GITHUB');
+}
+async function browseRepoFolder(path,{preferredFile='',autoReadme=true}={}){
+  if(!repoCurrent)return;
+  const ticket=++repoNav;
+  const loc=repoCurrent;repoPath=path;repoFile='';repoRows=[];
+  repoSource.href=buildRepoUrl(loc,path);
+  repoDirectory.replaceChildren();repoCount.textContent='...';
+  const loading=document.createElement('p');loading.className='repo-directory-message';loading.textContent='Loading directory...';repoDirectory.append(loading);
+  renderRepoCrumbs();setRepoPreview(path?path.split('/').pop():loc.repo,'FOLDER','Fetching the directory listing...');
+  setRepoStatus('CONNECTING TO GITHUB...');
+  try{
+    const data=await repoContents(loc,path);
+    if(ticket!==repoNav||!readmeDialog.open)return;
+    if(!Array.isArray(data)){
+      // Some links point directly to a file. Show it and keep the parent folder navigable.
+      if(data.type==='file'){
+        const parent=pathParts(path).slice(0,-1).join('/');
+        await browseRepoFolder(parent,{preferredFile:data.path});
+        return;
+      }
+      throw new Error('GitHub returned a non-directory response.');
+    }
+    repoRows=data.filter(row=>row&&['dir','file','symlink','submodule'].includes(row.type))
+      .sort((a,b)=>Number(b.type==='dir')-Number(a.type==='dir')||a.name.localeCompare(b.name,undefined,{sensitivity:'base'}));
+    drawRepoList();setRepoStatus(`${loc.owner}/${loc.repo} / ${repoRows.length} items`);
+    repoDirectory.scrollTop=0;
+    const desired=repoRows.find(x=>x.type==='file'&&x.path===preferredFile);
+    const readme=autoReadme?repoRows.find(x=>x.type==='file'&&/^readme(?:\.[a-z0-9_-]+)?\.(?:md|markdown|mdown|rst|txt)$/i.test(x.name))
+      ||repoRows.find(x=>x.type==='file'&&/^readme\.md$/i.test(x.name)):null;
+    if(desired||readme){await openRepoFile(desired||readme);return}
+    const folders=repoRows.filter(row=>row.type==='dir').length;
+    const files=repoRows.length-folders;
+    setRepoPreview(path?path.split('/').pop():loc.repo,'DIRECTORY',
+      `This directory contains ${folders} folder${folders===1?'':'s'} and ${files} file${files===1?'':'s'}. Select any file on the left to read it. A README is not required.`);
+  }catch(error){
+    if(ticket!==repoNav||!readmeDialog.open)return;
+    repoDirectory.replaceChildren();repoCount.textContent='—';
+    const msg=document.createElement('p');msg.className='repo-directory-message';msg.textContent='Directory unavailable.';repoDirectory.append(msg);
+    showRepoError(error);
+  }
+}
+async function downloadRepoFile(item){
+  if(item.size>1000000)throw new Error('This file is over 1 MB, so it is not displayed in the browser. You can open it on GitHub.');
+  if(!item.download_url||!/^https:\/\/(?:raw\.githubusercontent\.com|github\.com|objects\.githubusercontent\.com)\//.test(item.download_url)){
+    const entry=await repoContents(repoCurrent,item.path);
+    if(entry&&entry.encoding==='base64'&&entry.content){
+      const bytes=Uint8Array.from(atob(entry.content.replace(/\s/g,'')),c=>c.charCodeAt(0));
+      return new TextDecoder('utf-8',{fatal:true}).decode(bytes);
+    }
+    throw new Error('GitHub did not provide a readable download URL for this file.');
+  }
+  const res=await fetch(item.download_url);
+  if(!res.ok)throw new Error(`Could not download file (HTTP ${res.status}).`);
+  return await res.text();
+}
+function normalRepoPath(folder,relative){
+  let target=relative;
+  try{target=decodeURIComponent(relative)}catch{}
+  const path=target.startsWith('/')?[]:pathParts(folder);
+  for(const part of target.split('/')){
+    if(part==='..'){if(!path.length)return null;path.pop()}
+    else if(part&&part!=='.')path.push(part);
+  }
+  return path.join('/');
+}
+function rawGitHubImage(url){
+  try{
+    const u=new URL(url);
+    if(u.hostname==='github.com'){
+      const parts=u.pathname.split('/').filter(Boolean);
+      if(parts.length>=5&&['blob','raw'].includes(parts[2]))
+        return `https://raw.githubusercontent.com/${parts[0]}/${parts[1]}/${parts.slice(3).join('/')}`;
+    }
+    if(u.hostname==='raw.githubusercontent.com'||u.hostname==='user-images.githubusercontent.com'||
+      u.hostname==='github.com'||u.hostname==='images.unsplash.com'||u.hostname==='img.shields.io')return u.href;
+    // Other HTTPS images (e.g., GitHub-hosted assets or project screenshots) are allowed.
+    return u.protocol==='https:'?u.href:null;
+  }catch{return null}
+}
+function resolveRepoImage(src,item){
+  if(!src||/^data:/i.test(src))return null;
+  if(/^https:\/\//i.test(src))return rawGitHubImage(src);
+  if(/^\/\//.test(src))return rawGitHubImage('https:'+src);
+  if(!item.download_url||!item.download_url.startsWith('https://raw.githubusercontent.com/'))return null;
+  try{
+    // Resolve ./, ../, and repo-root-relative paths without leaving the raw repo URL.
+    const base=new URL(item.download_url);
+    if(src.startsWith('/')){
+      const encodedSegments=base.pathname.split('/').filter(Boolean);
+      if(encodedSegments.length<3)return null;
+      const root=`https://raw.githubusercontent.com/${encodedSegments.slice(0,3).join('/')}/`;
+      return rawGitHubImage(new URL(src.slice(1),root).href);
+    }
+    const url=new URL(src,base);
+    return url.hostname==='raw.githubusercontent.com'?rawGitHubImage(url.href):null;
+  }catch{return null}
+}
+function decorateImage(img){
+  img.loading='lazy';img.decoding='async';
+  img.setAttribute('tabindex','0');img.setAttribute('role','button');
+  img.setAttribute('aria-label',`Enlarge image: ${img.alt||'repository image'}`);
+  img.title='Click to enlarge image';
+  img.addEventListener('error',()=>{
+    if(!img.isConnected)return;
+    const note=document.createElement('p');note.className='repo-image-error';
+    note.textContent=`Unable to display image: ${img.alt||'GitHub image'}`;
+    img.replaceWith(note);
+  },{once:true});
+}
+function renderRepoMarkdown(markdown,item){
+  if(!window.marked||!window.DOMPurify){
+    repoPreviewContent.textContent=markdown;return;
+  }
+  const html=window.marked.parse(markdown,{gfm:true,breaks:false});
+  repoPreviewContent.innerHTML=window.DOMPurify.sanitize(html,{USE_PROFILES:{html:true}});
+  const dir=pathParts(item.path).slice(0,-1).join('/');
+  const loc=repoCurrent;
+  // GitHub Markdown images may be repository-relative, absolute, or GitHub blob URLs.
+  for(const image of repoPreviewContent.querySelectorAll('img[src]')){
+    const src=image.getAttribute('src')?.trim()||'';
+    const resolved=resolveRepoImage(src,item);
+    // Prevent an unrebased srcset from overriding the corrected image URL.
+    image.removeAttribute('srcset');
+    if(!resolved){image.remove();continue}
+    image.src=resolved;
+    decorateImage(image);
+  }
+  // Let browsers pick the <img> source even if <picture> contains repository-relative URLs.
+  for(const source of repoPreviewContent.querySelectorAll('source[srcset]'))source.removeAttribute('srcset');
+  for(const link of repoPreviewContent.querySelectorAll('a[href]')){
+    const href=link.getAttribute('href')?.trim()||'';
+    if(!href)continue;
+    if(href.startsWith('#'))continue;
+    if(!/^(?:https?:|mailto:|\/\/)/i.test(href)){
+      const target=normalRepoPath(dir,href.split(/[?#]/)[0]);
+      if(target!==null){
+        link.setAttribute('data-repo-target',target);
+        link.href=buildRepoUrl(loc,target,'blob');
+      }
+    }
+    link.target='_blank';link.rel='noopener noreferrer';
+  }
+}
+async function openRepoFile(item){
+  if(!repoCurrent||item.type==='dir')return;
+  const ticket=++repoNav;
+  repoFile=item.path;
+  repoSource.href=item.html_url||buildRepoUrl(repoCurrent,item.path,'blob');
+  renderRepoCrumbs();drawRepoList();
+  repoPreviewName.textContent=item.name;
+  repoPreviewKind.textContent='LOADING';
+  repoPreviewContent.replaceChildren();
+  const note=document.createElement('p');note.className='repo-hint';note.textContent='Opening file...';repoPreviewContent.append(note);
+  repoPreviewScroll.scrollTop=0;
+  setRepoStatus(`${repoCurrent.repo} / ${item.path}`);
+  try{
+    if(IMAGE_EXT.test(item.name)){
+      repoPreviewKind.textContent='IMAGE';repoPreviewContent.replaceChildren();
+      const imageUrl=rawGitHubImage(item.download_url||item.html_url||'');
+      if(imageUrl){
+        const img=document.createElement('img');img.alt=item.name;
+        img.src=imageUrl;decorateImage(img);repoPreviewContent.append(img);
+        setRepoStatus(`${repoCurrent.repo} / ${item.path} / image`);
+      }else setRepoPreview(item.name,'IMAGE','Preview unavailable. Open this image on GitHub.');
+      return;
+    }
+    if(!TEXT_EXT.test(item.name)&&!DOC_NAMES.test(item.name)){
+      setRepoPreview(item.name,'FILE',`This ${sizeLabel(item.size||0)} file does not have a text preview. Use Open on GitHub to view or download it.`);return;
+    }
+    const content=await downloadRepoFile(item);
+    if(ticket!==repoNav||!readmeDialog.open)return;
+    if(content.includes('\0')){
+      setRepoPreview(item.name,'BINARY','This file is binary and cannot be shown as text. Open it on GitHub.');return;
+    }
+    repoPreviewContent.replaceChildren();
+    if(MARKDOWN_EXT.test(item.name)){
+      repoPreviewKind.textContent='MARKDOWN';renderRepoMarkdown(content,item);
+    }else{
+      repoPreviewKind.textContent='SOURCE';
+      const pre=document.createElement('pre');const code=document.createElement('code');code.textContent=content;
+      pre.append(code);repoPreviewContent.append(pre);
+    }
+    setRepoStatus(`${repoCurrent.repo} / ${item.path} / ${sizeLabel(item.size||content.length)}`);
+    repoPreviewScroll.scrollTop=0;
+  }catch(error){
+    if(ticket!==repoNav||!readmeDialog.open)return;
+    showRepoError(error,item.name);
+  }
+}
+async function openRepoLocation(path){
+  const parent=pathParts(path).slice(0,-1).join('/');
+  const known=repoRows.find(row=>row.path===path);
+  if(known){
+    if(known.type==='dir')await browseRepoFolder(path);
+    else await openRepoFile(known);
+    return;
+  }
+  // Try opening a linked file; if GitHub says directory, open it as a folder.
+  try{
+    const value=await repoContents(repoCurrent,path);
+    if(!readmeDialog.open)return;
+    if(Array.isArray(value))await browseRepoFolder(path);
+    else if(value&&value.type==='file'){
+      if(repoPath!==parent){await browseRepoFolder(parent,{preferredFile:path,autoReadme:false})}
+      else await openRepoFile(value);
+    }
+  }catch(error){showRepoError(error,'Linked path unavailable')}
+}
+function closeRepoBrowser(){
+  if(!readmeDialog.open)return;
+  clearTimeout(voidEntryTimer);
+  readmeDialog.classList.remove('is-entering');
+  readmeDialog.classList.remove('is-visible');
+  clearTimeout(closeTimer);
+  closeTimer=setTimeout(()=>{if(readmeDialog.open&&!readmeDialog.classList.contains('is-visible'))readmeDialog.close()},
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:250);
+}
+function openRepoBrowser(loc,trigger,title){
+  if(!loc)return;
+  clearTimeout(closeTimer);
+  ++repoNav;repoCurrent=loc;repoTrigger=trigger;repoPath='';repoFile='';repoRows=[];
+  readmeTitle.textContent=title;
+  if(!readmeDialog.open)readmeDialog.showModal();
+  startReadmeCosmos();
+  drawVoidEntry();
+  clearTimeout(voidEntryTimer);
+  if(!reducedEntry.matches){
+    readmeDialog.classList.remove('is-entering');
+    // Force a fresh CSS animation on every project click.
+    void readmeDialog.offsetWidth;
+    readmeDialog.classList.add('is-entering');
+    voidEntryTimer=setTimeout(()=>readmeDialog.classList.remove('is-entering'),1450);
+  }
+  requestAnimationFrame(()=>readmeDialog.classList.add('is-visible'));
+  browseRepoFolder(loc.folder,{preferredFile:loc.directFile});
+  readmeClose.focus({preventScroll:true});
+}
+for(const project of $$('.project[data-project]')){
+  const link=project.querySelector('.project-copy h3 a[href]');
+  if(!link||!parseRepoLink(link))continue;
+  link.setAttribute('aria-haspopup','dialog');link.setAttribute('aria-controls','readme-dialog');
+  link.addEventListener('click',event=>{
+    if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+    event.preventDefault();openRepoBrowser(parseRepoLink(link),link,link.textContent.trim());
+  });
+}
+repoBack.addEventListener('click',()=>{if(repoCurrent&&repoPath)browseRepoFolder(pathParts(repoPath).slice(0,-1).join('/'))});
+readmeClose.addEventListener('click',closeRepoBrowser);
+readmeDialog.addEventListener('click',event=>{if(event.target===readmeDialog||event.target?.classList?.contains('readme-window'))closeRepoBrowser()});
+readmeDialog.addEventListener('cancel',event=>{event.preventDefault();closeRepoBrowser()});
+readmeDialog.addEventListener('close',()=>{++repoNav;repoCurrent=null;clearTimeout(voidEntryTimer);stopReadmeCosmos();readmeDialog.classList.remove('is-entering','is-visible');repoTrigger?.focus({preventScroll:true});if(!sceneRaf)sceneRaf=requestAnimationFrame(tick)});
+// Enlarge either a README's embedded image or a selected image file.
+const repoImageLightbox=$('#repo-image-lightbox');
+const repoImageLightboxImage=$('#repo-image-lightbox-image');
+const repoImageLightboxTitle=$('#repo-image-lightbox-title');
+const repoImageLightboxOriginal=$('#repo-image-lightbox-original');
+const repoImageLightboxClose=$('#repo-image-lightbox-close');
+let repoImageFocusReturn=null;
+function openRepoImageZoom(image){
+  if(!image||!image.isConnected)return;
+  const src=image.currentSrc||image.src;
+  if(!src||!/^https:\/\//i.test(src))return;
+  repoImageFocusReturn=image;
+  repoImageLightboxTitle.textContent=image.alt||repoPreviewName.textContent||'Repository image';
+  repoImageLightboxImage.alt=image.alt||'Enlarged repository image';
+  repoImageLightboxImage.src=src;
+  repoImageLightboxOriginal.href=src;
+  if(!repoImageLightbox.open)repoImageLightbox.showModal();
+  repoImageLightboxClose.focus({preventScroll:true});
+}
+repoImageLightboxClose.addEventListener('click',()=>repoImageLightbox.close());
+repoImageLightbox.addEventListener('click',event=>{
+  if(event.target===repoImageLightbox||event.target===repoImageLightboxImage)repoImageLightbox.close();
+});
+repoImageLightbox.addEventListener('close',()=>{
+  repoImageLightboxImage.removeAttribute('src');
+  if(repoImageFocusReturn?.isConnected)repoImageFocusReturn.focus({preventScroll:true});
+  repoImageFocusReturn=null;
+});
+repoPreviewContent.addEventListener('keydown',event=>{
+  if(!['Enter',' '].includes(event.key))return;
+  const image=event.target.closest?.('img');
+  if(!image||!repoPreviewContent.contains(image))return;
+  event.preventDefault();openRepoImageZoom(image);
+});
+repoPreviewContent.addEventListener('click',event=>{
+  const image=event.target.closest?.('img');
+  if(image&&repoPreviewContent.contains(image)){
+    event.preventDefault();
+    openRepoImageZoom(image);
+    return;
+  }
+  const link=event.target.closest?.('a[href]');if(!link)return;
+  const target=link.getAttribute('data-repo-target');
+  if(target!==null&&target!==undefined&&!event.metaKey&&!event.ctrlKey&&!event.shiftKey&&!event.altKey){
+    event.preventDefault();openRepoLocation(target);return;
+  }
+  const href=link.getAttribute('href');
+  if(!href||!href.startsWith('#'))return;
+  let id=href.slice(1);try{id=decodeURIComponent(id)}catch{}
+  const node=[...repoPreviewContent.querySelectorAll('[id]')].find(x=>x.id===id);
+  if(node){event.preventDefault();node.scrollIntoView({block:'nearest'})}
+});
+
+sceneRaf=requestAnimationFrame(tick);
 })();
 </script>
 </body>
