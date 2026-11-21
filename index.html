@@ -1,772 +1,457 @@
 <!doctype html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="icon" type="image/x-icon" href="assets/icon2.png" />
-      <title>Milk outside a file of init.d outside a init.d of milk</title>
-
-      <style>
-         :root {
-            --bg: #0d0e13;
-            --red: #ac3232;
-            --dark-red: #52263e;
-            --pink: #d96b78;
-            --text: #d8bfc5;
-            --muted: #8f6f78;
-            --mono: "Courier New", monospace;
-            --serif: Georgia, serif;
-         }
-
-         * {
-            box-sizing: border-box;
-            cursor: url("assets/cursor.png"), auto;
-         }
-
-         html {
-            scroll-behavior: smooth;
-         }
-
-         body {
-            margin: 0;
-            min-height: 100vh;
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--mono);
-         }
-
-         main {
-            width: min(900px, calc(100% - 40px));
-            margin: 0 auto;
-            padding: 40px 0;
-         }
-
-         /* Header */
-
-         .title-block h1 {
-            margin: 0;
-            color: var(--red);
-            font-family: var(--serif);
-            font-size: clamp(30px, 6vw, 56px);
-            font-weight: normal;
-            letter-spacing: 0.08em;
-            line-height: 1.1;
-            text-shadow: 0 0 10px rgba(172, 50, 50, 0.8);
-         }
-
-         .about-me {
-            margin: 10px 0 0;
-            color: var(--pink);
-            font-size: 16px;
-            letter-spacing: 0.2em;
-         }
-
-         .subtitle {
-            margin: 1px 0 -15px;
-            color: var(--muted);
-            font-size: 11px;
-            letter-spacing: 0.12em;
-         }
-
-         /* Navigation */
-
-         .navigation {
-            display: flex;
-            gap: 24px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-         }
-
-         .navigation a {
-            position: relative;
-            display: inline-block;
-            padding: 6px 0 6px 20px;
-            color: var(--muted);
-            background: transparent;
-            border: none;
-            font-size: 12px;
-            letter-spacing: 0.12em;
-            text-decoration: none;
-            text-shadow: none;
-            transition:
-               color 0.2s ease,
-               text-shadow 0.2s ease;
-         }
-
-         .navigation a::before {
-            content: ">";
-            position: absolute;
-            left: 0;
-            color: var(--red);
-            opacity: 0;
-            transform: translateX(-8px);
-            transition:
-               opacity 0.2s ease,
-               transform 0.2s ease;
-         }
-
-         .navigation a:hover {
-            color: var(--pink);
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            text-shadow: 0 0 8px var(--pink);
-         }
-
-         .navigation a:hover::before {
-            opacity: 1;
-            transform: translateX(0);
-         }
-
-         /* General links */
-
-         a {
-            color: var(--pink);
-            text-decoration: none;
-            transition:
-               color 0.2s ease,
-               text-shadow 0.2s ease,
-               border-color 0.2s ease;
-         }
-
-         a:hover {
-            color: #ff9aa6;
-            text-shadow: 0 0 8px var(--pink);
-         }
-
-         /* Archive sections */
-
-         .archive-section {
-            padding-top: 45px;
-         }
-
-         .archive-description {
-            margin: 0 0 20px;
-            color: var(--muted);
-            font-size: 12px;
-            letter-spacing: 0.08em;
-         }
-
-         .archive-heading {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-         }
-
-         .icon {
-            width: 32px;
-            height: 32px;
-            margin-bottom: 9px;
-            flex-shrink: 0;
-            object-fit: contain;
-            image-rendering: pixelated;
-         }
-
-         .archive-title {
-            margin: 0 0 5px;
-            color: var(--red);
-            font-family: var(--serif);
-            font-size: 25px;
-            font-weight: normal;
-            letter-spacing: 0.06em;
-         }
-
-         /* Projects */
-
-         .project {
-            padding: 25px 0;
-            border-top: 1px solid var(--dark-red);
-         }
-
-         .project-number {
-            margin-bottom: 8px;
-            color: var(--muted);
-            font-size: 11px;
-            letter-spacing: 0.2em;
-         }
-
-         .project h3 {
-            margin: 0 0 8px;
-            font-family: var(--serif);
-            font-size: 17px;
-            font-weight: normal;
-            letter-spacing: 0.08em;
-            max-width: 100%;
-            overflow-wrap: anywhere;
-         }
-
-         .project h3 a {
-            color: var(--red);
-         }
-
-         .project p {
-            max-width: 650px;
-            margin: 0;
-            color: var(--text);
-            font-size: 13px;
-            line-height: 1.6;
-         }
-
-         /* Empty archive section */
-
-         .empty-archive {
-            padding: 25px 0;
-            border-top: 1px solid var(--dark-red);
-            color: var(--muted);
-            font-size: 13px;
-            font-style: italic;
-         }
-
-         /* Archive image */
-
-         .archive-image {
-            display: block;
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            margin: 20px 0 -5px;
-            border: 1px solid var(--dark-red);
-         }
-
-         /* Milk image */
-         .milk {
-            width: 50px;
-            height: 100%;
-            flex-shrink: 0;
-            object-fit: contain;
-            image-rendering: pixelated;
-         }
-
-         /* Footer */
-
-         .site-footer {
-            padding: 50px 0 10px;
-            color: var(--muted);
-            font-size: 11px;
-            letter-spacing: 0.12em;
-            text-align: center;
-         }
-
-         .archive-search {
-            max-width: 960px;
-            margin-top: 22px;
-         }
-
-         .archive-search label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--muted);
-            font-size: 10px;
-            letter-spacing: 0.14em;
-         }
-
-         .search-controls {
-            display: flex;
-            gap: 10px;
-         }
-
-         .search-controls input {
-            flex: 1;
-            min-width: 0;
-            padding: 11px 12px;
-            color: var(--text);
-            background: rgba(13, 14, 19, 0.8);
-            border: 1px solid var(--dark-red);
-            border-radius: 2px;
-            font: inherit;
-            font-size: 12px;
-            outline: none;
-         }
-
-         .search-controls input:focus {
-            border-color: var(--pink);
-            box-shadow: 0 0 10px rgba(217, 107, 120, 0.15);
-         }
-
-         .search-controls input::placeholder {
-            color: var(--muted);
-         }
-
-         .search-controls button {
-            padding: 0 13px;
-            color: var(--muted);
-            background: transparent;
-            border: 1px solid var(--dark-red);
-            border-radius: 2px;
-            font: inherit;
-            font-size: 10px;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            transition:
-               color 180ms ease,
-               border-color 180ms ease;
-         }
-
-         .search-controls button:hover {
-            color: var(--pink);
-            border-color: var(--pink);
-         }
-
-         #search-status {
-            min-height: 1em;
-            margin: 8px 0 0;
-            color: var(--muted);
-            font-size: 10px;
-         }
-
-         .project[hidden] {
-            display: none;
-         }
-         body.searching .archive-image {
-            display: none;
-         }
-
-         .corner-menu {
-            position: fixed;
-            top: 18px;
-            right: 18px;
-            z-index: 1000;
-            font-size: 11px;
-            letter-spacing: 0.12em;
-         }
-
-         .corner-menu summary {
-            padding: 11px 14px;
-            color: var(--pink);
-            background: rgba(13, 14, 19, 0.96);
-            border: 1px solid var(--dark-red);
-            cursor: url("assets/cursor.png"), auto;
-            list-style: none;
-         }
-
-         .corner-menu summary::-webkit-details-marker {
-            display: none;
-         }
-
-         .corner-menu summary::after {
-            content: " +";
-            color: var(--red);
-         }
-
-         .corner-menu[open] summary::after {
-            content: " −";
-         }
-
-         .corner-menu .navigation {
-            display: none;
-            position: absolute;
-            top: calc(100% + 6px);
-            right: 0;
-            min-width: 220px;
-            margin: 0;
-            padding: 8px 14px;
-            flex-direction: column;
-            gap: 4px;
-            background: rgba(13, 14, 19, 0.97);
-            border: 1px solid var(--dark-red);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-         }
-
-         .corner-menu[open] .navigation {
-            display: flex;
-         }
-
-         .corner-menu .navigation a {
-            padding: 9px 0 9px 20px;
-            cursor: url("assets/cursor.png"), auto;
-         }
-
-         .corner-menu .navigation a::before {
-            left: 0;
-            transform: none;
-            transition: opacity 0.2s ease;
-         }
-
-         .corner-menu .navigation a:hover::before {
-            opacity: 1;
-            transform: none;
-         }
-
-         /* Mobile layout */
-
-         @media (max-width: 600px) {
-            main {
-               width: min(100% - 28px, 900px);
-               padding: 20px 0;
-            }
-
-            .title-block h1 {
-               font-size: 30px;
-            }
-
-            .about-me {
-               font-size: 13px;
-            }
-
-            .subtitle {
-               font-size: 9px;
-            }
-
-            .navigation {
-               gap: 8px;
-               margin-top: 20px;
-            }
-
-            .navigation a {
-               padding: 8px 10px;
-               font-size: 9px;
-            }
-
-            .archive-section {
-               padding-top: 35px;
-            }
-
-            .archive-heading {
-               gap: 8px;
-            }
-
-            .icon {
-               width: 24px;
-               height: 24px;
-            }
-
-            .archive-title {
-               font-size: 22px;
-            }
-
-            .project h3 {
-               font-size: 16px;
-            }
-
-            .archive-image {
-               width: 100%;
-               max-width: 100%;
-               height: auto;
-               margin-top: 35px;
-            }
-            .corner-menu {
-               top: 10px;
-               right: 10px;
-            }
-         }
-      </style>
-   </head>
-
-   <body>
-      <main id="home">
-         <header>
-            <div class="title-block">
-               <div class="archive-heading">
-                  <img class="milk" src="assets/milkinit.png" alt="" />
-                  <h1 class="archive-title">milkinit</h1>
-               </div>
-               <p class="subtitle">RESEARCH/PROJECT ARCHIVE</p>
-            </div>
-            <details class="corner-menu">
-               <summary>ARCHIVE MENU</summary>
-               <nav class="navigation" aria-label="Archive navigation">
-                  <a href="https://github.com/milkinit">GITHUB</a>
-                  <a href="#home">HOME</a>
-                  <a href="#vulnerbility-research">VULNERABILITY RESEARCH</a>
-                  <a href="#system-software">SYSTEM•SOFTWARE</a>
-               </nav>
-            </details>
-         </header>
-
-         <img
-            class="archive-image"
-            src="assets/banner2.png"
-            alt="Archive banner"
-         />
-
-         <form class="archive-search" role="search" onsubmit="return false;">
-            <div class="search-controls">
-               <input
-                  id="project-search"
-                  type="search"
-                  placeholder="Search projects..."
-                  autocomplete="off"
-               />
-               <button type="button" id="clear-search">CLEAR</button>
-            </div>
-            <p id="search-status" aria-live="polite"></p>
-         </form>
-
-         <!-- Vulnerbility Research archive -->
-         <section class="archive-section" id="vulnerbility-research">
-            <div class="archive-heading">
-               <img class="icon" src="assets/icon.png" alt="" />
-               <h2 class="archive-title">Vulnerbility Research</h2>
-            </div>
-            <p class="archive-description">
-               CVE / EXPLOITS / VULNERABILITIES / DISCOVERY /
-               REVERSE-ENGINEERING / MALWARE-RESEARCH / DETECTION
-            </p>
-            <article class="project">
-               <div class="project-number">08</div>
-
-               <h3>
-                  <a href="https://github.com/milkinit/pwnable.kr/">
-                     Pwnable.kr
-                  </a>
-               </h3>
-
-               <p>
-                  Challenge write-ups and learning notes for pwnable.kr security
-                  challenges.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">07</div>
-
-               <h3>
-                  <a
-                     href="https://github.com/milkinit/malware-research/tree/main/shellcode"
-                  >
-                     Shellcode-repo
-                  </a>
-               </h3>
-
-               <p>
-                  Practice repository for shellcode research and low-level
-                  security learning.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">06</div>
-               <h3>
-                  <a
-                     href="https://github.com/milkinit/malware-research/tree/main/blog/c2-framework/understanding-c2-framework"
-                  >
-                     Intro: Understanding C2 Framework
-                  </a>
-               </h3>
-
-               <p>
-                  Introduction to command-and-control (C2) frameworks and their
-                  basic architecture.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">05</div>
-
-               <h3>
-                  <a
-                     href="https://github.com/milkinit/malware-research/tree/main/blog/linux-maldev/ptrace-process-injector"
-                  >
-                     Linux Maldev: ptrace
-                  </a>
-               </h3>
-
-               <p>
-                  Research notes on Linux ptrace, process tracing, and
-                  process-injection concepts.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">04</div>
-
-               <h3>
-                  <a
-                     href="https://github.com/milkinit/cve-disclosures/tree/main/IoT/CVE-2026-79589"
-                  >
-                     CVE-2026-79589
-                  </a>
-               </h3>
-
-               <p>
-                  CVE disclosure: missing authentication for a critical
-                  function.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">03</div>
-
-               <h3>
-                  <a
-                     href="https://github.com/milkinit/cve-disclosures/tree/main/IoT/CVE-2026-79588"
-                  >
-                     CVE-2026-79588
-                  </a>
-               </h3>
-
-               <p>
-                  CVE disclosure: sensitive information transmitted in
-                  cleartext.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">02</div>
-               <h3>
-                  <a
-                     href="https://github.com/milkinit/malware-research/blob/main/wannacry/yara-rules/static_artifacts.yara"
-                  >
-                     WannaCry Yara Rules
-                  </a>
-               </h3>
-
-               <p>
-                  YARA rules for identifying static artifacts associated with
-                  WannaCry.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">01</div>
-
-               <h3>
-                  <a
-                     href="https://github.com/milkinit/malware-research/tree/main/wannacry/killswitch-analysis"
-                  >
-                     WannaCry Kill-switch
-                  </a>
-               </h3>
-
-               <p>
-                  Reverse-engineering report on WannaCry’s kill-switch
-                  mechanism.
-               </p>
-            </article>
-         </section>
-
-         <img
-            class="archive-image"
-            src="assets/banner.png"
-            alt="Archive banner"
-         />
-
-         <section class="archive-section" id="system-software">
-            <!-- Software / System archive -->
-            <div class="archive-heading">
-               <img class="icon" src="assets/icon.png" alt="" />
-               <h2 class="archive-title">System • Software</h2>
-            </div>
-
-            <p class="archive-description">
-               OPERATING-SYSTEMS / SCRIPTS / CONFIGURATIONS / SOFTWARE /
-               HARDWARE
-            </p>
-            <article class="project">
-               <div class="project-number">06</div>
-
-               <h3>
-                  <a href="https://github.com/milkinit/bsd-dot-lain">
-                     BSD Dot Lain
-                  </a>
-               </h3>
-
-               <p>
-                  BSD dotfiles and configuration files inspired by Serial
-                  Experiments Lain.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">05</div>
-
-               <h3>
-                  <a
-                     href="https://github.com/milkinit/my-ghidra-theme/tree/main"
-                  >
-                     My Ghidra Theme
-                  </a>
-               </h3>
-
-               <p>
-                  Custom Ghidra theme using colors from this site’s visual
-                  design.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">04</div>
-
-               <h3>
-                  <a href="https://github.com/milkinit/mscript"> Mscript </a>
-               </h3>
-
-               <p>Minescript scripts for automating tasks in Minecraft.</p>
-            </article>
-            <article class="project">
-               <div class="project-number">03</div>
-
-               <h3>
-                  <a href="https://github.com/milkinit/ddot-lain">
-                     Ddot Lain
-                  </a>
-               </h3>
-
-               <p>
-                  Debian-based dotfiles and configuration files inspired by
-                  Serial Experiments Lain.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">02</div>
-
-               <h3>
-                  <a href="https://github.com/milkinit/aniscraper">
-                     AniScraper
-                  </a>
-               </h3>
-
-               <p>
-                  Command-line tool that reads MyAnimeList’s top anime rankings
-                  and randomly selects a title.
-               </p>
-            </article>
-            <article class="project">
-               <div class="project-number">01</div>
-
-               <h3>
-                  <a href="https://github.com/milkinit/http-server">
-                     HTTP Server
-                  </a>
-               </h3>
-
-               <p>HTTP server written in C.</p>
-            </article>
-         </section>
-
-         <img
-            class="archive-image"
-            src="assets/banner3.png"
-            alt="Archive banner"
-         />
-         <footer class="site-footer">
-            <p>milkinit.d // bottom of glass</p>
-         </footer>
-      </main>
-   </body>
-   <script>
-      const searchInput = document.getElementById("project-search");
-      const clearButton = document.getElementById("clear-search");
-      const searchStatus = document.getElementById("search-status");
-      const projects = [...document.querySelectorAll(".project")];
-
-      function filterProjects() {
-         const query = searchInput.value.trim().toLowerCase();
-         document.body.classList.toggle("searching", Boolean(query));
-         let visibleCount = 0;
-
-         projects.forEach((project) => {
-            const matches = project.textContent.toLowerCase().includes(query);
-            project.hidden = !matches;
-            if (matches) visibleCount++;
-         });
-
-         searchStatus.textContent = !query
-            ? `Showing all ${projects.length} projects`
-            : visibleCount
-              ? `${visibleCount} matching project${visibleCount === 1 ? "" : "s"}`
-              : "No matching projects";
-      }
-
-      searchInput.addEventListener("input", filterProjects);
-
-      clearButton.addEventListener("click", () => {
-         searchInput.value = "";
-         filterProjects();
-         searchInput.focus();
-      });
-
-      filterProjects();
-   </script>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0e13">
+<meta name="description" content="milkinit — research, systems, reverse engineering, and things taken apart.">
+<title>milkinit.d / archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="assets/icon.png">
+<style>
+/* milkinit: one consistent fluid layout from small phones to television screens */
+:root{
+  color-scheme:dark;
+  --bg:#0d0e13;--red:#ac3232;--dark-red:#52263e;--pink:#d96b78;
+  --text:#d8bfc5;--muted:#8f6f78;--mono:"Courier New",monospace;--serif:Georgia,serif;
+  --page-width:980px;--gutter:clamp(15px,3.1vw,44px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;min-width:0;background:var(--bg);color:var(--text);font:13px/1.65 var(--mono);overflow-wrap:break-word}
+body::after{content:"";position:fixed;z-index:10;inset:0;pointer-events:none;opacity:.06;background:repeating-linear-gradient(0deg,transparent 0 3px,#000 4px)}
+@media(pointer:fine){*,*::before,*::after{cursor:url("assets/cursor.png"),auto}a,button,summary{cursor:url("assets/cursor.png"),pointer}}
+::selection{background:var(--dark-red);color:#fff}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #f5a7b1;outline-offset:4px}
+[hidden]{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.page{width:min(var(--page-width),calc(100% - 2 * var(--gutter)));margin:0 auto;padding-bottom:clamp(20px,3vw,44px)}
+.site-header,.brand{display:none}
+/* fixed but aligned with the archive's right edge */
+.corner-menu{position:fixed;top:max(14px,env(safe-area-inset-top,0px));right:max(var(--gutter),calc((100vw - var(--page-width))/2));z-index:95;font-size:12px}
+.corner-menu summary{display:flex;justify-content:space-between;gap:13px;align-items:center;list-style:none;min-height:46px;padding:9px 15px;user-select:none;background:rgba(13,14,19,.97);border:1px solid #773445;color:var(--text);font:11px/1.3 var(--mono);letter-spacing:.08em;box-shadow:0 2px 18px #0d0e1373}
+.corner-menu summary::-webkit-details-marker{display:none}
+.corner-menu summary span{color:var(--red);font-size:18px;line-height:1}
+.corner-menu[open] summary{border-color:var(--red);color:var(--pink)}
+.menu-panel{position:absolute;top:calc(100% + 6px);right:0;width:min(300px,calc(100vw - 2 * var(--gutter)));max-height:min(600px,calc(100dvh - 80px));overflow-y:auto;overscroll-behavior:contain;padding:9px;background:rgba(13,14,19,.985);border:1px solid var(--dark-red);box-shadow:8px 10px 0 #0008}
+.navigation{display:grid;gap:2px}
+.navigation a{display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:10px 11px;border:0;color:#b995a0;background:transparent;font:12px/1.35 var(--mono);text-align:left}
+.navigation a::before{content:"> ";color:var(--red);margin-right:8px;flex:none}
+.navigation a:hover,.navigation a:focus-visible{color:#ffe0e2;background:#25141e}
+.corner-menu summary:focus,.navigation a:focus{outline:3px solid #f5a7b1;outline-offset:2px}
+.scene{position:relative;overflow:hidden;isolation:isolate}
+/* opening: portal above, wordmark on the lower left */
+.hero{min-height:clamp(515px,62svh,760px);padding:clamp(58px,7vw,90px) clamp(18px,4vw,48px) clamp(40px,5vw,58px);border-top:1px solid var(--dark-red);border-bottom:1px solid var(--dark-red);display:flex;align-items:flex-end}
+.void-space{position:absolute;z-index:-2;top:-1.5%;right:1.5%;width:min(79%,800px);height:min(90%,715px);pointer-events:none}
+.void-space canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+.void-space::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,var(--bg),transparent 42%),linear-gradient(0deg,var(--bg),transparent 24%);opacity:.16}
+.hero::after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(0deg,rgba(13,14,19,.94),rgba(13,14,19,.2) 56%,transparent),linear-gradient(90deg,rgba(13,14,19,.62),transparent 72%);pointer-events:none}
+.hero-copy{position:relative;z-index:2;width:min(100%,750px)}
+.hero-copy h1{font:normal clamp(68px,8.5vw,128px)/.94 var(--serif);letter-spacing:-.052em;color:var(--text);margin:0}
+.hero-copy h1 span{color:var(--red)}
+.hero-copy .hero-kicker{font:clamp(10px,1.05vw,12px)/1.65 var(--mono);letter-spacing:.04em;color:var(--pink);margin:15px 0 0}
+.hero-copy .hero-description{color:var(--muted);font:clamp(10px,1vw,12px)/1.9 var(--mono);letter-spacing:.045em;margin:18px 0 0}
+/* small, unobtrusive search */
+.search-area{margin:11px 0 20px}
+.search-row{display:flex;align-items:center;gap:10px;min-height:52px;border-bottom:1px solid var(--dark-red);margin:0;padding:5px 0}
+.search-row b{font:18px var(--mono);color:var(--red);font-weight:normal;flex:none}
+.search-row input{width:100%;min-width:0;flex:1;border:0;outline:0;background:transparent;color:var(--text);font:13px/1.5 var(--mono);padding:10px 3px}
+.search-row input:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+.search-row input::placeholder{color:#927481}
+.search-row button{padding:9px 12px;min-height:44px;background:transparent;border:0;color:var(--muted);font:11px var(--mono)}
+.search-row button:hover,.search-row button:focus-visible{color:var(--pink)}
+#search-status{font-size:10px;color:var(--muted);margin:6px 0 0}
+.empty-state{border-top:1px solid var(--dark-red);color:var(--muted);padding:18px 0}
+/* chapter list, deliberately not cards */
+.archive-section{scroll-margin-top:80px;padding-top:clamp(32px,4.5vw,56px)}
+.chapter-heading{display:flex;gap:14px;align-items:flex-start;margin-bottom:25px}
+.chapter-heading .chapter-label{display:none}
+.chapter-symbol{font:22px/1 var(--mono);color:var(--red);flex:none;width:18px;margin-top:8px}
+.archive-title{font:normal clamp(26px,3.3vw,38px)/1.18 var(--serif);letter-spacing:.015em;color:var(--red);margin:3px 0 11px}
+.archive-description{font:11px/1.95 var(--mono);letter-spacing:.025em;color:var(--muted);margin:0;max-width:770px}
+.project-list{border-top:1px solid var(--dark-red)}
+.project{display:grid;grid-template-columns:44px minmax(0,1fr) 25px;gap:12px;align-items:start;padding:22px 3px 23px;border-bottom:1px solid #3a2534}
+.project-number{color:var(--muted);font-size:11px;line-height:1.9}
+.project-copy{min-width:0}
+.project h3{font:normal clamp(18px,2vw,22px)/1.35 var(--serif);margin:0 0 7px;overflow-wrap:anywhere}
+.project h3 a{color:var(--red)}
+.project h3 a:hover,.project h3 a:focus-visible{color:var(--pink);text-decoration:underline;text-underline-offset:4px}
+.project p{color:#bda5af;font:12px/1.78 var(--mono);margin:0;max-width:690px}
+.project-arrow{font:20px/1.4 var(--serif);color:#5d3546;transition:transform .2s,color .2s}
+.project:hover .project-arrow,.project:focus-within .project-arrow{color:var(--red);transform:translate(2px,-2px)}
+.project:hover{background:linear-gradient(90deg,rgba(82,38,62,.1),transparent)}
+/* one open scene, one milk control, one dialogue box */
+.interlude{position:relative;isolation:isolate;overflow:hidden;margin:clamp(62px,8vw,94px) 0 24px;height:clamp(480px,48vw,600px);background:#0d0e13;border:0}
+.milk-backdrop{position:absolute;inset:0;width:100%;height:100%;z-index:0;image-rendering:pixelated;opacity:.63;pointer-events:none}
+.interlude::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(13,14,19,.16),transparent 58%),linear-gradient(0deg,rgba(13,14,19,.42),transparent 62%);pointer-events:none}
+.interlude::after{content:"";position:absolute;inset:0;z-index:1;box-shadow:inset 0 0 64px 12px rgba(13,14,19,.38);pointer-events:none}
+.character-layer{position:absolute;z-index:2;left:clamp(-12px,1.2vw,18px);bottom:-2px;width:min(53%,520px);height:100%;pointer-events:none}
+.character-layer img{position:absolute;left:0;bottom:0;display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;object-position:left bottom;image-rendering:pixelated;opacity:0;transition:opacity .16s steps(2,end)}
+.character-layer img.active{opacity:1}
+/* The milk itself is a single unframed button; the prompt is beneath it. */
+.milk-interaction{appearance:none;position:absolute;z-index:3;top:clamp(27px,4vw,46px);right:clamp(19px,4vw,46px);width:clamp(165px,25%,246px);aspect-ratio:252 / 188;height:auto;display:block;padding:0;margin:0;background:transparent;border:0;touch-action:manipulation;box-shadow:none;transform:none}
+.milk-interaction canvas{display:block;width:100%;height:100%;image-rendering:pixelated;pointer-events:none}
+.milk-interaction:hover,.milk-interaction:focus,.milk-interaction:active{transform:none;filter:none;box-shadow:none;border-color:transparent}
+.milk-interaction:focus-visible{outline:3px solid var(--pink);outline-offset:7px}
+.milk-hint{position:absolute;top:calc(100% + 8px);left:0;width:100%;color:#c19ca5;text-align:center;font:clamp(10px,.95vw,12px)/1.5 var(--mono);letter-spacing:.02em;pointer-events:none}
+/* Pixel-edged dialogue window: a single rough border, no inner border. */
+.milk-dialogue{position:absolute;z-index:4;bottom:clamp(19px,2.5vw,32px);left:36%;right:clamp(12px,2.5vw,27px);min-height:clamp(158px,15vw,208px);padding:clamp(17px,2vw,26px) clamp(17px,2.1vw,28px);border:9px solid transparent;border-image-source:url('assets/dialogue-frame.png');border-image-slice:19;border-image-width:9px;border-image-repeat:stretch;background:#0b0a11;box-shadow:2px 3px 0 rgba(5,4,10,.5)}
+.milk-dialogue::before,.milk-dialogue::after{display:none}
+.milk-line{display:block;position:relative;z-index:1;margin:0;color:#c6585d;font:normal clamp(12px,1.23vw,16px)/1.95 "Press Start 2P","Courier New",monospace;font-weight:700;letter-spacing:.012em;overflow-wrap:normal;word-break:normal}
+.dialogue-word{display:inline-block;white-space:nowrap}
+.dialogue-letter{display:inline-block;transform:translateY(0);animation:dialogue-letter-breathe 4.3s steps(1,end) infinite;animation-delay:calc(var(--letter-delay) * -1s)}
+@keyframes dialogue-letter-breathe{0%,11%,15%,37%,41%,65%,69%,100%{transform:translateY(0)}12%,14%{transform:translateY(-1px)}38%,40%{transform:translateY(1px)}66%,68%{transform:translateY(-1px)}}
+.system-section{padding-top:clamp(47px,6vw,80px)}
+.archive-banner-slot{margin-top:clamp(70px,9vw,110px);padding-top:23px;border-top:1px solid var(--dark-red)}
+.archive-banner{display:block;width:100%;height:auto;border:1px solid var(--dark-red);background:#100e14}
+.archive-banner-slot.empty{min-height:160px;border:1px solid var(--dark-red);background:var(--bg)}
+.footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px 0 15px;color:var(--muted);font:11px/1.6 var(--mono)}
+.footer a:hover,.footer a:focus-visible{color:var(--pink)}
+/* tablets, including landscape */
+@media(max-width:900px){
+ .page{width:calc(100% - 2 * var(--gutter))}
+ .hero{min-height:clamp(490px,60svh,670px)}
+ .void-space{right:0;top:2%;width:86%;height:84%}
+ .interlude{height:clamp(450px,58vw,535px)}
+ .character-layer{width:min(56%,460px)}
+ .milk-interaction{width:clamp(145px,26%,215px)}
+}
+/* phones */
+@media(max-width:600px){
+ :root{--gutter:clamp(13px,4vw,20px)}
+ .corner-menu{top:max(10px,env(safe-area-inset-top,0px));right:max(var(--gutter),env(safe-area-inset-right,0px))}
+ .corner-menu summary{min-height:44px;padding:8px 12px;font-size:10px}
+ .menu-panel{max-height:calc(100dvh - 66px);width:min(290px,calc(100vw - 2 * var(--gutter)))}
+ .hero{min-height:clamp(450px,64svh,585px);padding:60px 18px 36px}
+ .hero-copy h1{font-size:clamp(56px,16vw,88px)}
+ .hero-copy .hero-kicker{font-size:10px;letter-spacing:0;margin-top:10px}
+ .hero-copy .hero-description{font-size:9px;line-height:1.9;margin-top:12px}
+ .void-space{right:-1%;top:3%;width:98%;height:74%}
+ .hero::after{background:linear-gradient(0deg,rgba(13,14,19,.95),rgba(13,14,19,.22) 61%,transparent),linear-gradient(90deg,rgba(13,14,19,.28),transparent)}
+ .search-area{margin:8px 0 12px}
+ .search-row{min-height:50px}
+ .search-row input{font-size:16px} /* avoid mobile Safari auto-zoom */
+ .search-row button{font-size:11px}
+ .archive-section{padding-top:30px}
+ .chapter-heading{gap:8px;margin-bottom:21px}
+ .chapter-symbol{width:15px;font-size:18px;margin-top:7px}
+ .archive-title{font-size:clamp(25px,6.6vw,32px)}
+ .archive-description{font-size:10px;line-height:1.85;overflow-wrap:anywhere}
+ .project{grid-template-columns:26px minmax(0,1fr) 18px;gap:8px;padding:19px 0 20px}
+ .project-number{font-size:10px}
+ .project h3{font-size:18px}
+ .project p{font-size:11px;line-height:1.74}
+ .project-arrow{font-size:18px}
+ .interlude{margin-top:64px;height:clamp(470px,135vw,565px)}
+ .character-layer{left:-12px;width:102%;height:100%;bottom:0}
+ .milk-interaction{top:16px;right:14px;width:clamp(116px,34%,158px)}
+ .milk-hint{font-size:9px}
+ .milk-dialogue{left:17%;right:9px;bottom:12px;min-height:163px;padding:13px 13px;border-width:7px;border-image-width:7px}
+ .milk-line{font-size:clamp(10.5px,2.8vw,12px);line-height:1.9}
+ .system-section{padding-top:43px}
+ .archive-banner-slot{margin-top:65px}
+ .footer{font-size:9px;flex-wrap:wrap;line-height:1.8}
+}
+/* very narrow phones and high text zoom */
+@media(max-width:360px){
+ .hero{padding-left:12px;padding-right:12px;min-height:455px}
+ .hero-copy h1{font-size:clamp(51px,15.5vw,63px)}
+ .hero-copy .hero-description{font-size:9px}
+ .interlude{height:485px}
+ .milk-interaction{width:116px;top:12px;right:10px}
+ .character-layer{width:106%;left:-14px}
+ .milk-dialogue{left:13%;right:7px;min-height:161px;padding:10px 10px;border-width:7px;border-image-width:7px}
+ .milk-line{font-size:10.5px;line-height:2.05}
+ .project h3{font-size:17px}
+}
+/* tablet / desktop landscape with a short viewport */
+@media(min-width:601px) and (max-height:620px){
+ .hero{min-height:480px}
+ .interlude{height:455px}
+}
+/* large monitors and 1080p televisions */
+@media(min-width:1600px){
+ :root{--page-width:1300px;--gutter:60px}
+ body{font-size:16px}
+ .corner-menu summary{min-height:56px;padding:13px 20px;font-size:14px}
+ .menu-panel{width:380px;max-height:calc(100dvh - 95px);padding:13px}
+ .navigation a{font-size:15px;min-height:54px;padding:14px}
+ .hero{min-height:clamp(685px,66svh,890px);padding:85px 60px 70px}
+ .void-space{width:78%;height:90%;right:1%;top:1%}
+ .hero-copy h1{font-size:clamp(128px,8vw,165px)}
+ .hero-copy .hero-kicker{font-size:16px}
+ .hero-copy .hero-description{font-size:15px}
+ .search-row{min-height:64px}
+ .search-row input{font-size:17px}
+ #search-status,.project-number,.archive-description{font-size:14px}
+ .archive-title{font-size:46px}
+ .project{grid-template-columns:58px minmax(0,1fr) 30px;gap:18px;padding:28px 8px}
+ .project h3{font-size:27px}.project p{font-size:16px}
+ .interlude{height:620px}
+ .character-layer{width:53%;max-width:620px}
+ .milk-interaction{width:280px}
+ .milk-dialogue{min-height:200px;padding:28px 29px;left:36%}
+ .milk-line{font-size:17px;line-height:1.95}
+ .footer{font-size:14px}
+}
+/* 4K / very distant screens; retain readability instead of stretching the art to fill everything */
+@media(min-width:2560px){
+ :root{--page-width:1700px;--gutter:100px}
+ body{font-size:19px}
+ .corner-menu summary{min-height:72px;padding:18px 25px;font-size:18px}
+ .menu-panel{width:450px;padding:16px}
+ .navigation a{font-size:18px;min-height:66px}
+ .hero{min-height:980px;padding:110px 85px 85px}
+ .void-space{width:80%;max-width:none;height:950px;top:0;right:0}
+ .hero-copy h1{font-size:200px}
+ .hero-copy .hero-kicker{font-size:19px}.hero-copy .hero-description{font-size:18px}
+ .archive-title{font-size:56px}.archive-description{font-size:18px}
+ .project h3{font-size:33px}.project p{font-size:20px}.project-number{font-size:18px}
+ .interlude{height:770px}.character-layer{max-width:760px}.milk-interaction{width:350px}
+ .milk-dialogue{min-height:250px;padding:39px}.milk-line{font-size:21px}
+ .footer{font-size:18px}
+}
+@media(hover:none),(pointer:coarse){
+ .search-row button{min-width:54px}
+ .navigation a{min-height:48px}
+ .project h3 a{display:inline-block;padding:4px 0}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+
+
+.skip-link:focus{position:fixed;top:9px;left:9px;z-index:1000;width:auto;height:auto;padding:10px 16px;clip:auto;background:var(--bg);border:1px solid var(--red);color:var(--text);margin:0}
+</style>
+</head>
+<body>
+<a class="sr-only skip-link" href="#vulnerbility-research">Skip to archive</a>
+<main class="page" id="home">
+<details class="corner-menu" id="menu"><summary>ARCHIVE MENU <span aria-hidden="true">+</span></summary><div class="menu-panel"><nav class="navigation" aria-label="Archive navigation"><a href="#home">HOME</a><a href="#vulnerbility-research">VULNERABILITY · RESEARCH</a><a href="#milk-scene">MILK</a><a href="#system-software">SYSTEM · SOFTWARE</a><a href="https://github.com/milkinit" target="_blank" rel="noopener noreferrer">GITHUB ↗</a></nav></div></details>
+<section class="hero scene" id="prologue" aria-label="Opening scene">
+<div class="void-space" aria-hidden="true"><canvas class="void-canvas" data-void="hero"></canvas></div>
+<div class="hero-copy"><h1>milkinit<span>.</span></h1><p class="hero-kicker">outside an init.d of milk.</p><p class="hero-description">REVERSE ENGINEERING / VULNERABILITY RESEARCH<br>SYSTEM · SOFTWARE</p></div>
+
+</section>
+<form class="search-area" role="search" onsubmit="return false"><label class="section-label sr-only" for="project-search">Search archive</label><div class="search-row"><b aria-hidden="true">&gt;</b><input type="search" id="project-search" placeholder="Search projects..." aria-controls="vulnerbility-research system-software" autocomplete="off"><button id="clear-search" type="button">CLEAR</button></div><p id="search-status" aria-live="polite">Showing all 14 projects.</p></form>
+<p class="empty-state" id="empty-state" hidden>No records found.</p>
+<section class="archive-section" id="vulnerbility-research"><div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><span class="chapter-label"></span><h2 class="archive-title">Vulnerability · Research</h2><p class="archive-description">CVE / EXPLOITS / VULNERABILITIES / DISCOVERY / REVERSE-ENGINEERING / MALWARE-RESEARCH / DETECTION</p></div></div><div class="project-list">
+<article class="project" data-project><span class="project-number">08</span><div class="project-copy"><h3><a href="https://github.com/milkinit/pwnable.kr/" target="_blank" rel="noopener noreferrer">Pwnable.kr</a></h3><p>Challenge write-ups and learning notes for pwnable.kr security                   challenges.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">07</span><div class="project-copy"><h3><a href="https://github.com/milkinit/malware-research/tree/main/shellcode" target="_blank" rel="noopener noreferrer">Shellcode-repo</a></h3><p>Practice repository for shellcode research and low-level                   security learning.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">06</span><div class="project-copy"><h3><a href="https://github.com/milkinit/malware-research/tree/main/blog/c2-framework/understanding-c2-framework" target="_blank" rel="noopener noreferrer">Intro: Understanding C2 Framework</a></h3><p>Introduction to command-and-control (C2) frameworks and their                   basic architecture.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">05</span><div class="project-copy"><h3><a href="https://github.com/milkinit/malware-research/tree/main/blog/linux-maldev/ptrace-process-injector" target="_blank" rel="noopener noreferrer">Linux Maldev: ptrace</a></h3><p>Research notes on Linux ptrace, process tracing, and                   process-injection concepts.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">04</span><div class="project-copy"><h3><a href="https://github.com/milkinit/cve-disclosures/tree/main/IoT/CVE-2026-79589" target="_blank" rel="noopener noreferrer">CVE-2026-79589</a></h3><p>CVE disclosure: missing authentication for a critical                   function.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">03</span><div class="project-copy"><h3><a href="https://github.com/milkinit/cve-disclosures/tree/main/IoT/CVE-2026-79588" target="_blank" rel="noopener noreferrer">CVE-2026-79588</a></h3><p>CVE disclosure: sensitive information transmitted in                   cleartext.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">02</span><div class="project-copy"><h3><a href="https://github.com/milkinit/malware-research/blob/main/wannacry/yara-rules/static_artifacts.yara" target="_blank" rel="noopener noreferrer">WannaCry Yara Rules</a></h3><p>YARA rules for identifying static artifacts associated with                   WannaCry.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">01</span><div class="project-copy"><h3><a href="https://github.com/milkinit/malware-research/tree/main/wannacry/killswitch-analysis" target="_blank" rel="noopener noreferrer">WannaCry Kill-switch</a></h3><p>Reverse-engineering report on WannaCry’s kill-switch                   mechanism.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+</div></section>
+<section class="interlude scene" id="milk-scene" aria-label="Milk scene">
+<canvas class="milk-backdrop" id="milk-backdrop" aria-hidden="true"></canvas>
+<div class="character-layer" aria-hidden="true">
+<img src="assets/milkchan-closed.png" alt="" id="milkchan-closed" class="active">
+<img src="assets/milkchan-open.png" alt="" id="milkchan-open">
+</div>
+<button class="milk-interaction" id="milk-interaction" type="button" aria-label="Drink the milk; it refills automatically"><canvas id="milk-canvas" width="252" height="188" aria-hidden="true"></canvas><span class="milk-hint" id="milk-hint" aria-live="polite">click / tap to drink</span></button>
+<div class="milk-dialogue" role="note" aria-label="- Drink the milk... make sure you're not allergic.">
+<p class="milk-line" id="milk-dialogue-line" aria-hidden="true">- Drink the milk... make sure you're not allergic.</p>
+</div>
+</section>
+<section class="archive-section system-section" id="system-software"><div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><span class="chapter-label"></span><h2 class="archive-title">System · Software</h2><p class="archive-description">OPERATING-SYSTEMS / SCRIPTS / CONFIGURATIONS / SOFTWARE / HARDWARE</p></div></div><div class="project-list">
+<article class="project" data-project><span class="project-number">06</span><div class="project-copy"><h3><a href="https://github.com/milkinit/bsd-dot-lain" target="_blank" rel="noopener noreferrer">BSD Dot Lain</a></h3><p>BSD dotfiles and configuration files inspired by Serial                   Experiments Lain.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">05</span><div class="project-copy"><h3><a href="https://github.com/milkinit/my-ghidra-theme/tree/main" target="_blank" rel="noopener noreferrer">My Ghidra Theme</a></h3><p>Custom Ghidra theme using colors from this site’s visual                   design.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">04</span><div class="project-copy"><h3><a href="https://github.com/milkinit/mscript" target="_blank" rel="noopener noreferrer">Mscript</a></h3><p>Minescript scripts for automating tasks in Minecraft.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">03</span><div class="project-copy"><h3><a href="https://github.com/milkinit/ddot-lain" target="_blank" rel="noopener noreferrer">Ddot Lain</a></h3><p>Debian-based dotfiles and configuration files inspired by                   Serial Experiments Lain.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">02</span><div class="project-copy"><h3><a href="https://github.com/milkinit/aniscraper" target="_blank" rel="noopener noreferrer">AniScraper</a></h3><p>Command-line tool that reads MyAnimeList’s top anime rankings                   and randomly selects a title.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+<article class="project" data-project><span class="project-number">01</span><div class="project-copy"><h3><a href="https://github.com/milkinit/http-server" target="_blank" rel="noopener noreferrer">HTTP Server</a></h3><p>HTTP server written in C.</p></div><span class="project-arrow" aria-hidden="true">↗</span></article>
+</div></section>
+<section class="archive-banner-slot" id="eof" aria-label="Archive banner">
+<img class="archive-banner" src="assets/banner.png" alt="Archive closing banner" onerror="this.style.display='none';this.parentElement.classList.add('empty')">
+</section>
+<footer class="footer"><span>milkinit.d // bottom of glass</span><a href="#home">RETURN TO START ↑</a></footer>
+</main>
+<script>
+(()=>{'use strict';
+const $=(sel,root=document)=>root.querySelector(sel), $$=(sel,root=document)=>[...root.querySelectorAll(sel)];
+const html=document.documentElement;const menu=$('#menu'),search=$('#project-search'),status=$('#search-status'),clear=$('#clear-search'),empty=$('#empty-state');
+const projectEls=$$('[data-project]'),chapters=$$('.archive-section');
+function filter(){let total=0;const query=search.value.trim().toLowerCase();for(const sec of chapters){let count=0;const title=$('.archive-title',sec).textContent.toLowerCase();for(const project of $$('[data-project]',sec)){const show=!query||(`${project.textContent} ${title}`).toLowerCase().includes(query);project.hidden=!show;if(show){count++;total++;}}sec.hidden=!!query&&!count;}empty.hidden=total!==0;status.textContent=query?`${total} matching record${total===1?'':'s'}.`:`Showing all ${projectEls.length} projects.`;}
+search.addEventListener('input',filter);clear.addEventListener('click',()=>{search.value='';filter();search.focus()});filter();
+$$('.navigation a').forEach(a=>a.addEventListener('click',()=>menu.open=false));document.addEventListener('pointerdown',e=>{if(menu.open&&!menu.contains(e.target))menu.open=false});
+const menuSummary=$('summary',menu);
+menu.addEventListener('keydown',e=>{
+ if(!['ArrowDown','ArrowUp','Escape'].includes(e.key))return;
+ if(e.key==='Escape'){e.preventDefault();menu.open=false;menuSummary.focus();return}
+ const controls=[menuSummary,...$$('.menu-panel a, .menu-panel button',menu)];
+ if(!menu.open){if(e.key==='ArrowDown'){e.preventDefault();menu.open=true;controls[1]?.focus()}return}
+ e.preventDefault();const i=controls.indexOf(document.activeElement),dir=e.key==='ArrowDown'?1:-1;
+ controls[(i+dir+controls.length)%controls.length].focus();
+});
+document.addEventListener('keydown',e=>{const focused=e.target;const typing=focused instanceof HTMLElement&&(focused.matches('input,textarea,select')||focused.isContentEditable);if(e.key==='/'&&!typing&&!e.altKey&&!e.ctrlKey&&!e.metaKey){e.preventDefault();search.focus()}if(e.key==='Escape'){menu.open=false;if(document.activeElement===search){if(search.value){search.value='';filter()}search.blur()}}});
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const atlas=new Image();atlas.src='assets/void-frames.webp';const poster=new Image();poster.src='assets/void-poster.png';
+const portalCanvases=$$('.void-canvas');const ports=portalCanvases.map((el,index)=>({el,ctx:el.getContext('2d'),phase:index?7.4:0,visible:true}));
+const frameSize=336,cols=6,frameCount=24;let speed=.55,impulse=0,scrollY=window.scrollY,mouseX=0,mouseY=0,mouseTX=0,mouseTY=0,previous=0,drawElapsed=0;
+function sizeCanvas(p){const box=p.el.getBoundingClientRect(),dpr=Math.min(1.5,devicePixelRatio||1);p.w=box.width;p.h=box.height;p.el.width=Math.max(1,Math.round(box.width*dpr));p.el.height=Math.max(1,Math.round(box.height*dpr));p.ctx.setTransform(dpr,0,0,dpr,0,0);p.ctx.imageSmoothingEnabled=false}
+function size(){ports.forEach(sizeCanvas); if(typeof sizeMilkBackdrop==='function')sizeMilkBackdrop()}ports.forEach(sizeCanvas);window.addEventListener('resize',()=>size(),{passive:true});
+function drawVoid(p){const c=p.ctx,w=p.w,h=p.h;c.clearRect(0,0,w,h);if(!w||!h)return;const image=atlas.complete&&atlas.naturalWidth?atlas:null,still=poster.complete&&poster.naturalWidth?poster:null;if(!image&&!still)return;
+ const frame=p.phase%frameCount,i=Math.floor(frame),j=(i+1)%frameCount,t=frame-i;
+ // Outer art is truly transparent, including its corners; no dark rectangular layer.
+ const dim=Math.min(w,h)*.985;const cx=w*.52+mouseX*8,cy=h*.50+mouseY*6;
+ const scale=1+impulse*.018;c.save();c.translate(cx,cy);c.scale(scale,scale);c.translate(-dim/2,-dim/2);
+ if(image){const draw=(n,alpha)=>{c.globalAlpha=alpha;c.drawImage(image,(n%cols)*frameSize,Math.floor(n/cols)*frameSize,frameSize,frameSize,0,0,dim,dim)};draw(i,1);draw(j,t*t*(3-2*t)*.88)}else{c.drawImage(still,0,0,dim,dim)}c.restore();c.globalAlpha=1;}
+function drawMilk(dt,time){
+ const el=$('#milk-canvas'),ctx=el.getContext('2d');if(!ctx)return;
+ const w=el.width,h=el.height;ctx.clearRect(0,0,w,h);
+ const pad=6;
+ const innerX=pad, innerY=pad, innerW=w-pad*2, innerH=h-pad*2;
+ // Keep the panel quiet and dark — no reactive ripple lines.
+ ctx.fillStyle='rgba(13,14,19,.08)';
+ ctx.fillRect(innerX,innerY,innerW,innerH);
+ // subtle dark shadow where the milk sits, still visible when empty
+ const poolX=innerX+18, poolW=innerW-36, poolTop=innerY+30, poolH=innerH-54;
+ const bottom=poolTop+poolH;
+ const surface=bottom-poolH*milk.amount;
+ for(let i=0;i<4;i++){
+   ctx.fillStyle=`rgba(0,0,0,${0.07 - i*0.012})`;
+   ctx.fillRect(poolX-i*2,poolTop+10+i*3,poolW+i*4,poolH-18+i*2);
+ }
+ ctx.save();
+ ctx.beginPath(); ctx.rect(poolX,poolTop,poolW,poolH); ctx.clip();
+ // quiet underlayer
+ ctx.fillStyle='rgba(82,38,62,.10)';
+ ctx.fillRect(poolX,poolTop,poolW,poolH);
+ for(let xx=poolX; xx<poolX+poolW; xx+=4){
+   const f=(xx-poolX)/Math.max(1,poolW);
+   const y=Math.max(poolTop, Math.min(bottom, Math.round((surface + Math.sin(f*12+time*2.0)*3 + Math.cos(f*19-time*1.7)*2 + milk.tilt*8*(f-.5))/3)*3));
+   if(y<bottom){
+     ctx.fillStyle='#d8bfc5'; ctx.fillRect(xx,y,Math.min(4,poolX+poolW-xx),bottom-y);
+     if(((xx>>2)+Math.floor(time*2))%5===0 && y+10<bottom){ctx.fillStyle='#b78e9b'; ctx.fillRect(xx+1,y+9,2,2)}
+   }
+ }
+ if(milk.amount>.1){
+   for(let i=0;i<6;i++){
+     const bx=poolX+14+((i*29+17)%Math.floor(poolW-28));
+     const by=bottom-5-((time*(11+i*2.2)+i*23)%(Math.max(14,(bottom-surface)-8)));
+     if(by>surface+8){ctx.fillStyle=i%2?'#f0d9de':'#ae7f90';ctx.fillRect(Math.round(bx/3)*3,Math.round(by/3)*3,i%2?3:2,i%2?3:2)}
+   }
+ }
+ ctx.restore();
+ // subtle top and bottom guides, not a full box
+ ctx.fillStyle='rgba(172,50,50,.38)';
+ ctx.fillRect(poolX,poolTop-1,poolW,1);
+ ctx.fillRect(poolX,bottom-1,poolW,1);
+}
+const milk={tilt:0,target:0,shake:0,amount:1,stage:'idle',elapsed:0};
+let milkSceneVisible=true;
+
+// Standalone, gently moving 8-bit swirl. No pointer coordinates are read.
+const bgCanvas=$('#milk-backdrop');
+const bgCtx=bgCanvas.getContext('2d',{alpha:false});
+let bgData=null,bgW=0,bgH=0,bgClock=0,bgBoost=0,bgElapsed=0;
+const bgPalette=[
+ [13,14,19],[21,15,24],[35,17,29],[57,23,39],
+ [82,38,62],[117,40,56],[172,50,50],[217,107,120]
+];
+function sizeMilkBackdrop(){
+ const box=bgCanvas.getBoundingClientRect();
+ if(!box.width||!box.height)return;
+ const W=Math.max(115,Math.min(226,Math.round(box.width/4.6)));
+ const H=Math.max(85,Math.min(138,Math.round(box.height/4.6)));
+ if(bgW===W&&bgH===H)return;
+ bgW=W;bgH=H;bgCanvas.width=W;bgCanvas.height=H;
+ bgData=bgCtx.createImageData(W,H);
+}
+function paintMilkBackdrop(t){
+ if(!bgData||!bgW||!bgH)return;
+ const data=bgData.data,w=bgW,h=bgH;
+ const phase=t*.27;
+ const cx=w*.51,cy=h*.48;
+ const norm=Math.min(w,h)*.85;
+ for(let y=0;y<h;y++){
+   const dy=(y-cy)/norm;
+   for(let x=0;x<w;x++){
+     const dx=(x-cx)/norm, r=Math.sqrt(dx*dx+dy*dy);
+     const a=Math.atan2(dy,dx);
+     // Two nested spiral frequencies, elliptical arcs and ordered dithering.
+     const swirl=a*6.0+r*27.0-phase*2.6+Math.sin(a*3+r*9-phase)*.7;
+     const ring=Math.sin(r*49-phase*1.9 + Math.cos(a*4)*.28);
+     const flame=Math.sin(swirl)*.54 + Math.sin(a*13-r*31+phase*1.1)*.20 + ring*.24;
+     const noise=(((x*31+y*17+(x*y)%19)%23)/22-.5)*.19;
+     const focus=Math.max(0,1-r*1.04);
+     const v=flame*.78+focus*.25+noise-.17;
+     let ix=0;
+     if(v>-.46)ix=1;
+     if(v>-.32)ix=2;
+     if(v>-.18)ix=3;
+     if(v>-.01)ix=4;
+     if(v>.20)ix=5;
+     if(v>.41)ix=6;
+     if(v>.67)ix=7;
+     const c=bgPalette[ix],q=(y*w+x)*4;
+     data[q]=c[0];data[q+1]=c[1];data[q+2]=c[2];data[q+3]=255;
+   }
+ }
+ bgCtx.putImageData(bgData,0,0);
+}
+
+sizeMilkBackdrop();paintMilkBackdrop(0);
+if('IntersectionObserver' in window){const mo=new IntersectionObserver(entries=>{milkSceneVisible=entries[0]?.isIntersecting??true},{rootMargin:'140px'});mo.observe($('#milk-scene'))}
+// Keep the sentence accessible as a single line while animating only its visible glyphs.
+const dialogueText="- Drink the milk... make sure you're not allergic.";
+const milkLine=$('#milk-dialogue-line');
+if(milkLine){
+  milkLine.textContent='';
+  let charIndex=0;
+  dialogueText.split(/(\s+)/).forEach(part=>{
+    if(!part)return;
+    if(/^\s+$/.test(part)){milkLine.append(document.createTextNode(part));return;}
+    const word=document.createElement('span');word.className='dialogue-word';
+    for(const letter of part){
+      const span=document.createElement('span');span.className='dialogue-letter';
+      span.style.setProperty('--letter-delay',((charIndex*0.17)%3.9).toFixed(2));
+      span.textContent=letter;word.append(span);charIndex++;
+    }
+    milkLine.append(word);
+  });
+}
+const milkButton=$('#milk-interaction'),milkHint=$('#milk-hint'),milkPrompt=$('#milk-prompt');
+const milkchanClosed=$('#milkchan-closed'),milkchanOpen=$('#milkchan-open'),milkScene=$('#milk-scene');
+function milkStage(stage){milk.stage=stage;milk.elapsed=0;
+ const labels={idle:'click / tap to drink',drinking:'drinking...',empty:'empty',refilling:'refilling...'};
+ milkHint.textContent=labels[stage];
+ milkButton.setAttribute('aria-label',stage==='idle'?'Drink the milk; it refills automatically':labels[stage]);
+ if(milkPrompt)milkPrompt.disabled=stage!=='idle';
+ if(milkchanClosed&&milkchanOpen){
+   const open = stage==='drinking';
+   milkchanOpen.classList.toggle('active', open);
+   milkchanClosed.classList.toggle('active', !open);
+ }
+}
+function drinkMilk(){if(milk.stage!=='idle')return;milkStage('drinking');milk.shake=Math.max(milk.shake,10);bgBoost=1;}
+milkButton.addEventListener('click',drinkMilk);if(milkPrompt)milkPrompt.addEventListener('click',drinkMilk);
+function updateMilk(dt){
+ if(milk.stage==='idle')return;
+ if(reduced){milk.amount=1;milkStage('idle');return}
+ milk.elapsed+=dt;
+ const ease=t=>t*t*(3-2*t);
+ if(milk.stage==='drinking'){
+   milk.amount=1-ease(Math.min(1,milk.elapsed/1.05));
+   if(milk.elapsed>=1.05){milk.amount=0;milkStage('empty')}
+ }else if(milk.stage==='empty'){
+   milk.amount=0;
+   if(milk.elapsed>.25)milkStage('refilling');
+ }else if(milk.stage==='refilling'){
+   milk.amount=ease(Math.min(1,milk.elapsed/1.45));
+   if(milk.elapsed>=1.45){milk.amount=1;milkStage('idle')}
+ }
+}
+window.addEventListener('scroll',()=>{const now=window.scrollY,delta=now-scrollY;scrollY=now;if(delta>0){impulse=Math.min(1,impulse+Math.min(.12,delta/1800));milk.shake=Math.min(14,milk.shake+Math.min(2.3,delta/140))}else{impulse*=.85}},{passive:true});
+window.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;mouseTX=e.clientX/innerWidth-.5;mouseTY=e.clientY/innerHeight-.5},{passive:true});
+if('IntersectionObserver' in window){const obs=new IntersectionObserver(entries=>entries.forEach(e=>{const p=ports.find(p=>p.el===e.target);if(p)p.visible=e.isIntersecting}),{rootMargin:'200px'});ports.forEach(p=>obs.observe(p.el))}
+function tick(t){const dt=Math.min(.05,previous?(t-previous)/1000:.016);previous=t;drawElapsed+=dt;const drawDue=drawElapsed>=(innerWidth>=1500?1/24:1/30);if(drawDue)drawElapsed=0;bgBoost*=Math.exp(-dt*.8);bgClock+=dt*(1+bgBoost*.72);bgElapsed+=dt;if(bgElapsed>(reduced?3:1/18)){if(milkSceneVisible&&!document.hidden)paintMilkBackdrop(reduced?0:bgClock);bgElapsed=0;}impulse*=Math.exp(-dt*1.5);const target=.60+impulse*.48;speed+=(target-speed)*(1-Math.exp(-dt*1.9));mouseX+=(mouseTX-mouseX)*(1-Math.exp(-dt*2));mouseY+=(mouseTY-mouseY)*(1-Math.exp(-dt*2));milk.tilt+=(milk.target-milk.tilt)*(1-Math.exp(-dt*2.2));milk.shake*=Math.exp(-dt*2.0);updateMilk(dt);for(const p of ports){if(!reduced)p.phase=(p.phase+dt*speed)%frameCount;if(drawDue&&(p.visible||t===0)&&!document.hidden)drawVoid(p)}if(drawDue&&milkSceneVisible&&!document.hidden)drawMilk(dt,reduced?0:t/1000);requestAnimationFrame(tick)}
+requestAnimationFrame(tick);
+})();
+</script>
+</body>
 </html>
