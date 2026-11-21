@@ -36,7 +36,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 .corner-menu summary::-webkit-details-marker{display:none}
 .corner-menu summary span{color:var(--red);font-size:18px;line-height:1}
 .corner-menu[open] summary{border-color:var(--red);color:var(--pink)}
-.menu-panel{position:absolute;top:calc(100% + 6px);right:0;width:min(300px,calc(100vw - 2 * var(--gutter)));max-height:min(600px,calc(100dvh - 80px));overflow-y:auto;overscroll-behavior:contain;padding:9px;background:rgba(13,14,19,.985);border:3px solid var(--dark-red);box-shadow:8px 10px 0 #0008}
+.menu-panel{position:absolute;top:calc(100% + 6px);right:0;width:min(300px,calc(100vw - 2 * var(--gutter)));max-height:min(600px,calc(100dvh - 80px));overflow-y:auto;overscroll-behavior:contain;padding:9px;background:rgba(13,14,19,.985);border:1px solid var(--dark-red);box-shadow:8px 10px 0 #0008}
 .navigation{display:grid;gap:2px}
 .navigation a{display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:10px 11px;border:0;color:#b995a0;background:transparent;font:12px/1.35 var(--mono);text-align:left}
 .navigation a::before{content:"> ";color:var(--red);margin-right:8px;flex:none}
@@ -85,7 +85,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 .project:hover{background:linear-gradient(90deg,rgba(82,38,62,.1),transparent)}
 /* one open scene, one milk control, one dialogue box */
 .interlude{position:relative;isolation:isolate;overflow:hidden;margin:clamp(62px,8vw,94px) 0 24px;height:clamp(480px,48vw,600px);background:#0d0e13;border:0}
-.milk-backdrop{position:absolute;inset:0;width:100%;height:100%;border:1px solid var(--red);z-index:0;image-rendering:pixelated;opacity:.63;pointer-events:none}
+.milk-backdrop{position:absolute;inset:0;width:100%;height:100%;border:4px solid var(--red);z-index:0;image-rendering:pixelated;opacity:.63;pointer-events:none}
 .interlude::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(13,14,19,.16),transparent 58%),linear-gradient(0deg,rgba(13,14,19,.42),transparent 62%);pointer-events:none}
 .interlude::after{content:"";position:absolute;inset:0;z-index:1;box-shadow:inset 0 0 64px 12px rgba(13,14,19,.38);pointer-events:none}
 .character-layer{position:absolute;z-index:2;left:clamp(-12px,1.2vw,18px);bottom:-2px;width:min(53%,520px);height:100%;pointer-events:none}
