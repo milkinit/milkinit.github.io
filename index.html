@@ -24,7 +24,13 @@
 html{scroll-behavior:smooth;scroll-padding-top:80px}
 body{margin:0;min-width:0;background:var(--bg);color:var(--text);font:13px/1.65 var(--mono);overflow-wrap:break-word}
 body::after{content:"";position:fixed;z-index:10;inset:0;pointer-events:none;opacity:.06;background:repeating-linear-gradient(0deg,transparent 0 3px,#000 4px)}
-@media(pointer:fine){*,*::before,*::after{cursor:url("assets/cursor.png"),auto}a,button,summary{cursor:url("assets/cursor.png"),pointer}}
+/* Keep the existing main-page cursor.png on every hover target, including links,
+   buttons, menus, search boxes, project links and their nested icons. */
+@media (pointer:fine){
+  html, body, body *, body *::before, body *::after{
+    cursor:url("assets/cursor.png"),auto!important;
+  }
+}
 ::selection{background:var(--dark-red);color:#fff}
 a{color:inherit;text-decoration:none}
 a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #f5a7b1;outline-offset:4px}
@@ -486,8 +492,16 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 }
 /* A white targeting ring replaces the page's red cursor only after entering the void. */
 @media(pointer:fine){
-  .readme-dialog,.readme-dialog *{cursor:url("assets/cursor2.png") 16 16, crosshair!important}
-  .readme-dialog :is(button,a,summary){cursor:url("assets/cursor2.png") 16 16,pointer!important}
+  .readme-dialog,.readme-dialog *,
+  .readme-dialog *::before,.readme-dialog *::after,
+  .repo-image-lightbox,.repo-image-lightbox *,
+  .repo-image-lightbox *::before,.repo-image-lightbox *::after{
+    cursor:url("assets/cursor2.png") 16 16,crosshair!important;
+  }
+  .readme-dialog :is(button,a,summary),
+  .repo-image-lightbox :is(button,a,summary){
+    cursor:url("assets/cursor2.png") 16 16,pointer!important;
+  }
 }
 @media(max-width:720px){
   .readme-dialogue{border:2px solid rgba(244,244,244,.86);border-image:none}
