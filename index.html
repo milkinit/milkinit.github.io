@@ -498,6 +498,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 .void-space canvas{filter:none}
 
 
+
+/* Freeze the archive underneath the GitHub repository viewer.
+   The fixed-body lock also handles iOS Safari touch scrolling. */
+html.repo-scroll-locked{overflow:hidden!important;overscroll-behavior:none;scroll-behavior:auto!important}
+body.repo-scroll-locked{
+  position:fixed!important;top:var(--repo-lock-top,0px)!important;left:0!important;
+  width:100%!important;height:100dvh!important;overflow:hidden!important;
+  overscroll-behavior:none;
+  padding-right:var(--repo-lock-scrollbar,0px);
+}
+.readme-dialog,.readme-window,.readme-dialogue,.repo-layout,.repo-tree,.repo-preview{overscroll-behavior:contain}
+.repo-file-list,.repo-preview-scroll,.repo-crumbs{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+
 /* Fullscreen image enlargement for repository previews. */
 .repo-preview-content img{cursor:zoom-in;transition:outline-color .14s ease}
 .repo-preview-content img:focus-visible{outline:2px solid #fff;outline-offset:5px}
@@ -1242,6 +1255,28 @@ async function openRepoLocation(path){
     }
   }catch(error){showRepoError(error,'Linked path unavailable')}
 }
+
+// Keep the archive at its exact scroll position while the GitHub viewer is open.
+// Only the repo's directory, README and image zoom may scroll.
+let repoLockedScrollY=0;
+function lockRepoBackgroundScroll(){
+  if(document.body.classList.contains('repo-scroll-locked'))return;
+  repoLockedScrollY=window.scrollY;
+  const scrollbar=Math.max(0,window.innerWidth-document.documentElement.clientWidth);
+  document.body.style.setProperty('--repo-lock-top',`-${repoLockedScrollY}px`);
+  document.body.style.setProperty('--repo-lock-scrollbar',`${scrollbar}px`);
+  document.documentElement.classList.add('repo-scroll-locked');
+  document.body.classList.add('repo-scroll-locked');
+}
+function unlockRepoBackgroundScroll(){
+  if(!document.body.classList.contains('repo-scroll-locked'))return;
+  document.body.classList.remove('repo-scroll-locked');
+  document.documentElement.classList.remove('repo-scroll-locked');
+  document.body.style.removeProperty('--repo-lock-top');
+  document.body.style.removeProperty('--repo-lock-scrollbar');
+  window.scrollTo({left:0,top:repoLockedScrollY,behavior:'instant'});
+}
+
 function closeRepoBrowser(){
   if(!readmeDialog.open)return;
   clearTimeout(voidEntryTimer);
@@ -1256,7 +1291,7 @@ function openRepoBrowser(loc,trigger,title){
   clearTimeout(closeTimer);
   ++repoNav;repoCurrent=loc;repoTrigger=trigger;repoPath='';repoFile='';repoRows=[];
   readmeTitle.textContent=title;
-  if(!readmeDialog.open)readmeDialog.showModal();
+  if(!readmeDialog.open){lockRepoBackgroundScroll();readmeDialog.showModal();}
   startReadmeCosmos();
   drawVoidEntry();
   clearTimeout(voidEntryTimer);
@@ -1284,7 +1319,7 @@ repoBack.addEventListener('click',()=>{if(repoCurrent&&repoPath)browseRepoFolder
 readmeClose.addEventListener('click',closeRepoBrowser);
 readmeDialog.addEventListener('click',event=>{if(event.target===readmeDialog||event.target?.classList?.contains('readme-window'))closeRepoBrowser()});
 readmeDialog.addEventListener('cancel',event=>{event.preventDefault();closeRepoBrowser()});
-readmeDialog.addEventListener('close',()=>{++repoNav;repoCurrent=null;clearTimeout(voidEntryTimer);stopReadmeCosmos();readmeDialog.classList.remove('is-entering','is-visible');repoTrigger?.focus({preventScroll:true});if(!sceneRaf)sceneRaf=requestAnimationFrame(tick)});
+readmeDialog.addEventListener('close',()=>{unlockRepoBackgroundScroll();++repoNav;repoCurrent=null;clearTimeout(voidEntryTimer);stopReadmeCosmos();readmeDialog.classList.remove('is-entering','is-visible');repoTrigger?.focus({preventScroll:true});if(!sceneRaf)sceneRaf=requestAnimationFrame(tick)});
 // Enlarge either a README's embedded image or a selected image file.
 const repoImageLightbox=$('#repo-image-lightbox');
 const repoImageLightboxImage=$('#repo-image-lightbox-image');
