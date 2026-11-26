@@ -612,7 +612,10 @@ body.repo-scroll-locked{
 .credential-visual::before{content:'';position:absolute;z-index:-1;width:clamp(145px,19vw,205px);aspect-ratio:1;border:1px dashed #52263e; border-radius:50%;background:radial-gradient(circle,#52263e25,transparent 70%)}
 .credential-visual::after{content:'';position:absolute;z-index:-1;width:clamp(175px,22vw,240px);height:1px;background:linear-gradient(90deg,#52263e,transparent 25% 75%,#52263e)}
 .credential-visual img{display:block;width:clamp(115px,15vw,162px);height:auto;aspect-ratio:1;object-fit:contain}
-.credential-visual img.maldev-logo{mix-blend-mode:lighten}
+.maldev-badge{display:grid;place-items:center;width:clamp(115px,15vw,162px);aspect-ratio:1;border:3px solid #e9e5e2;border-radius:50%;background:#080809;box-shadow:inset 0 0 0 2px #1b191b;overflow:hidden}
+.credential-visual .maldev-badge img.maldev-logo{width:91%;height:91%;object-fit:contain;border-radius:0;mix-blend-mode:lighten}
+@media(max-width:650px){.maldev-badge{width:140px}}
+@media(min-width:1600px){.maldev-badge{width:190px}}
 .credential-copy{max-width:330px}
 .credential-copy .learning-status{margin-bottom:3px}
 .learning-controls{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;min-height:46px;border-top:1px solid var(--dark-red)}
@@ -716,7 +719,7 @@ body.repo-scroll-locked{
           <div class="credential-copy"><span class="learning-status is-complete">Completed</span><h4 id="pmrp-title">Practical Malware Research Professional</h4><p>TCM Security // PMRP</p><p>Malware analysis / reverse engineering</p></div>
         </article>
         <article class="learning-slide" data-learning-slide data-record-label="MALDEV" aria-labelledby="maldev-title" hidden>
-          <div class="credential-visual"><img class="maldev-logo" src="assets/maldev-academy.webp" alt="" width="200" height="200" decoding="async"></div>
+          <div class="credential-visual"><div class="maldev-badge"><img class="maldev-logo" src="assets/maldev-academy.webp" alt="" width="200" height="200" decoding="async"></div></div>
           <div class="credential-copy"><span class="learning-status is-progress">In progress</span><h4 id="maldev-title">Maldev Academy</h4><p>Malware Development Course</p><p>Windows internals / malware development</p></div>
         </article>
       </div>
