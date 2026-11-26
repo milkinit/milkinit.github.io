@@ -555,16 +555,174 @@ body.repo-scroll-locked{
   .repo-image-lightbox-actions{width:100%;justify-content:space-between}
   .repo-image-lightbox img{max-height:calc(100dvh - 150px)}
 }
+/* Learning archive: branching diagram and two independent record viewers. */
+.learning-section{padding:clamp(28px,4vw,48px) 0 clamp(20px,3vw,34px);border-bottom:1px solid var(--dark-red);scroll-margin-top:80px}
+.learning-section .chapter-heading{margin-bottom:20px}
+.learning-map{position:relative;display:grid;justify-items:center;margin:0 0 0;isolation:isolate}
+.learning-root{position:relative;z-index:1;display:flex;align-items:center;gap:8px;border:1px solid var(--dark-red);padding:6px 12px;background:var(--bg);color:var(--muted);font:10px/1.5 var(--mono);letter-spacing:.1em}
+.learning-root::before{content:'+';color:var(--red);font-size:15px;line-height:1}
+.learning-branch{height:28px;width:calc(50% + clamp(16px,3vw,32px) / 2);position:relative;border-bottom:1px solid var(--dark-red)}
+.learning-branch::before{content:'';position:absolute;left:50%;top:0;height:100%;border-left:1px solid var(--dark-red)}
+.learning-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,3vw,32px);padding-top:15px}
+.learning-panel{position:relative;min-width:0;display:flex;flex-direction:column;border:1px solid var(--dark-red);background:linear-gradient(150deg,#52263e13,transparent 55%);padding:0;scroll-margin-top:80px}
+.learning-panel::before{content:'';position:absolute;top:-16px;left:50%;height:15px;border-left:1px solid var(--dark-red)}
+.learning-panel::after{content:'';position:absolute;top:-3px;left:calc(50% - 2px);width:5px;height:5px;background:var(--red);pointer-events:none}
+.learning-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 15px;border-bottom:1px solid var(--dark-red)}
+.learning-panel-heading>div{display:flex;align-items:baseline;gap:9px;min-width:0}
+.learning-node-id{color:var(--muted);font:10px/1.5 var(--mono)}
+.learning-panel h3{font:normal clamp(20px,2.3vw,27px)/1.25 var(--serif);color:var(--red);margin:0}
+.learning-panel-meta{font:10px/1.5 var(--mono);color:var(--muted);text-align:right;white-space:nowrap}
+.learning-deck{display:grid;flex:1;min-width:0;min-height:0}
+.learning-slide{grid-area:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:clamp(310px,34vw,355px);padding:10px 16px 17px;text-align:center}
+.learning-slide[hidden]{display:none!important}
+.learning-slide:not([hidden]){animation:learning-reveal .28s ease-out both}
+@keyframes learning-reveal{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.learning-status{display:inline-flex;align-items:center;justify-content:center;gap:6px;color:var(--pink);font:10px/1.4 var(--mono);letter-spacing:.065em;text-transform:uppercase}
+.learning-status::before{content:'';width:6px;height:6px;border:1px solid currentColor;background:currentColor;flex:none}
+.learning-status.is-complete::before{background:var(--red);border-color:var(--red)}
+.learning-status.is-progress::before{background:transparent}
+.learning-status.is-empty{color:var(--muted)}
+.learning-status.is-empty::before{background:transparent}
+.book-stage{position:relative;display:grid;place-items:center;min-height:clamp(222px,26vw,280px);perspective:900px;background:radial-gradient(ellipse at 50% 62%,#52263e35,transparent 67%);isolation:isolate}
+.book-stage::before{content:'';position:absolute;width:73%;height:29px;bottom:13px;border:1px dashed #77344580;border-radius:50%;z-index:-1}
+.book-stage::after{content:'';position:absolute;bottom:18px;width:46%;height:19px;border-radius:50%;background:radial-gradient(ellipse,#ac323245,transparent 72%);z-index:-1}
+.book-float{--book-w:clamp(116px,15vw,158px);--book-h:calc(var(--book-w) * 1.324);--book-d:clamp(24px,3vw,32px);width:var(--book-w);height:var(--book-h);transform-style:preserve-3d;animation:archive-book-float 5s ease-in-out infinite;position:relative;margin-bottom:16px}
+.book-object{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform:rotateX(8deg) rotateY(-22deg);animation:archive-book-turn 18s linear infinite}
+.book-face{position:absolute;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border:1px solid #471c20}
+.book-front,.book-back{inset:0;width:100%;height:100%}
+.book-front{transform:translateZ(calc(var(--book-d) / 2));background:#721d22}
+.book-front img{width:100%;height:100%;object-fit:cover;display:block}
+.book-back{transform:rotateY(180deg) translateZ(calc(var(--book-d) / 2));background:linear-gradient(135deg,#751d25,#35121b);padding:0;text-align:center;flex-direction:column;gap:0;color:transparent;box-shadow:inset 0 0 0 4px #42151c,inset 0 0 24px #1d0c10}
+.book-back>*{display:none!important}
+.book-spine,.book-fore{width:var(--book-d);height:100%;left:calc((var(--book-w) - var(--book-d)) / 2);top:0}
+.book-spine{transform:rotateY(-90deg) translateZ(calc(var(--book-w) / 2));background:linear-gradient(90deg,#45141a,#8a292c 20%,#642024 80%,#351018);color:transparent;writing-mode:vertical-rl;font-size:0;letter-spacing:0;white-space:nowrap;text-indent:-9999px;overflow:hidden}
+.book-fore{transform:rotateY(90deg) translateZ(calc(var(--book-w) / 2));background:repeating-linear-gradient(90deg,#c9b69d 0 2px,#a59179 2px 3px,#e0cdb1 3px 4px);border:2px solid #632229}
+.book-top,.book-bottom{width:100%;height:var(--book-d);top:calc((var(--book-h) - var(--book-d)) / 2);left:0;background:repeating-linear-gradient(0deg,#cbb99d 0 2px,#9e8b72 2px 3px,#dfcbb1 3px 4px);border:2px solid #632229}
+.book-top{transform:rotateX(90deg) translateZ(calc(var(--book-h) / 2))}
+.book-bottom{transform:rotateX(-90deg) translateZ(calc(var(--book-h) / 2))}
+@keyframes archive-book-turn{from{transform:rotateX(8deg) rotateY(-22deg)}to{transform:rotateX(8deg) rotateY(338deg)}}
+@keyframes archive-book-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+.book-stage{width:100%;min-height:clamp(188px,23vw,230px);background:radial-gradient(ellipse at 50% 62%,#52263e30,transparent 67%)}
+.book-float{--book-w:clamp(110px,13vw,140px);--book-d:clamp(23px,2.7vw,30px);margin-bottom:8px}
+.book-caption,.credential-copy{min-width:0;text-align:center}
+.book-caption h4,.credential-copy h4,.learning-empty h4{font:normal clamp(18px,2vw,23px)/1.28 var(--serif);margin:5px 0 5px;color:var(--text);overflow-wrap:anywhere}
+.book-caption p,.credential-copy p,.learning-empty p{font:clamp(10px,1.1vw,12px)/1.65 var(--mono);margin:0;color:var(--muted)}
+.credential-visual{position:relative;display:grid;place-items:center;width:100%;min-height:clamp(170px,21vw,215px);isolation:isolate}
+.credential-visual::before{content:'';position:absolute;z-index:-1;width:clamp(145px,19vw,205px);aspect-ratio:1;border:1px dashed #52263e; border-radius:50%;background:radial-gradient(circle,#52263e25,transparent 70%)}
+.credential-visual::after{content:'';position:absolute;z-index:-1;width:clamp(175px,22vw,240px);height:1px;background:linear-gradient(90deg,#52263e,transparent 25% 75%,#52263e)}
+.credential-visual img{display:block;width:clamp(115px,15vw,162px);height:auto;aspect-ratio:1;object-fit:contain}
+.credential-visual img.maldev-logo{mix-blend-mode:lighten}
+.credential-copy{max-width:330px}
+.credential-copy .learning-status{margin-bottom:3px}
+.learning-controls{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;min-height:46px;border-top:1px solid var(--dark-red)}
+.learning-controls button{appearance:none;display:grid;place-items:center;width:100%;min-height:46px;padding:0;border:0;background:transparent;color:var(--red);font:21px/1 var(--mono);transition:background .2s,color .2s}
+.learning-controls button:first-child{border-right:1px solid var(--dark-red)}
+.learning-controls button:last-child{border-left:1px solid var(--dark-red)}
+.learning-controls button:hover,.learning-controls button:focus-visible{background:#52263e35;color:var(--pink)}
+.learning-controls button:focus-visible{outline-offset:-3px}
+.learning-count{text-align:center;color:var(--muted);font:10px/1.5 var(--mono);letter-spacing:.08em;min-width:0;padding:3px;overflow-wrap:anywhere}
+.learning-count b{color:var(--pink);font-weight:normal}
+@media(max-width:650px){
+ .learning-map{justify-items:start;padding-left:7px}
+ .learning-branch{width:12px;height:13px;border-bottom:0;border-left:1px solid var(--dark-red);margin-left:6px}
+ .learning-branch::before{display:none}
+ .learning-grid{grid-template-columns:minmax(0,1fr);gap:18px;padding:0 0 0 13px;border-left:1px solid var(--dark-red);margin-left:13px}
+ .learning-panel::before{top:23px;left:-14px;width:13px;height:0;border-left:0;border-top:1px solid var(--dark-red)}
+ .learning-panel::after{top:21px;left:-3px}
+ .learning-slide{min-height:310px;padding:10px 10px 16px}
+ .book-stage{min-height:205px}
+ .book-float{--book-w:126px;--book-d:27px}
+ .credential-visual{min-height:190px}
+ .credential-visual img{width:140px}
+}
+@media(min-width:1600px){
+ .learning-slide{min-height:415px}.book-stage{min-height:275px}.book-float{--book-w:170px;--book-d:35px}
+ .credential-visual{min-height:245px}.credential-visual img{width:190px}
+ .learning-status,.learning-count,.learning-panel-meta,.learning-root{font-size:12px}
+ .book-caption p,.credential-copy p,.learning-empty p{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){.book-float,.book-object,.learning-slide{animation:none!important}}
+
+/* Evasive Malware: original cover colors, restrained matching book materials. */
+.book-evasive{--book-h:calc(var(--book-w) * 450 / 338)}
+.book-evasive .book-face{border-color:#3b3159}
+.book-evasive .book-front{background:#59518e}
+.book-evasive .book-back{background:linear-gradient(140deg,#514574,#262039);color:transparent;box-shadow:inset 0 0 0 4px #352b50,inset 0 0 24px #1a1428}
+.book-evasive .book-spine{background:linear-gradient(90deg,#352b50,#71649b 23%,#514574 80%,#30263e);color:transparent}
+.book-evasive :is(.book-fore,.book-top,.book-bottom){border-color:#514574}
+@media(max-width:380px){.learning-panel-heading{padding-inline:9px;gap:5px}.learning-panel-meta{font-size:9px;white-space:normal}.learning-panel-heading>div{gap:5px}}
+
+
+/* Peripheral raster linework: confined to the real margins, never the archive. */
+.milk-periphery{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;display:block}
+.milk-periphery canvas{position:absolute;top:0;height:100%;width:0;display:block;image-rendering:pixelated;opacity:1}
+.milk-periphery-left{left:0}
+.milk-periphery-right{right:0}
+.page{position:relative;z-index:1;background:transparent}
+
 </style>
 </head>
 <body>
+<div class="milk-periphery" id="milk-periphery" aria-hidden="true"><canvas class="milk-periphery-left"></canvas><canvas class="milk-periphery-right"></canvas></div>
+
 <a class="sr-only skip-link" href="#vulnerbility-research">Skip to archive</a>
 <main class="page" id="home">
-<details class="corner-menu" id="menu"><summary>ARCHIVE MENU <span aria-hidden="true">+</span></summary><div class="menu-panel"><nav class="navigation" aria-label="Archive navigation"><a href="#home">HOME</a><a href="#vulnerbility-research">VULNERABILITY · RESEARCH</a><a href="#milk-scene">MILK</a><a href="#system-software">SYSTEM · SOFTWARE</a><a href="https://github.com/milkinit" target="_blank" rel="noopener noreferrer">GITHUB ↗</a></nav></div></details>
+<details class="corner-menu" id="menu"><summary>ARCHIVE MENU <span aria-hidden="true">+</span></summary><div class="menu-panel"><nav class="navigation" aria-label="Archive navigation"><a href="#home">HOME</a><a href="#reading-certifications">READING · CERTIFICATIONS</a><a href="#vulnerbility-research">VULNERABILITY · RESEARCH</a><a href="#milk-scene">MILK</a><a href="#system-software">SYSTEM · SOFTWARE</a><a href="https://github.com/milkinit" target="_blank" rel="noopener noreferrer">GITHUB ↗</a></nav></div></details>
 <section class="hero scene" id="prologue" aria-label="Opening scene">
 <div class="void-space" aria-hidden="true"><canvas class="void-canvas" data-void="hero"></canvas></div>
 <div class="hero-copy"><h1>milkinit<span>.</span></h1><p class="hero-kicker">outside an init.d of milk.</p><p class="hero-description">REVERSE ENGINEERING / VULNERABILITY RESEARCH<br>SYSTEM · SOFTWARE</p></div>
 
+</section>
+<section class="learning-section" id="reading-certifications" aria-labelledby="learning-title">
+  <div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><h2 class="archive-title" id="learning-title">Reading · Certifications</h2><p class="archive-description">BOOKS / SELF-STUDY / PROFESSIONAL CERTIFICATIONS</p></div></div>
+  <div class="learning-map" aria-hidden="true"><span class="learning-root">/ learning</span><div class="learning-branch"></div></div>
+  <div class="learning-grid">
+    <section class="learning-panel" id="books" data-learning-deck aria-labelledby="reading-title">
+      <div class="learning-panel-heading"><div><span class="learning-node-id" aria-hidden="true">01 /</span><h3 id="reading-title">Books</h3></div><span class="learning-panel-meta">01 READ / 01 ACTIVE</span></div>
+      <div class="learning-deck" id="book-records">
+        <article class="learning-slide" data-learning-slide data-record-label="READ" aria-labelledby="book-pma-title" hidden>
+          <div class="book-stage" id="learning-book-stage" aria-hidden="true">
+        <div class="book-float"><div class="book-object">
+          <div class="book-face book-front"><img src="assets/practical-malware-analysis.webp" alt="" width="500" height="662" decoding="async"></div>
+          <div class="book-face book-back"><strong>Practical<br>Malware<br>Analysis</strong><span>The Hands-On Guide to Dissecting Malicious Software</span><span>Michael Sikorski<br>Andrew Honig</span></div>
+          <div class="book-face book-spine">Practical Malware Analysis</div>
+          <div class="book-face book-fore"></div><div class="book-face book-top"></div><div class="book-face book-bottom"></div>
+        </div></div>
+      </div>
+          <div class="book-caption"><span class="learning-status is-complete">Completed</span><h4 id="book-pma-title">Practical Malware Analysis</h4><p>Michael Sikorski · Andrew Honig</p></div>
+          
+        </article>
+        <article class="learning-slide" data-learning-slide data-record-label="READING" aria-labelledby="book-evasive-title">
+          <div class="book-stage" id="evasive-book-stage" aria-hidden="true">
+            <div class="book-float book-evasive"><div class="book-object">
+              <div class="book-face book-front"><img src="assets/evasive-malware.webp" alt="" width="338" height="450"></div>
+              <div class="book-face book-back"><strong>Evasive<br>Malware</strong><span>A Field Guide to Detecting, Analyzing, and Defeating Advanced Threats</span><span>Kyle Cucci</span></div>
+              <div class="book-face book-spine">Evasive Malware · Kyle Cucci</div>
+              <div class="book-face book-fore"></div><div class="book-face book-top"></div><div class="book-face book-bottom"></div>
+            </div></div>
+          </div>
+          <div class="book-caption"><span class="learning-status is-progress">Currently reading</span><h4 id="book-evasive-title">Evasive Malware</h4><p>Kyle Cucci</p></div>
+          
+        </article>
+      </div>
+      <div class="learning-controls"><button type="button" data-learning-step="-1" aria-controls="book-records" aria-label="Previous book view">←</button><span class="learning-count" data-learning-count role="status" aria-live="polite" aria-atomic="true"><b>02 / 02</b> · READING</span><button type="button" data-learning-step="1" aria-controls="book-records" aria-label="Next book view">→</button></div>
+    </section>
+    <section class="learning-panel" id="certifications" data-learning-deck aria-labelledby="credentials-title">
+      <div class="learning-panel-heading"><div><span class="learning-node-id" aria-hidden="true">02 /</span><h3 id="credentials-title">Certifications</h3></div><span class="learning-panel-meta">01 DONE / 01 ACTIVE</span></div>
+      <div class="learning-deck" id="credential-records">
+        <article class="learning-slide" data-learning-slide data-record-label="PMRP" aria-labelledby="pmrp-title">
+          <div class="credential-visual"><img src="assets/tcm-pmrp.webp" alt="" width="346" height="347" decoding="async"></div>
+          <div class="credential-copy"><span class="learning-status is-complete">Completed</span><h4 id="pmrp-title">Practical Malware Research Professional</h4><p>TCM Security // PMRP</p><p>Malware analysis / reverse engineering</p></div>
+        </article>
+        <article class="learning-slide" data-learning-slide data-record-label="MALDEV" aria-labelledby="maldev-title" hidden>
+          <div class="credential-visual"><img class="maldev-logo" src="assets/maldev-academy.webp" alt="" width="200" height="200" decoding="async"></div>
+          <div class="credential-copy"><span class="learning-status is-progress">In progress</span><h4 id="maldev-title">Maldev Academy</h4><p>Malware Development Course</p><p>Windows internals / malware development</p></div>
+        </article>
+      </div>
+      <div class="learning-controls"><button type="button" data-learning-step="-1" aria-controls="credential-records" aria-label="Previous certification">←</button><span class="learning-count" data-learning-count role="status" aria-live="polite" aria-atomic="true"><b>01 / 02</b> · PMRP</span><button type="button" data-learning-step="1" aria-controls="credential-records" aria-label="Next certification">→</button></div>
+    </section>
+  </div>
 </section>
 <form class="search-area" role="search" onsubmit="return false"><label class="section-label sr-only" for="project-search">Search archive</label><div class="search-row"><b aria-hidden="true">&gt;</b><input type="search" id="project-search" placeholder="Search projects..." aria-controls="vulnerbility-research system-software" autocomplete="off"><button id="clear-search" type="button">CLEAR</button></div><p id="search-status" aria-live="polite">Showing all 14 projects.</p></form>
 <p class="empty-state" id="empty-state" hidden>No records found.</p>
@@ -657,6 +815,24 @@ body.repo-scroll-locked{
 <script>
 (()=>{'use strict';
 const $=(sel,root=document)=>root.querySelector(sel), $$=(sel,root=document)=>[...root.querySelectorAll(sel)];
+// Each learning branch has its own record index; arrows never affect the other branch.
+$$('[data-learning-deck]').forEach(panel=>{
+ const slides=$$('[data-learning-slide]',panel),count=$('[data-learning-count]',panel);
+ let index=Math.max(0,slides.findIndex(slide=>!slide.hidden));
+ const fmt=n=>String(n).padStart(2,'0');
+ function move(step){
+  if(slides.length<2)return;
+  index=(index+step+slides.length)%slides.length;
+  slides.forEach((slide,i)=>{slide.hidden=i!==index});
+  const number=document.createElement('b');number.textContent=`${fmt(index+1)} / ${fmt(slides.length)}`;
+  count.replaceChildren(number,document.createTextNode(' · '+slides[index].dataset.recordLabel));
+ }
+ $$('[data-learning-step]',panel).forEach(button=>button.addEventListener('click',()=>move(Number(button.dataset.learningStep))));
+ panel.addEventListener('keydown',event=>{
+  if(!event.target.matches('[data-learning-step]')||!['ArrowLeft','ArrowRight'].includes(event.key))return;
+  event.preventDefault();move(event.key==='ArrowLeft'?-1:1);
+ });
+});
 const html=document.documentElement;const menu=$('#menu'),search=$('#project-search'),status=$('#search-status'),clear=$('#clear-search'),empty=$('#empty-state');
 const projectEls=$$('[data-project]'),chapters=$$('.archive-section');
 function filter(){let total=0;const query=search.value.trim().toLowerCase();for(const sec of chapters){let count=0;const title=$('.archive-title',sec).textContent.toLowerCase();for(const project of $$('[data-project]',sec)){const show=!query||(`${project.textContent} ${title}`).toLowerCase().includes(query);project.hidden=!show;if(show){count++;total++;}}sec.hidden=!!query&&!count;}empty.hidden=total!==0;status.textContent=query?`${total} matching record${total===1?'':'s'}.`:`Showing all ${projectEls.length} projects.`;}
@@ -1390,5 +1566,99 @@ repoPreviewContent.addEventListener('click',event=>{
 sceneRaf=requestAnimationFrame(tick);
 })();
 </script>
+<script>
+/* A small, procedural 2D raster effect. No image textures, gradients or characters. */
+(()=>{
+  'use strict';
+  const scene=document.getElementById('milk-periphery');
+  const page=document.querySelector('main.page');
+  if(!scene||!page)return;
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const sides=Array.from(scene.querySelectorAll('canvas'),(canvas,side)=>({canvas,ctx:canvas.getContext('2d',{alpha:true}),side,w:0,h:0}));
+  if(sides.some(s=>!s.ctx))return;
+  let raf=0,elapsed=0,last=0,lastDraw=-100;
+  const palette=['#6d303d','#74303b','#52263e','#4a2533','#68313e','#8b4149'];
+  function resize(){
+    const rect=page.getBoundingClientRect(), screen=document.documentElement.clientWidth;
+    const gutters=[rect.left,screen-rect.right];
+    for(const s of sides){
+      // Use only the actual outer gutter. On phones preserve a 3px clear gap. No gradient mask.
+      const gutter=Math.max(0,gutters[s.side]);
+      const compact=screen<=700;
+      const width=Math.max(0,Math.min(compact?12:180,Math.floor(gutter*(compact ? .80 : .60)),Math.floor(gutter-(compact?3:8))));
+      s.canvas.style.width=width+'px';
+      const step=width>=48?2:1;
+      s.w=Math.max(1,Math.round(width/step));
+      s.h=Math.max(1,Math.round(scene.clientHeight/step));
+      s.canvas.width=s.w;s.canvas.height=s.h;
+      s.ctx.imageSmoothingEnabled=false;
+    }
+    draw(elapsed);
+  }
+  // Integer-pixel lines, as on a small retro game framebuffer.
+  function pixelLine(ctx,x0,y0,x1,y1,color){
+    x0=Math.round(x0);y0=Math.round(y0);x1=Math.round(x1);y1=Math.round(y1);
+    let dx=Math.abs(x1-x0),sx=x0<x1?1:-1,dy=-Math.abs(y1-y0),sy=y0<y1?1:-1,err=dx+dy;
+    ctx.fillStyle=color;
+    while(true){ctx.fillRect(x0,y0,1,1);if(x0===x1&&y0===y1)break;const e=2*err;if(e>=dy){err+=dy;x0+=sx}if(e<=dx){err+=dx;y0+=sy}}
+  }
+  function drawSide(s,t){
+    const {ctx,w,h,side}=s;ctx.clearRect(0,0,w,h);
+    if(w<3)return;
+    ctx.save();if(side){ctx.translate(w,0);ctx.scale(-1,1)}
+    const phase=t*.24+side*1.4;
+    const rails=w<18?2:w<40?4:7;
+    const spacing=w<18?22:44;
+    // Curved structural ribs with one shared distortion: controlled, not random.
+    function xAt(i,y){
+      const q=i/(rails-1),base=w*(.025+.91*Math.pow(q,1.16));
+      const wave=Math.sin(y*.018+phase)*.11+Math.sin(y*.009-phase*.7)*.055;
+      return Math.max(-3,Math.min(w-1,base+w*wave*(.3+.7*q)));
+    }
+    for(let i=0;i<rails;i++){
+      let x=xAt(i,-8);
+      for(let y=0;y<=h+8;y+=8){const next=xAt(i,y);pixelLine(ctx,x,y-8,next,y,palette[i%5]);x=next;}
+    }
+    // Repeating transverse rails resemble the game's bent architectural lines.
+    const shift=Math.floor(t*5+side*spacing*.6)%spacing;
+    for(let row=-1;row<=Math.ceil(h/spacing)+1;row++){
+      const y=row*spacing+shift;
+      for(let i=0;i<rails-1;i++){
+        const u=i/(rails-1),v=(i+1)/(rails-1);
+        const curve=k=>y+Math.round((k*k-.2)*spacing*.54+Math.sin(phase+y*.014)*spacing*.10*k);
+        const a=curve(u),b=curve(v);
+        pixelLine(ctx,xAt(i,a),a,xAt(i+1,b),b,palette[(i+row+10)%5]);
+        if(w>32&&i<rails-2&&((i+row+20)%3===0)){
+          pixelLine(ctx,xAt(i,a+3),a+3,xAt(i+1,b+3),b+3,'#442333');
+        }
+      }
+    }
+    // Sparse pale-pink accents, kept within the outermost part of the edge.
+    if(w>22){
+      for(let y=-spacing+shift;y<h;y+=spacing*2){
+        const x=xAt(0,y+12);pixelLine(ctx,x,y+12,xAt(0,y+17),y+17,palette[5]);
+      }
+    }
+    ctx.restore();
+  }
+  function draw(ms){for(const s of sides)drawSide(s,ms/1000)}
+  function frame(now){
+    raf=0;if(reduced.matches||document.hidden)return;
+    if(last)elapsed+=Math.min(now-last,100);last=now;
+    if(now-lastDraw>=1000/14){draw(elapsed);lastDraw=now}
+    raf=requestAnimationFrame(frame);
+  }
+  function sync(){
+    cancelAnimationFrame(raf);raf=0;last=0;resize();
+    if(!reduced.matches&&!document.hidden)raf=requestAnimationFrame(frame);
+  }
+  reduced.addEventListener('change',sync);
+  window.addEventListener('resize',sync,{passive:true});
+  document.addEventListener('visibilitychange',sync);
+  if('ResizeObserver' in window)new ResizeObserver(sync).observe(page);
+  sync();
+})();
+</script>
+
 </body>
 </html>
