@@ -10,10 +10,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
 <link rel="icon" type="image/x-icon" href="assets/icon.png">
-<link rel="preload" as="image" href="assets/milkchan-closed.png">
-<link rel="preload" as="image" href="assets/milkchan-open.png">
 <link rel="preload" as="image" href="assets/cursor.png">
 <link rel="preload" as="image" href="assets/cursor2.png">
+<link rel="preload" as="image" href="assets/milkchan-closed.png">
+<link rel="preload" as="image" href="assets/milkchan-open.png">
 <style>
 /* milkinit: one consistent fluid layout from small phones to television screens */
 :root{
@@ -165,6 +165,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
  .milk-hint{font-size:9px}
  .milk-dialogue{left:17%;right:9px;bottom:12px;min-height:163px;padding:13px 13px;border-width:7px;border-image-width:7px}
  .milk-line{font-size:clamp(10.5px,2.8vw,12px);line-height:1.9}
+
+
+
+
+
  .system-section{padding-top:43px}
  .archive-banner-slot{margin-top:65px}
  .footer{font-size:9px;flex-wrap:wrap;line-height:1.8}
@@ -179,6 +184,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
  .character-layer{width:106%;left:-14px}
  .milk-dialogue{left:13%;right:7px;min-height:161px;padding:10px 10px;border-width:7px;border-image-width:7px}
  .milk-line{font-size:10.5px;line-height:2.05}
+
+
+
  .project h3{font-size:17px}
 }
 /* tablet / desktop landscape with a short viewport */
@@ -209,6 +217,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
  .milk-interaction{width:280px}
  .milk-dialogue{min-height:200px;padding:28px 29px;left:36%}
  .milk-line{font-size:17px;line-height:1.95}
+
+
+
+
  .footer{font-size:14px}
 }
 /* 4K / very distant screens; retain readability instead of stretching the art to fill everything */
@@ -226,6 +238,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
  .project h3{font-size:33px}.project p{font-size:20px}.project-number{font-size:18px}
  .interlude{height:770px}.character-layer{max-width:760px}.milk-interaction{width:350px}
  .milk-dialogue{min-height:250px;padding:39px}.milk-line{font-size:21px}
+
  .footer{font-size:18px}
 }
 @media(hover:none),(pointer:coarse){
@@ -666,6 +679,63 @@ body.repo-scroll-locked{
 .milk-periphery-right{right:0}
 .page{position:relative;z-index:1;background:transparent}
 
+/* About Me uses the original Milk scene and dialogue classes. Only positioning is different. */
+.about-section{padding-top:clamp(32px,4.5vw,56px);scroll-margin-top:80px}
+.about-scene.interlude{margin:10px 0 12px;--character-x:50%;--dialogue-x:50%;--dialogue-width:calc(64% - clamp(12px,2.5vw,27px))}
+.about-scene[data-pose="right"]{--character-x:75%;--dialogue-x:35%}
+.about-scene[data-pose="left"]{--character-x:25%;--dialogue-x:65%}
+.about-backdrop{position:absolute;inset:0;width:100%;height:100%;z-index:0;image-rendering:pixelated;opacity:.76;pointer-events:none}
+.about-character-layer{position:absolute;z-index:2;left:var(--character-x);bottom:0;width:min(53%,520px);height:100%;pointer-events:none;transform:translateX(-50%);transition:left 440ms cubic-bezier(.25,.7,.25,1)}
+.about-character-layer img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;object-position:center bottom;image-rendering:pixelated;opacity:0;transition:none;backface-visibility:hidden}
+/* Idle sprite sway: all three gaze frames share the same movement. */
+.about-character-layer img{transform-origin:50% 100%;animation:about-idle-wobble 5.6s steps(1,end) infinite}
+@keyframes about-idle-wobble{
+  0%,100%{transform:translate(0,0) rotate(0deg)}
+  12.5%{transform:translate(-1px,-1px) rotate(-.28deg)}
+  25%{transform:translate(-2px,-2px) rotate(-.65deg)}
+  37.5%{transform:translate(-1px,-1px) rotate(-.28deg)}
+  50%{transform:translate(0,0) rotate(0deg)}
+  62.5%{transform:translate(1px,-1px) rotate(.28deg)}
+  75%{transform:translate(2px,-2px) rotate(.65deg)}
+  87.5%{transform:translate(1px,-1px) rotate(.28deg)}
+}
+@media(prefers-reduced-motion:reduce){.about-character-layer img{animation:none!important}}
+.about-character-layer[data-gaze="straight"] #aboutme-straight,.about-character-layer[data-gaze="right"] #aboutme-right,.about-character-layer[data-gaze="left"] #aboutme-left{opacity:1}
+.about-dialogue.milk-dialogue{appearance:none;display:flex;align-items:flex-start;flex-direction:column;justify-content:flex-start;width:var(--dialogue-width);left:var(--dialogue-x);right:auto;transform:translateX(-50%);transition:left 440ms cubic-bezier(.25,.7,.25,1);text-align:left;color:var(--text);touch-action:manipulation;min-width:0}
+.about-dialogue .about-line{width:100%;overflow-wrap:anywhere;white-space:pre-line;padding-bottom:15px}
+.about-dialogue .dialogue-word{max-width:100%;white-space:normal}
+/* First dialogue: centered greeting without a topic illustration. */
+.about-scene[data-pose="center"] .about-dialogue{justify-content:center;align-items:center;text-align:center}
+.about-scene[data-pose="center"] .about-line{font-size:clamp(16px,2.1vw,26px);line-height:1.8;padding-bottom:0;text-align:center}
+@media(max-width:600px){.about-scene[data-pose="center"] .about-line{font-size:clamp(13px,4vw,19px)}}
+.about-dialogue-arrow{position:absolute;right:clamp(8px,1vw,15px);bottom:8px;color:#c6585d;font:15px/1 var(--mono);animation:about-arrow 2s steps(1,end) infinite;pointer-events:none}
+/* Reserve the full line's layout while revealing individual glyphs. */
+.about-line .dialogue-letter.is-untyped{visibility:hidden}
+.about-dialogue[data-typing="true"] .about-dialogue-arrow{visibility:hidden}
+@keyframes about-arrow{0%,100%{transform:translateY(0)}50%{transform:translateY(2px)}}
+@media(min-width:1600px){.about-character-layer{width:53%;max-width:620px}}
+@media(min-width:2560px){.about-character-layer{max-width:760px}}
+@media(max-width:900px){.about-character-layer{width:min(56%,460px)}}
+@media(max-width:600px){
+ .about-section{padding-top:30px}
+ .about-scene.interlude{--dialogue-width:calc(83% - 9px)}
+ .about-scene[data-pose="right"]{--character-x:65%;--dialogue-x:47%}
+ .about-scene[data-pose="left"]{--character-x:35%;--dialogue-x:57%}
+ .about-character-layer{width:86%;height:100%}
+}
+@media(max-width:360px){.about-scene.interlude{--dialogue-width:calc(87% - 7px)}.about-scene[data-pose="left"]{--dialogue-x:56%}}
+@media(prefers-reduced-motion:reduce){.about-character-layer,.about-dialogue{transition:none!important}.about-dialogue-arrow{animation:none!important}}
+
+
+/* Keep both sprite bottoms inside the scene even at the peak of their idle sway. */
+#milk-scene .character-layer,.about-character-layer{bottom:-12px}
+#milk-scene .character-layer img{transform-origin:50% 100%;animation:about-idle-wobble 5.6s steps(1,end) infinite}
+@media(max-width:600px){
+ .about-character-layer{width:115%;max-width:480px}
+ .about-dialogue.milk-dialogue{min-height:205px}
+}
+@media(prefers-reduced-motion:reduce){#milk-scene .character-layer img{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -673,14 +743,28 @@ body.repo-scroll-locked{
 
 <a class="sr-only skip-link" href="#vulnerbility-research">Skip to archive</a>
 <main class="page" id="home">
-<details class="corner-menu" id="menu"><summary>ARCHIVE MENU <span aria-hidden="true">+</span></summary><div class="menu-panel"><nav class="navigation" aria-label="Archive navigation"><a href="#home">HOME</a><a href="#reading-certifications">READING · CERTIFICATIONS</a><a href="#vulnerbility-research">VULNERABILITY · RESEARCH</a><a href="#milk-scene">MILK</a><a href="#system-software">SYSTEM · SOFTWARE</a><a href="https://github.com/milkinit" target="_blank" rel="noopener noreferrer">GITHUB ↗</a></nav></div></details>
+<details class="corner-menu" id="menu"><summary>ARCHIVE MENU <span aria-hidden="true">+</span></summary><div class="menu-panel"><nav class="navigation" aria-label="Archive navigation"><a href="#home">HOME</a><a href="#about-me">ABOUT - ME</a><a href="#reading-certifications">LEARNING</a><a href="#vulnerbility-research">CYBERSECURITY</a><a href="#milk-scene">MILK</a><a href="#system-software">SOFTWARE DEVELOPMENT</a><a href="https://github.com/milkinit" target="_blank" rel="noopener noreferrer">GITHUB ↗</a></nav></div></details>
 <section class="hero scene" id="prologue" aria-label="Opening scene">
 <div class="void-space" aria-hidden="true"><canvas class="void-canvas" data-void="hero"></canvas></div>
-<div class="hero-copy"><h1>milkinit<span>.</span></h1><p class="hero-kicker">outside an init.d of milk.</p><p class="hero-description">REVERSE ENGINEERING / VULNERABILITY RESEARCH<br>SYSTEM · SOFTWARE</p></div>
+<div class="hero-copy"><h1>milkinit<span>.</span></h1><p class="hero-kicker">outside an init.d of milk.</p></div>
 
 </section>
+<section class="about-section" id="about-me"><div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><h2 class="archive-title">About - Me</h2></div></div>
+<section class="about-scene interlude scene" id="about-me-scene" data-pose="center" aria-label="About me scene">
+<canvas class="about-backdrop" id="about-backdrop" aria-hidden="true"></canvas>
+<div class="about-character-layer" id="about-character-layer" data-gaze="straight" aria-hidden="true">
+<img id="aboutme-straight" src="assets/aboutme-straight.png" alt="" width="1000" height="1036" decoding="async">
+<img id="aboutme-right" src="assets/aboutme-right.png" alt="" width="1000" height="1036" decoding="async">
+<img id="aboutme-left" src="assets/aboutme-left.png" alt="" width="1000" height="1036" decoding="async">
+</div>
+<button type="button" class="about-dialogue milk-dialogue" id="about-dialogue" aria-label="Advance About Me dialogue">
+<span class="about-line milk-line" id="about-dialogue-line" aria-hidden="true">- Hello, I'm milkinit.</span>
+<span id="about-dialogue-count" class="sr-only">01 / 03</span><span class="about-dialogue-arrow" aria-hidden="true">▼</span>
+</button>
+<span id="about-dialogue-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true">- Hello, I'm milkinit.</span>
+</section></section>
 <section class="learning-section" id="reading-certifications" aria-labelledby="learning-title">
-  <div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><h2 class="archive-title" id="learning-title">Reading · Certifications</h2><p class="archive-description">BOOKS / SELF-STUDY / PROFESSIONAL CERTIFICATIONS</p></div></div>
+  <div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><h2 class="archive-title" id="learning-title">Learning</h2></div></div>
   <div class="learning-map" aria-hidden="true"><span class="learning-root">/ learning</span><div class="learning-branch"></div></div>
   <div class="learning-grid">
     <section class="learning-panel" id="books" data-learning-deck aria-labelledby="reading-title">
@@ -731,7 +815,7 @@ body.repo-scroll-locked{
 </section>
 <form class="search-area" role="search" onsubmit="return false"><label class="section-label sr-only" for="project-search">Search archive</label><div class="search-row"><b aria-hidden="true">&gt;</b><input type="search" id="project-search" placeholder="Search projects..." aria-controls="vulnerbility-research system-software" autocomplete="off"><button id="clear-search" type="button">CLEAR</button></div><p id="search-status" aria-live="polite">Showing all 14 projects.</p></form>
 <p class="empty-state" id="empty-state" hidden>No records found.</p>
-<section class="archive-section" id="vulnerbility-research"><div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><span class="chapter-label"></span><h2 class="archive-title">Vulnerability · Research</h2><p class="archive-description">CVE / EXPLOITS / VULNERABILITIES / DISCOVERY / REVERSE-ENGINEERING / MALWARE-RESEARCH / DETECTION</p></div></div><div class="project-list">
+<section class="archive-section" id="vulnerbility-research"><div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><span class="chapter-label"></span><h2 class="archive-title">Cybersecurity</h2><p class="archive-description">CVE / EXPLOITS / VULNERABILITIES / DISCOVERY / REVERSE-ENGINEERING / MALWARE-RESEARCH / DETECTION</p></div></div><div class="project-list">
 <article class="project" data-project><span class="project-number">08</span><div class="project-copy"><h3><a href="https://github.com/milkinit/pwnable.kr/" target="_blank" rel="noopener noreferrer">Pwnable.kr</a></h3><p>Challenge write-ups and learning notes for pwnable.kr security                   challenges.</p></div><span class="project-arrow" aria-hidden="true"><span class="project-arrow" aria-hidden="true">↗&#xFE0E;</span></span></article>
 <article class="project" data-project><span class="project-number">07</span><div class="project-copy"><h3><a href="https://github.com/milkinit/malware-research/tree/main/shellcode" target="_blank" rel="noopener noreferrer">Shellcode-repo</a></h3><p>Practice repository for shellcode research and low-level                   security learning.</p></div><span class="project-arrow" aria-hidden="true"><span class="project-arrow" aria-hidden="true">↗&#xFE0E;</span></span></article>
 <article class="project" data-project><span class="project-number">06</span><div class="project-copy"><h3><a href="https://github.com/milkinit/malware-research/tree/main/blog/c2-framework/understanding-c2-framework" target="_blank" rel="noopener noreferrer">Intro: Understanding C2 Framework</a></h3><p>Introduction to command-and-control (C2) frameworks and their                   basic architecture.</p></div><span class="project-arrow" aria-hidden="true"><span class="project-arrow" aria-hidden="true">↗&#xFE0E;</span></span></article>
@@ -752,7 +836,7 @@ body.repo-scroll-locked{
 <p class="milk-line" id="milk-dialogue-line" aria-hidden="true">- Drink the milk... make sure you're not allergic.</p>
 </div>
 </section>
-<section class="archive-section system-section" id="system-software"><div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><span class="chapter-label"></span><h2 class="archive-title">System · Software</h2><p class="archive-description">OPERATING-SYSTEMS / SCRIPTS / CONFIGURATIONS / SOFTWARE / HARDWARE</p></div></div><div class="project-list">
+<section class="archive-section system-section" id="system-software"><div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><span class="chapter-label"></span><h2 class="archive-title">Software Development</h2><p class="archive-description">OPERATING-SYSTEMS / SCRIPTS / CONFIGURATIONS / SOFTWARE / HARDWARE</p></div></div><div class="project-list">
 <article class="project" data-project><span class="project-number">06</span><div class="project-copy"><h3><a href="https://github.com/milkinit/bsd-dot-lain" target="_blank" rel="noopener noreferrer">BSD Dot Lain</a></h3><p>BSD dotfiles and configuration files inspired by Serial                   Experiments Lain.</p></div><span class="project-arrow" aria-hidden="true"><span class="project-arrow" aria-hidden="true">↗&#xFE0E;</span></span></article>
 <article class="project" data-project><span class="project-number">05</span><div class="project-copy"><h3><a href="https://github.com/milkinit/my-ghidra-theme/tree/main" target="_blank" rel="noopener noreferrer">My Ghidra Theme</a></h3><p>Custom Ghidra theme using colors from this site’s visual                   design.</p></div><span class="project-arrow" aria-hidden="true"><span class="project-arrow" aria-hidden="true">↗&#xFE0E;</span></span></article>
 <article class="project" data-project><span class="project-number">04</span><div class="project-copy"><h3><a href="https://github.com/milkinit/mscript" target="_blank" rel="noopener noreferrer">Mscript</a></h3><p>Minescript scripts for automating tasks in Minecraft.</p></div><span class="project-arrow" aria-hidden="true"><span class="project-arrow" aria-hidden="true">↗&#xFE0E;</span></span></article>
@@ -858,7 +942,7 @@ const atlas=new Image();atlas.src='assets/void-frames.webp';const poster=new Ima
 const portalCanvases=$$('.void-canvas');const ports=portalCanvases.map((el,index)=>({el,ctx:el.getContext('2d'),phase:index?7.4:0,visible:true}));
 const frameSize=336,cols=6,frameCount=24;let speed=.55,impulse=0,scrollY=window.scrollY,mouseX=0,mouseY=0,mouseTX=0,mouseTY=0,previous=0,drawElapsed=0;
 function sizeCanvas(p){const box=p.el.getBoundingClientRect(),dpr=Math.min(1.5,devicePixelRatio||1);p.w=box.width;p.h=box.height;p.el.width=Math.max(1,Math.round(box.width*dpr));p.el.height=Math.max(1,Math.round(box.height*dpr));p.ctx.setTransform(dpr,0,0,dpr,0,0);p.ctx.imageSmoothingEnabled=false}
-function size(){ports.forEach(sizeCanvas); if(typeof sizeMilkBackdrop==='function')sizeMilkBackdrop()}ports.forEach(sizeCanvas);window.addEventListener('resize',()=>size(),{passive:true});
+function size(){ports.forEach(sizeCanvas); if(typeof sizeMilkBackdrop==='function')sizeMilkBackdrop(); if(typeof sizeAboutBackdrop==='function')sizeAboutBackdrop()}ports.forEach(sizeCanvas);window.addEventListener('resize',()=>size(),{passive:true});
 function drawVoid(p){const c=p.ctx,w=p.w,h=p.h;c.clearRect(0,0,w,h);if(!w||!h)return;const image=atlas.complete&&atlas.naturalWidth?atlas:null,still=poster.complete&&poster.naturalWidth?poster:null;if(!image&&!still)return;
  const frame=p.phase%frameCount,i=Math.floor(frame),j=(i+1)%frameCount,t=frame-i;
  // Outer art is truly transparent, including its corners; no dark rectangular layer.
@@ -960,26 +1044,154 @@ function paintMilkBackdrop(t){
  bgCtx.putImageData(bgData,0,0);
 }
 
+// EarthBound-like about screen: warped bands and orbit lines, quieter than the milk spiral.
+const aboutCanvas=$('#about-backdrop');
+const aboutCtx=aboutCanvas.getContext('2d',{alpha:false});
+let aboutData=null,aboutW=0,aboutH=0,aboutClock=0,aboutElapsed=0,aboutSceneVisible=true;
+const aboutPalette=[
+ [13,14,19],[24,18,28],[45,23,35],[73,31,49],
+ [109,39,58],[164,66,78],[46,86,92],[207,188,183]
+];
+function sizeAboutBackdrop(){
+ const box=aboutCanvas.getBoundingClientRect();
+ if(!box.width||!box.height)return;
+ const W=Math.max(118,Math.min(228,Math.round(box.width/4.9)));
+ const H=Math.max(88,Math.min(140,Math.round(box.height/4.9)));
+ if(aboutW===W&&aboutH===H)return;
+ aboutW=W;aboutH=H;aboutCanvas.width=W;aboutCanvas.height=H;
+ aboutData=aboutCtx.createImageData(W,H);
+}
+function paintAboutBackdrop(t){
+ if(!aboutData||!aboutW||!aboutH)return;
+ const data=aboutData.data,w=aboutW,h=aboutH;
+ const cx=w*.70,cy=h*.42,norm=Math.min(w,h)*.78;
+ for(let y=0;y<h;y++){
+   const yy=(y-h/2)/norm;
+   for(let x=0;x<w;x++){
+     const xx=(x-w/2)/norm;
+     const dx=(x-cx)/norm,dy=(y-cy)/norm;
+     const r=Math.sqrt(dx*dx+dy*dy),a=Math.atan2(dy,dx);
+     const bands=Math.sin(xx*14.5 + Math.sin(yy*5.4+t*.45)*2.2 + t*.85);
+     const lattice=Math.sin((xx+yy)*10.5 - t*.55) * Math.cos((xx-yy)*9.5 + t*.42);
+     const orb=Math.sin(r*26 - t*1.25 + Math.cos(a*4.2)*1.3);
+     const sweep=Math.sin(a*7.0 + r*18 + t*.35);
+     const noise=(((x*17+y*29+(x*y)%31)%27)/26-.5)*.16;
+     const glow=Math.max(0,1-r*1.15)*.28;
+     const v=bands*.34 + lattice*.20 + orb*.26 + sweep*.12 + glow + noise - .08;
+     let ix=0;
+     if(v>-.46)ix=1;
+     if(v>-.28)ix=2;
+     if(v>-.12)ix=3;
+     if(v>.03)ix=4;
+     if(v>.18)ix=5;
+     if(v>.36)ix=6;
+     if(v>.58)ix=7;
+     const c=aboutPalette[ix],q=(y*w+x)*4;
+     data[q]=c[0];data[q+1]=c[1];data[q+2]=c[2];data[q+3]=255;
+   }
+ }
+ aboutCtx.putImageData(aboutData,0,0);
+}
+sizeAboutBackdrop();paintAboutBackdrop(0);
+if('IntersectionObserver' in window){const ao=new IntersectionObserver(entries=>{aboutSceneVisible=entries[0]?.isIntersecting??true},{rootMargin:'140px'});ao.observe($('#about-me-scene'))}
+const aboutCharacterLayer=$('#about-character-layer');
+
+
 sizeMilkBackdrop();paintMilkBackdrop(0);
 if('IntersectionObserver' in window){const mo=new IntersectionObserver(entries=>{milkSceneVisible=entries[0]?.isIntersecting??true},{rootMargin:'140px'});mo.observe($('#milk-scene'))}
-// Keep the sentence accessible as a single line while animating only its visible glyphs.
-const dialogueText="- Drink the milk... make sure you're not allergic.";
-const milkLine=$('#milk-dialogue-line');
-if(milkLine){
-  milkLine.textContent='';
+// Keep the sentence accessible as readable lines while animating only visible glyphs.
+function buildDialogueLine(el,text){
+  if(!el)return;
+  el.textContent='';
   let charIndex=0;
-  dialogueText.split(/(\s+)/).forEach(part=>{
-    if(!part)return;
-    if(/^\s+$/.test(part)){milkLine.append(document.createTextNode(part));return;}
-    const word=document.createElement('span');word.className='dialogue-word';
-    for(const letter of part){
-      const span=document.createElement('span');span.className='dialogue-letter';
-      span.style.setProperty('--letter-delay',((charIndex*0.17)%3.9).toFixed(2));
-      span.textContent=letter;word.append(span);charIndex++;
-    }
-    milkLine.append(word);
+  const lines=String(text).split('\n');
+  lines.forEach((line,lineIndex)=>{
+    line.split(/(\s+)/).forEach(part=>{
+      if(!part)return;
+      if(/^\s+$/.test(part)){el.append(document.createTextNode(part));return;}
+      const word=document.createElement('span');word.className='dialogue-word';
+      for(const letter of part){
+        const span=document.createElement('span');span.className='dialogue-letter';
+        span.style.setProperty('--letter-delay',((charIndex*0.17)%3.9).toFixed(2));
+        span.textContent=letter;word.append(span);charIndex++;
+      }
+      el.append(word);
+    });
+    if(lineIndex<lines.length-1)el.append(document.createElement('br'));
   });
 }
+const dialogueText="- Drink the milk... make sure you're not allergic.";
+const milkLine=$('#milk-dialogue-line');
+const aboutLine=$('#about-dialogue-line');
+buildDialogueLine(milkLine,dialogueText);
+// Edit these three records to write your own looping About Me conversation.
+const aboutDialoguePages=[
+ {pose:'center',gaze:'straight',text:"- Hello, I'm milkinit."},
+ {pose:'right',gaze:'left',text:"- I'm interested in malware research, vulnerability research, and exploit development."},
+ {pose:'left',gaze:'right',text:"- My projects and reports cover vulnerability assessments, CTFs, malware analysis, techniques, and systems programming."}
+];
+const aboutDialogue=$('#about-dialogue');
+const aboutDialogueCount=$('#about-dialogue-count');
+const aboutDialogueStatus=$('#about-dialogue-status');
+let aboutPage=0,aboutTyping=false,aboutTypeTimer=0,aboutGlyphs=[],aboutGlyphIndex=0;
+const aboutScene=$('#about-me-scene');
+const aboutTypeReduced=matchMedia('(prefers-reduced-motion: reduce)');
+const ABOUT_TYPE_SPEED=32; // milliseconds per character
+function finishAboutTyping(){
+ clearTimeout(aboutTypeTimer);
+ aboutGlyphs.forEach(glyph=>glyph.classList.remove('is-untyped'));
+ aboutGlyphIndex=aboutGlyphs.length;
+ aboutTyping=false;
+ aboutDialogue.dataset.typing='false';
+ aboutDialogue.setAttribute('aria-label','Advance About Me dialogue');
+}
+function typeAboutGlyph(){
+ if(!aboutTyping)return;
+ if(aboutGlyphIndex>=aboutGlyphs.length){finishAboutTyping();return;}
+ const glyph=aboutGlyphs[aboutGlyphIndex++];
+ glyph.classList.remove('is-untyped');
+ if(aboutGlyphIndex>=aboutGlyphs.length){finishAboutTyping();return;}
+ const delay=/[.!?,]/.test(glyph.textContent)?ABOUT_TYPE_SPEED*3:ABOUT_TYPE_SPEED;
+ aboutTypeTimer=setTimeout(typeAboutGlyph,delay);
+}
+function showAboutPage(){
+ clearTimeout(aboutTypeTimer);
+ const record=aboutDialoguePages[aboutPage];
+ aboutScene.dataset.pose=record.pose;
+ aboutCharacterLayer.dataset.gaze=record.gaze;
+ buildDialogueLine(aboutLine,record.text);
+ aboutDialogueStatus.textContent=record.text;
+ aboutDialogueCount.textContent=String(aboutPage+1).padStart(2,'0')+' / '+String(aboutDialoguePages.length).padStart(2,'0');
+ aboutGlyphs=[...aboutLine.querySelectorAll('.dialogue-letter')];
+ aboutGlyphIndex=0;
+ if(aboutTypeReduced.matches){finishAboutTyping();return;}
+ aboutGlyphs.forEach(glyph=>glyph.classList.add('is-untyped'));
+ aboutTyping=true;
+ aboutDialogue.dataset.typing='true';
+ aboutDialogue.setAttribute('aria-label','Reveal current About Me dialogue');
+ aboutTypeTimer=setTimeout(typeAboutGlyph,110);
+}
+let aboutStarted=false;
+function startAbout(){if(!aboutStarted){aboutStarted=true;showAboutPage();}}
+aboutDialogue.addEventListener('click',()=>{
+ if(!aboutStarted){startAbout();return;}
+ if(aboutTyping){finishAboutTyping();return;}
+ aboutPage=(aboutPage+1)%aboutDialoguePages.length;
+ showAboutPage();
+});
+// Start the first line when the dialogue itself scrolls into view.
+if('IntersectionObserver' in window){
+ buildDialogueLine(aboutLine,aboutDialoguePages[0].text);
+ aboutLine.querySelectorAll('.dialogue-letter').forEach(glyph=>glyph.classList.add('is-untyped'));
+ aboutDialogue.dataset.typing='true';
+ const aboutIntroObserver=new IntersectionObserver(entries=>{
+  if(entries.some(entry=>entry.isIntersecting)){startAbout();aboutIntroObserver.disconnect();}
+ },{threshold:.2});
+ aboutIntroObserver.observe(aboutDialogue);
+}else{startAbout();}
+aboutTypeReduced.addEventListener('change',()=>{if(aboutTypeReduced.matches&&aboutTyping)finishAboutTyping();});
+// Decode all poses ahead of time for immediate, flicker-free swaps.
+aboutCharacterLayer.querySelectorAll('img').forEach(img=>{if(img.decode)img.decode().catch(()=>{})});
 const milkButton=$('#milk-interaction'),milkHint=$('#milk-hint'),milkPrompt=$('#milk-prompt');
 const milkchanClosed=$('#milkchan-closed'),milkchanOpen=$('#milkchan-open'),milkScene=$('#milk-scene');
 // Decode both sprites before the first swap; catch decode errors rather than
@@ -1031,7 +1243,7 @@ window.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;mous
 if('IntersectionObserver' in window){const obs=new IntersectionObserver(entries=>entries.forEach(e=>{const p=ports.find(p=>p.el===e.target);if(p)p.visible=e.isIntersecting}),{rootMargin:'200px'});ports.forEach(p=>obs.observe(p.el))}
 let sceneRaf=0;
 function tick(t){if(readmeDialog.open){sceneRaf=0;previous=0;return}
- const dt=Math.min(.05,previous?(t-previous)/1000:.016);previous=t;drawElapsed+=dt;const drawDue=drawElapsed>=((innerWidth<700||window.matchMedia('(pointer:coarse)').matches)?1/20:1/24);if(drawDue)drawElapsed=0;bgBoost*=Math.exp(-dt*.8);bgClock+=dt*(1+bgBoost*.72);bgElapsed+=dt;if(bgElapsed>(reduced?3:1/18)){if(milkSceneVisible&&!document.hidden)paintMilkBackdrop(reduced?0:bgClock);bgElapsed=0;}impulse*=Math.exp(-dt*1.5);const target=.60+impulse*.48;speed+=(target-speed)*(1-Math.exp(-dt*1.9));mouseX+=(mouseTX-mouseX)*(1-Math.exp(-dt*2));mouseY+=(mouseTY-mouseY)*(1-Math.exp(-dt*2));milk.tilt+=(milk.target-milk.tilt)*(1-Math.exp(-dt*2.2));milk.shake*=Math.exp(-dt*2.0);updateMilk(dt);for(const p of ports){if(!reduced)p.phase=(p.phase+dt*speed)%frameCount;if(drawDue&&(p.visible||t===0)&&!document.hidden)drawVoid(p)}if(drawDue&&milkSceneVisible&&!document.hidden)drawMilk(dt,reduced?0:t/1000);sceneRaf=requestAnimationFrame(tick)}
+ const dt=Math.min(.05,previous?(t-previous)/1000:.016);previous=t;drawElapsed+=dt;const drawDue=drawElapsed>=((innerWidth<700||window.matchMedia('(pointer:coarse)').matches)?1/20:1/24);if(drawDue)drawElapsed=0;bgBoost*=Math.exp(-dt*.8);bgClock+=dt*(1+bgBoost*.72);bgElapsed+=dt;aboutClock+=dt*.92;aboutElapsed+=dt;if(bgElapsed>(reduced?3:1/18)){if(milkSceneVisible&&!document.hidden)paintMilkBackdrop(reduced?0:bgClock);bgElapsed=0;}if(aboutElapsed>(reduced?3:1/20)){if(aboutSceneVisible&&!document.hidden)paintAboutBackdrop(reduced?0:aboutClock);aboutElapsed=0;}impulse*=Math.exp(-dt*1.5);const target=.60+impulse*.48;speed+=(target-speed)*(1-Math.exp(-dt*1.9));mouseX+=(mouseTX-mouseX)*(1-Math.exp(-dt*2));mouseY+=(mouseTY-mouseY)*(1-Math.exp(-dt*2));milk.tilt+=(milk.target-milk.tilt)*(1-Math.exp(-dt*2.2));milk.shake*=Math.exp(-dt*2.0);updateMilk(dt);for(const p of ports){if(!reduced)p.phase=(p.phase+dt*speed)%frameCount;if(drawDue&&(p.visible||t===0)&&!document.hidden)drawVoid(p)}if(drawDue&&milkSceneVisible&&!document.hidden)drawMilk(dt,reduced?0:t/1000);sceneRaf=requestAnimationFrame(tick)}
 
 // Small GitHub file browser: folders first, optional README preview, file navigation.
 // The site only reads public repositories. Existing project names remain the triggers.
