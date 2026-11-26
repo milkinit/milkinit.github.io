@@ -681,14 +681,14 @@ body.repo-scroll-locked{
 
 /* About Me uses the original Milk scene and dialogue classes. Only positioning is different. */
 .about-section{padding-top:clamp(32px,4.5vw,56px);scroll-margin-top:80px}
-.about-scene.interlude{margin:10px 0 12px;--character-x:50%;--dialogue-x:50%;--dialogue-width:calc(64% - clamp(12px,2.5vw,27px))}
+.about-scene.interlude{margin:10px 0 12px;--character-x:50%;--dialogue-x:50%;--dialogue-width:calc(64% - clamp(12px,2.5vw,27px));--topic-y:36%}
 .about-scene[data-pose="right"]{--character-x:75%;--dialogue-x:35%}
 .about-scene[data-pose="left"]{--character-x:25%;--dialogue-x:65%}
 .about-backdrop{position:absolute;inset:0;width:100%;height:100%;z-index:0;image-rendering:pixelated;opacity:.76;pointer-events:none}
 .about-character-layer{position:absolute;z-index:2;left:var(--character-x);bottom:0;width:min(53%,520px);height:100%;pointer-events:none;transform:translateX(-50%);transition:left 440ms cubic-bezier(.25,.7,.25,1)}
 .about-character-layer img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;object-position:center bottom;image-rendering:pixelated;opacity:0;transition:none;backface-visibility:hidden}
 /* Idle sprite sway: all three gaze frames share the same movement. */
-.about-character-layer img{transform-origin:50% 100%;animation:about-idle-wobble 5.6s steps(1,end) infinite}
+.sprite-idle{position:absolute;inset:0;transform-origin:50% 100%;animation:about-idle-wobble 5.6s steps(1,end) infinite}
 @keyframes about-idle-wobble{
   0%,100%{transform:translate(0,0) rotate(0deg)}
   12.5%{transform:translate(-1px,-1px) rotate(-.28deg)}
@@ -718,23 +718,65 @@ body.repo-scroll-locked{
 @media(max-width:900px){.about-character-layer{width:min(56%,460px)}}
 @media(max-width:600px){
  .about-section{padding-top:30px}
- .about-scene.interlude{--dialogue-width:calc(83% - 9px)}
- .about-scene[data-pose="right"]{--character-x:65%;--dialogue-x:47%}
- .about-scene[data-pose="left"]{--character-x:35%;--dialogue-x:57%}
+ .about-scene.interlude{--dialogue-width:calc(83% - 9px);--topic-y:42%}
+ .about-scene[data-pose="right"]{--character-x:80%;--dialogue-x:43%}
+ .about-scene[data-pose="left"]{--character-x:20%;--dialogue-x:57%}
  .about-character-layer{width:86%;height:100%}
 }
-@media(max-width:360px){.about-scene.interlude{--dialogue-width:calc(87% - 7px)}.about-scene[data-pose="left"]{--dialogue-x:56%}}
+@media(max-width:360px){.about-scene.interlude{--topic-y:45%}}
 @media(prefers-reduced-motion:reduce){.about-character-layer,.about-dialogue{transition:none!important}.about-dialogue-arrow{animation:none!important}}
-
+/* Matching 32-pixel icons, centered on the same horizontal axis as the dialogue. */
+.about-topic-art{position:absolute;z-index:3;left:var(--dialogue-x);top:var(--topic-y);width:clamp(108px,14.5vw,166px);aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none;transition:left 440ms cubic-bezier(.25,.7,.25,1),top 440ms cubic-bezier(.25,.7,.25,1);display:none}
+.about-topic-art[data-topic="malware"],.about-topic-art[data-topic="projects"]{display:block}
+.topic-sprite{position:absolute;inset:0;display:block;width:100%;height:100%;visibility:hidden;image-rendering:pixelated;transform-origin:center;animation:topic-idle 4.6s steps(1,end) infinite}
+.about-topic-art[data-topic="malware"] .topic-malware,.about-topic-art[data-topic="projects"] .topic-projects{visibility:visible}
+@keyframes topic-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@media(max-width:600px){
+ .about-topic-art{width:clamp(70px,19vw,96px)}
+}
+@media(max-width:360px){.about-topic-art{width:clamp(66px,19vw,86px)}}
+@media(prefers-reduced-motion:reduce){.topic-sprite{animation:none!important}}
 
 /* Keep both sprite bottoms inside the scene even at the peak of their idle sway. */
 #milk-scene .character-layer,.about-character-layer{bottom:-12px}
-#milk-scene .character-layer img{transform-origin:50% 100%;animation:about-idle-wobble 5.6s steps(1,end) infinite}
+/* Both scenes share one idle animation per sprite stack. */
 @media(max-width:600px){
  .about-character-layer{width:115%;max-width:480px}
- .about-dialogue.milk-dialogue{min-height:205px}
+ /* Keep the mobile visual-novel window compact; long lines can grow naturally. */
+ .about-dialogue.milk-dialogue{min-height:112px;bottom:12px;padding:11px 10px 15px;border-width:7px;border-image-width:7px;justify-content:center}
+ .about-dialogue .about-line{font-size:clamp(9px,2.45vw,11px);line-height:1.65;padding-bottom:4px;letter-spacing:0}
+ .about-scene[data-pose="center"] .about-dialogue{min-height:82px;--dialogue-width:calc(76% - 8px);padding:12px 10px 16px}
+ .about-scene[data-pose="center"] .about-line{font-size:clamp(12px,3.45vw,17px);line-height:1.65;padding-bottom:0}
+ .about-dialogue-arrow{font-size:11px;right:7px;bottom:4px}
 }
 @media(prefers-reduced-motion:reduce){#milk-scene .character-layer img{animation:none!important}}
+
+/* Keep the icons in a separate lane from the character on narrow screens. */
+@media(max-width:600px){
+ /* The sprite's face is about 4% left of its texture center. Offset the
+    whole stack, and use equal 28% travel on either side of the greeting. */
+ .about-scene.interlude{--character-x:54%;--dialogue-width:70%}
+ .about-scene[data-pose="right"]{--character-x:82%;--dialogue-x:37%;--dialogue-width:70%}
+ .about-scene[data-pose="left"]{--character-x:26%;--dialogue-x:63%;--dialogue-width:70%}
+ .about-character-layer{width:100%}
+ .about-scene[data-pose="center"] .about-dialogue{--dialogue-width:70%}
+ .about-dialogue.milk-dialogue{overflow:hidden}
+}
+@media(max-width:360px){
+ .about-character-layer{width:96%}
+}
+@media(prefers-reduced-motion:reduce){.about-topic-art{transition:none!important}.sprite-idle{animation:none!important}}
+.motion-paused .sprite-idle,.motion-paused .dialogue-letter,.motion-paused .about-dialogue-arrow,.motion-paused .topic-sprite,.motion-paused .book-float,.motion-paused .book-object,
+.document-hidden .page *, .repo-scroll-locked .page *{animation-play-state:paused!important}
+.about-topic-art:not([data-topic="malware"]) .topic-malware,.about-topic-art:not([data-topic="projects"]) .topic-projects{animation-play-state:paused}
+.about-line .is-untyped{animation-play-state:paused}
+
+
+/* Compact About Me framing on phones; leave the Milk scene untouched. */
+@media(max-width:600px){
+ .about-scene.interlude{height:clamp(365px,105vw,475px);--topic-y:38%}
+}
+@media(max-width:360px){.about-scene.interlude{--topic-y:42%}}
 
 </style>
 </head>
@@ -746,16 +788,42 @@ body.repo-scroll-locked{
 <details class="corner-menu" id="menu"><summary>ARCHIVE MENU <span aria-hidden="true">+</span></summary><div class="menu-panel"><nav class="navigation" aria-label="Archive navigation"><a href="#home">HOME</a><a href="#about-me">ABOUT - ME</a><a href="#reading-certifications">LEARNING</a><a href="#vulnerbility-research">CYBERSECURITY</a><a href="#milk-scene">MILK</a><a href="#system-software">SOFTWARE DEVELOPMENT</a><a href="https://github.com/milkinit" target="_blank" rel="noopener noreferrer">GITHUB ↗</a></nav></div></details>
 <section class="hero scene" id="prologue" aria-label="Opening scene">
 <div class="void-space" aria-hidden="true"><canvas class="void-canvas" data-void="hero"></canvas></div>
-<div class="hero-copy"><h1>milkinit<span>.</span></h1><p class="hero-kicker">outside an init.d of milk.</p></div>
+<div class="hero-copy"><h1>milkinit<span>.</span></h1><p class="hero-kicker">outside an init.d of milk.</p><p class="hero-description">Malware Researcher · Exploit Developer</p></div>
 
 </section>
 <section class="about-section" id="about-me"><div class="chapter-heading"><span class="chapter-symbol" aria-hidden="true">:</span><div><h2 class="archive-title">About - Me</h2></div></div>
 <section class="about-scene interlude scene" id="about-me-scene" data-pose="center" aria-label="About me scene">
 <canvas class="about-backdrop" id="about-backdrop" aria-hidden="true"></canvas>
-<div class="about-character-layer" id="about-character-layer" data-gaze="straight" aria-hidden="true">
+<div class="about-character-layer" id="about-character-layer" data-gaze="straight" aria-hidden="true"><div class="sprite-idle">
 <img id="aboutme-straight" src="assets/aboutme-straight.png" alt="" width="1000" height="1036" decoding="async">
 <img id="aboutme-right" src="assets/aboutme-right.png" alt="" width="1000" height="1036" decoding="async">
 <img id="aboutme-left" src="assets/aboutme-left.png" alt="" width="1000" height="1036" decoding="async">
+</div></div>
+<div class="about-topic-art" id="about-topic-art" data-topic="none" aria-hidden="true">
+  <svg class="topic-sprite topic-malware" viewBox="0 0 32 32" shape-rendering="crispEdges">
+    <!-- Eight-bit malware beetle, with stepped antennae and three pairs of legs. -->
+    <path fill="#100d15" d="M7 2H11V6H14V5H18V6H21V2H25V7H22V9H25V12H28V10H31V15H27V17H31V22H27V24H30V29H25V25H23V28H20V30H12V28H9V25H7V29H2V24H5V22H1V17H5V15H1V10H4V12H7V9H10V7H7Z"/>
+    <path fill="#79313d" d="M8 3H10V7H12V9H10V8H8ZM22 3H24V8H22V9H20V7H22ZM2 11H4V13H8V15H5V14H2ZM28 11H30V14H27V15H24V13H28ZM2 18H8V20H5V21H2ZM24 18H30V21H27V20H24ZM3 25H8V23H10V25H7V28H3ZM24 23V25H29V28H25V25H22V23Z"/>
+    <path fill="#ac3232" d="M12 7H20V9H23V12H25V23H23V26H20V28H12V26H9V23H7V12H9V9H12Z"/>
+    <path fill="#d96b78" d="M12 8H20V10H22V13H10V10H12ZM9 15H11V22H13V24H11V23H9Z"/>
+    <path fill="#52263e" d="M23 14H25V23H23V26H20V28H12V26H10V24H13V25H20V23H22V15H23Z"/>
+    <path fill="#211521" d="M10 13H22V15H17V26H15V15H10Z"/>
+    <path fill="#e0c3b6" d="M11 10H14V12H11ZM18 10H21V12H18Z"/>
+    <path fill="#79313d" d="M12 17H14V19H12ZM18 17H20V19H18ZM12 21H14V23H12ZM18 21H20V23H18Z"/>
+  </svg>
+  <svg class="topic-sprite topic-projects" viewBox="0 0 32 32" shape-rendering="crispEdges">
+    <!-- Circuit shield with a stepped perimeter and a small padlock. -->
+    <path fill="#100d15" d="M14 0H18V5H21V7H26V4H30V8H28V13H31V17H27V22H30V26H26V24H23V27H20V29H17V32H15V29H12V27H9V24H6V26H2V22H5V17H1V13H5V8H2V4H6V7H11V5H14Z"/>
+    <path fill="#79313d" d="M15 2H17V7H15ZM4 5H6V9H10V11H6V7H4ZM26 5H28V7H26V11H22V9H26ZM2 14H8V16H2ZM24 14H30V16H24ZM4 23H6V21H10V23H6V25H4ZM22 21H26V23H28V25H26V23H22ZM15 26H17V30H15Z"/>
+    <path fill="#d96b78" d="M14 1H18V4H14ZM2 4H5V7H2ZM27 4H30V7H27ZM1 13H4V16H1ZM28 13H31V16H28ZM2 23H5V26H2ZM27 23H30V26H27ZM14 28H18V31H14Z"/>
+    <path fill="#100d15" d="M14 5H18V7H22V9H26V19H24V23H22V26H19V28H13V26H10V23H8V19H6V9H10V7H14Z"/>
+    <path fill="#ac3232" d="M14 7H18V9H22V11H24V19H22V23H20V25H17V27H15V25H12V23H10V19H8V11H10V9H14Z"/>
+    <path fill="#52263e" d="M14 9H18V11H22V19H20V23H17V25H15V23H12V19H10V11H14Z"/>
+    <path fill="#d96b78" d="M14 8H18V10H14ZM10 10H14V12H10ZM9 12H11V19H9Z"/>
+    <path fill="#e0c3b6" d="M14 12H18V13H19V16H20V22H12V16H13V13H14ZM15 14V16H17V14Z" fill-rule="evenodd"/>
+    <path fill="#ac3232" d="M15 18H17V20H15Z"/>
+    <path fill="#79313d" d="M13 21H19V22H13Z"/>
+  </svg>
 </div>
 <button type="button" class="about-dialogue milk-dialogue" id="about-dialogue" aria-label="Advance About Me dialogue">
 <span class="about-line milk-line" id="about-dialogue-line" aria-hidden="true">- Hello, I'm milkinit.</span>
@@ -827,10 +895,10 @@ body.repo-scroll-locked{
 </div></section>
 <section class="interlude scene" id="milk-scene" aria-label="Milk scene">
 <canvas class="milk-backdrop" id="milk-backdrop" aria-hidden="true"></canvas>
-<div class="character-layer" data-expression="closed" aria-hidden="true">
-<img src="assets/milkchan-closed.png" alt="" loading="eager" decoding="sync" id="milkchan-closed" class="active">
-<img src="assets/milkchan-open.png" alt="" loading="eager" decoding="sync" id="milkchan-open">
-</div>
+<div class="character-layer" data-expression="closed" aria-hidden="true"><div class="sprite-idle">
+<img src="assets/milkchan-closed.png" alt="" loading="eager" decoding="async" id="milkchan-closed" class="active">
+<img src="assets/milkchan-open.png" alt="" loading="eager" decoding="async" id="milkchan-open">
+</div></div>
 <button class="milk-interaction" id="milk-interaction" type="button" aria-label="Drink the milk; it refills automatically"><canvas id="milk-canvas" width="252" height="188" aria-hidden="true"></canvas><span class="milk-hint" id="milk-hint" aria-live="polite">click / tap to drink</span></button>
 <div class="milk-dialogue" role="note" aria-label="- Drink the milk... make sure you're not allergic.">
 <p class="milk-line" id="milk-dialogue-line" aria-hidden="true">- Drink the milk... make sure you're not allergic.</p>
@@ -845,7 +913,7 @@ body.repo-scroll-locked{
 <article class="project" data-project><span class="project-number">01</span><div class="project-copy"><h3><a href="https://github.com/milkinit/http-server" target="_blank" rel="noopener noreferrer">HTTP Server</a></h3><p>HTTP server written in C.</p></div><span class="project-arrow" aria-hidden="true"><span class="project-arrow" aria-hidden="true">↗&#xFE0E;</span></span></article>
 </div></section>
 <section class="archive-banner-slot" id="eof" aria-label="Archive banner">
-<img class="archive-banner" src="assets/banner.gif" alt="Archive closing banner" onerror="this.style.display='none';this.parentElement.classList.add('empty')">
+<img class="archive-banner" src="assets/banner.gif" loading="lazy" decoding="async" alt="Archive closing banner" onerror="this.style.display='none';this.parentElement.classList.add('empty')">
 </section>
 <footer class="footer"><span>milkinit.d // bottom of glass</span><a href="#home">RETURN TO START ↑</a></footer>
 </main>
@@ -924,7 +992,8 @@ $$('[data-learning-deck]').forEach(panel=>{
 });
 const html=document.documentElement;const menu=$('#menu'),search=$('#project-search'),status=$('#search-status'),clear=$('#clear-search'),empty=$('#empty-state');
 const projectEls=$$('[data-project]'),chapters=$$('.archive-section');
-function filter(){let total=0;const query=search.value.trim().toLowerCase();for(const sec of chapters){let count=0;const title=$('.archive-title',sec).textContent.toLowerCase();for(const project of $$('[data-project]',sec)){const show=!query||(`${project.textContent} ${title}`).toLowerCase().includes(query);project.hidden=!show;if(show){count++;total++;}}sec.hidden=!!query&&!count;}empty.hidden=total!==0;status.textContent=query?`${total} matching record${total===1?'':'s'}.`:`Showing all ${projectEls.length} projects.`;}
+const searchRecords=new Map(chapters.map(sec=>[sec,$$('[data-project]',sec).map(project=>({project,key:(project.textContent+' '+$('.archive-title',sec).textContent).toLowerCase()}))]));
+function filter(){let total=0;const query=search.value.trim().toLowerCase();for(const sec of chapters){let count=0;for(const {project,key} of searchRecords.get(sec)){const show=!query||key.includes(query);project.hidden=!show;if(show){count++;total++;}}sec.hidden=!!query&&!count;}empty.hidden=total!==0;status.textContent=query?`${total} matching record${total===1?'':'s'}.`:`Showing all ${projectEls.length} projects.`;}
 search.addEventListener('input',filter);clear.addEventListener('click',()=>{search.value='';filter();search.focus()});filter();
 $$('.navigation a').forEach(a=>a.addEventListener('click',()=>menu.open=false));document.addEventListener('pointerdown',e=>{if(menu.open&&!menu.contains(e.target))menu.open=false});
 const menuSummary=$('summary',menu);
@@ -949,8 +1018,9 @@ function drawVoid(p){const c=p.ctx,w=p.w,h=p.h;c.clearRect(0,0,w,h);if(!w||!h)re
  const dim=Math.min(w,h)*.985;const cx=w*.52+mouseX*8,cy=h*.50+mouseY*6;
  const scale=1+impulse*.018;c.save();c.translate(cx,cy);c.scale(scale,scale);c.translate(-dim/2,-dim/2);
  if(image){const draw=(n,alpha)=>{c.globalAlpha=alpha;c.drawImage(image,(n%cols)*frameSize,Math.floor(n/cols)*frameSize,frameSize,frameSize,0,0,dim,dim)};draw(i,1);draw(j,t*t*(3-2*t)*.88)}else{c.drawImage(still,0,0,dim,dim)}c.restore();c.globalAlpha=1;}
+const milkCanvas=$('#milk-canvas'),milkCanvasCtx=milkCanvas.getContext('2d');
 function drawMilk(dt,time){
- const el=$('#milk-canvas'),ctx=el.getContext('2d');if(!ctx)return;
+ const el=milkCanvas,ctx=milkCanvasCtx;if(!ctx)return;
  const w=el.width,h=el.height;ctx.clearRect(0,0,w,h);
  const pad=6;
  const innerX=pad, innerY=pad, innerW=w-pad*2, innerH=h-pad*2;
@@ -997,7 +1067,7 @@ let milkSceneVisible=true;
 // Standalone, gently moving 8-bit swirl. No pointer coordinates are read.
 const bgCanvas=$('#milk-backdrop');
 const bgCtx=bgCanvas.getContext('2d',{alpha:false});
-let bgData=null,bgW=0,bgH=0,bgClock=0,bgBoost=0,bgElapsed=0;
+let bgData=null,bgW=0,bgH=0,bgClock=0,bgBoost=0,bgElapsed=0,bgGeometry=null;
 const bgPalette=[
  [13,14,19],[21,15,24],[35,17,29],[57,23,39],
  [82,38,62],[117,40,56],[172,50,50],[217,107,120]
@@ -1010,25 +1080,26 @@ function sizeMilkBackdrop(){
  if(bgW===W&&bgH===H)return;
  bgW=W;bgH=H;bgCanvas.width=W;bgCanvas.height=H;
  bgData=bgCtx.createImageData(W,H);
+ bgGeometry=new Float64Array(W*H*5);
+ const norm=Math.min(W,H)*.85;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+  const dx=(x-W*.51)/norm,dy=(y-H*.48)/norm,r=Math.sqrt(dx*dx+dy*dy),a=Math.atan2(dy,dx),q=(y*W+x)*5;
+  bgGeometry[q]=a*6+r*27;bgGeometry[q+1]=a*3+r*9;bgGeometry[q+2]=r*49+Math.cos(a*4)*.28;bgGeometry[q+3]=a*13-r*31;
+  bgGeometry[q+4]=Math.max(0,1-r*1.04)*.25+(((x*31+y*17+(x*y)%19)%23)/22-.5)*.19-.17;
+ }
 }
 function paintMilkBackdrop(t){
  if(!bgData||!bgW||!bgH)return;
  const data=bgData.data,w=bgW,h=bgH;
  const phase=t*.27;
- const cx=w*.51,cy=h*.48;
- const norm=Math.min(w,h)*.85;
+ const g=bgGeometry;
  for(let y=0;y<h;y++){
-   const dy=(y-cy)/norm;
    for(let x=0;x<w;x++){
-     const dx=(x-cx)/norm, r=Math.sqrt(dx*dx+dy*dy);
-     const a=Math.atan2(dy,dx);
-     // Two nested spiral frequencies, elliptical arcs and ordered dithering.
-     const swirl=a*6.0+r*27.0-phase*2.6+Math.sin(a*3+r*9-phase)*.7;
-     const ring=Math.sin(r*49-phase*1.9 + Math.cos(a*4)*.28);
-     const flame=Math.sin(swirl)*.54 + Math.sin(a*13-r*31+phase*1.1)*.20 + ring*.24;
-     const noise=(((x*31+y*17+(x*y)%19)%23)/22-.5)*.19;
-     const focus=Math.max(0,1-r*1.04);
-     const v=flame*.78+focus*.25+noise-.17;
+     const k=(y*w+x)*5;
+     const swirl=g[k]-phase*2.6+Math.sin(g[k+1]-phase)*.7;
+     const ring=Math.sin(g[k+2]-phase*1.9);
+     const flame=Math.sin(swirl)*.54+Math.sin(g[k+3]+phase*1.1)*.20+ring*.24;
+     const v=flame*.78+g[k+4];
      let ix=0;
      if(v>-.46)ix=1;
      if(v>-.32)ix=2;
@@ -1047,7 +1118,7 @@ function paintMilkBackdrop(t){
 // EarthBound-like about screen: warped bands and orbit lines, quieter than the milk spiral.
 const aboutCanvas=$('#about-backdrop');
 const aboutCtx=aboutCanvas.getContext('2d',{alpha:false});
-let aboutData=null,aboutW=0,aboutH=0,aboutClock=0,aboutElapsed=0,aboutSceneVisible=true;
+let aboutData=null,aboutW=0,aboutH=0,aboutClock=0,aboutElapsed=0,aboutSceneVisible=true,aboutGeometry=null,aboutRowPhase=null;
 const aboutPalette=[
  [13,14,19],[24,18,28],[45,23,35],[73,31,49],
  [109,39,58],[164,66,78],[46,86,92],[207,188,183]
@@ -1060,24 +1131,30 @@ function sizeAboutBackdrop(){
  if(aboutW===W&&aboutH===H)return;
  aboutW=W;aboutH=H;aboutCanvas.width=W;aboutCanvas.height=H;
  aboutData=aboutCtx.createImageData(W,H);
+ aboutGeometry=new Float64Array(W*H*5);aboutRowPhase=new Float64Array(H);
+ const norm=Math.min(W,H)*.78;
+ for(let y=0;y<H;y++){
+  const yy=(y-H/2)/norm;aboutRowPhase[y]=yy*5.4;
+  for(let x=0;x<W;x++){
+   const xx=(x-W/2)/norm,dx=(x-W*.70)/norm,dy=(y-H*.42)/norm,r=Math.sqrt(dx*dx+dy*dy),a=Math.atan2(dy,dx),q=(y*W+x)*5;
+   aboutGeometry[q]=(xx+yy)*10.5;aboutGeometry[q+1]=(xx-yy)*9.5;aboutGeometry[q+2]=r*26+Math.cos(a*4.2)*1.3;aboutGeometry[q+3]=a*7+r*18;
+   aboutGeometry[q+4]=Math.max(0,1-r*1.15)*.28+(((x*17+y*29+(x*y)%31)%27)/26-.5)*.16-.08;
+  }
+ }
 }
 function paintAboutBackdrop(t){
  if(!aboutData||!aboutW||!aboutH)return;
  const data=aboutData.data,w=aboutW,h=aboutH;
- const cx=w*.70,cy=h*.42,norm=Math.min(w,h)*.78;
+ const g=aboutGeometry,norm=Math.min(w,h)*.78;
  for(let y=0;y<h;y++){
-   const yy=(y-h/2)/norm;
+   const row=Math.sin(aboutRowPhase[y]+t*.45)*2.2+t*.85;
    for(let x=0;x<w;x++){
-     const xx=(x-w/2)/norm;
-     const dx=(x-cx)/norm,dy=(y-cy)/norm;
-     const r=Math.sqrt(dx*dx+dy*dy),a=Math.atan2(dy,dx);
-     const bands=Math.sin(xx*14.5 + Math.sin(yy*5.4+t*.45)*2.2 + t*.85);
-     const lattice=Math.sin((xx+yy)*10.5 - t*.55) * Math.cos((xx-yy)*9.5 + t*.42);
-     const orb=Math.sin(r*26 - t*1.25 + Math.cos(a*4.2)*1.3);
-     const sweep=Math.sin(a*7.0 + r*18 + t*.35);
-     const noise=(((x*17+y*29+(x*y)%31)%27)/26-.5)*.16;
-     const glow=Math.max(0,1-r*1.15)*.28;
-     const v=bands*.34 + lattice*.20 + orb*.26 + sweep*.12 + glow + noise - .08;
+     const k=(y*w+x)*5;
+     const bands=Math.sin((x-w/2)/norm*14.5+row);
+     const lattice=Math.sin(g[k]-t*.55)*Math.cos(g[k+1]+t*.42);
+     const orb=Math.sin(g[k+2]-t*1.25);
+     const sweep=Math.sin(g[k+3]+t*.35);
+     const v=bands*.34+lattice*.20+orb*.26+sweep*.12+g[k+4];
      let ix=0;
      if(v>-.46)ix=1;
      if(v>-.28)ix=2;
@@ -1093,12 +1170,12 @@ function paintAboutBackdrop(t){
  aboutCtx.putImageData(aboutData,0,0);
 }
 sizeAboutBackdrop();paintAboutBackdrop(0);
-if('IntersectionObserver' in window){const ao=new IntersectionObserver(entries=>{aboutSceneVisible=entries[0]?.isIntersecting??true},{rootMargin:'140px'});ao.observe($('#about-me-scene'))}
+if('IntersectionObserver' in window){const ao=new IntersectionObserver(entries=>{aboutSceneVisible=entries[0]?.isIntersecting??true;wakeScenes()},{rootMargin:'140px'});ao.observe($('#about-me-scene'))}
 const aboutCharacterLayer=$('#about-character-layer');
 
 
 sizeMilkBackdrop();paintMilkBackdrop(0);
-if('IntersectionObserver' in window){const mo=new IntersectionObserver(entries=>{milkSceneVisible=entries[0]?.isIntersecting??true},{rootMargin:'140px'});mo.observe($('#milk-scene'))}
+if('IntersectionObserver' in window){const mo=new IntersectionObserver(entries=>{milkSceneVisible=entries[0]?.isIntersecting??true;wakeScenes()},{rootMargin:'140px'});mo.observe($('#milk-scene'))}
 // Keep the sentence accessible as readable lines while animating only visible glyphs.
 function buildDialogueLine(el,text){
   if(!el)return;
@@ -1126,15 +1203,16 @@ const aboutLine=$('#about-dialogue-line');
 buildDialogueLine(milkLine,dialogueText);
 // Edit these three records to write your own looping About Me conversation.
 const aboutDialoguePages=[
- {pose:'center',gaze:'straight',text:"- Hello, I'm milkinit."},
- {pose:'right',gaze:'left',text:"- I'm interested in malware research, vulnerability research, and exploit development."},
- {pose:'left',gaze:'right',text:"- My projects and reports cover vulnerability assessments, CTFs, malware analysis, techniques, and systems programming."}
+ {pose:'center',gaze:'straight',topic:'none',text:"- Hello, I'm milkinit."},
+ {pose:'right',gaze:'left',topic:'malware',text:"- I'm interested in malware research, vulnerability research, and exploit development."},
+ {pose:'left',gaze:'right',topic:'projects',text:"- My projects and reports cover vulnerability assessments, CTFs, malware analysis, techniques, and systems programming."}
 ];
 const aboutDialogue=$('#about-dialogue');
 const aboutDialogueCount=$('#about-dialogue-count');
 const aboutDialogueStatus=$('#about-dialogue-status');
 let aboutPage=0,aboutTyping=false,aboutTypeTimer=0,aboutGlyphs=[],aboutGlyphIndex=0;
 const aboutScene=$('#about-me-scene');
+const aboutTopicArt=$('#about-topic-art');
 const aboutTypeReduced=matchMedia('(prefers-reduced-motion: reduce)');
 const ABOUT_TYPE_SPEED=32; // milliseconds per character
 function finishAboutTyping(){
@@ -1154,12 +1232,24 @@ function typeAboutGlyph(){
  const delay=/[.!?,]/.test(glyph.textContent)?ABOUT_TYPE_SPEED*3:ABOUT_TYPE_SPEED;
  aboutTypeTimer=setTimeout(typeAboutGlyph,delay);
 }
+let dialogueResizeAnimation=null;
+const mobileDialogue=matchMedia('(max-width:600px)');
 function showAboutPage(){
  clearTimeout(aboutTypeTimer);
+ const animateSize=mobileDialogue.matches&&!aboutTypeReduced.matches&&aboutStarted;
+ const oldHeight=animateSize?aboutDialogue.getBoundingClientRect().height:0;
+ if(dialogueResizeAnimation){dialogueResizeAnimation.cancel();dialogueResizeAnimation=null;}
  const record=aboutDialoguePages[aboutPage];
  aboutScene.dataset.pose=record.pose;
  aboutCharacterLayer.dataset.gaze=record.gaze;
+ if(aboutTopicArt)aboutTopicArt.dataset.topic=record.topic||'none';
  buildDialogueLine(aboutLine,record.text);
+ if(animateSize&&aboutDialogue.animate){
+  const nextHeight=aboutDialogue.getBoundingClientRect().height;
+  if(Math.abs(nextHeight-oldHeight)>1){
+   dialogueResizeAnimation=aboutDialogue.animate([{height:oldHeight+'px',minHeight:oldHeight+'px'},{height:nextHeight+'px',minHeight:nextHeight+'px'}],{duration:440,easing:'cubic-bezier(.25,.7,.25,1)'});
+  }
+ }
  aboutDialogueStatus.textContent=record.text;
  aboutDialogueCount.textContent=String(aboutPage+1).padStart(2,'0')+' / '+String(aboutDialoguePages.length).padStart(2,'0');
  aboutGlyphs=[...aboutLine.querySelectorAll('.dialogue-letter')];
@@ -1189,7 +1279,9 @@ if('IntersectionObserver' in window){
  },{threshold:.2});
  aboutIntroObserver.observe(aboutDialogue);
 }else{startAbout();}
-aboutTypeReduced.addEventListener('change',()=>{if(aboutTypeReduced.matches&&aboutTyping)finishAboutTyping();});
+aboutTypeReduced.addEventListener('change',()=>{if(aboutTypeReduced.matches){dialogueResizeAnimation?.cancel();if(aboutTyping)finishAboutTyping();}});
+mobileDialogue.addEventListener('change',()=>dialogueResizeAnimation?.cancel());
+window.addEventListener('resize',()=>dialogueResizeAnimation?.cancel(),{passive:true});
 // Decode all poses ahead of time for immediate, flicker-free swaps.
 aboutCharacterLayer.querySelectorAll('img').forEach(img=>{if(img.decode)img.decode().catch(()=>{})});
 const milkButton=$('#milk-interaction'),milkHint=$('#milk-hint'),milkPrompt=$('#milk-prompt');
@@ -1216,7 +1308,7 @@ async function drinkMilk(){
   try{
     await milkchanReady;
     if(milk.stage!=='idle')return;
-    milkStage('drinking');
+    milkStage('drinking');wakeScenes();
     milk.shake=Math.max(milk.shake,10);
     bgBoost=1;
   }finally{milkClickPending=false}
@@ -1240,10 +1332,30 @@ function updateMilk(dt){
 }
 window.addEventListener('scroll',()=>{const now=window.scrollY,delta=now-scrollY;scrollY=now;if(delta>0){impulse=Math.min(1,impulse+Math.min(.12,delta/1800));milk.shake=Math.min(14,milk.shake+Math.min(2.3,delta/140))}else{impulse*=.85}},{passive:true});
 window.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;mouseTX=e.clientX/innerWidth-.5;mouseTY=e.clientY/innerHeight-.5},{passive:true});
-if('IntersectionObserver' in window){const obs=new IntersectionObserver(entries=>entries.forEach(e=>{const p=ports.find(p=>p.el===e.target);if(p)p.visible=e.isIntersecting}),{rootMargin:'200px'});ports.forEach(p=>obs.observe(p.el))}
+if('IntersectionObserver' in window){const obs=new IntersectionObserver(entries=>entries.forEach(e=>{const p=ports.find(p=>p.el===e.target);if(p)p.visible=e.isIntersecting;wakeScenes()}),{rootMargin:'200px'});ports.forEach(p=>obs.observe(p.el))}
 let sceneRaf=0;
-function tick(t){if(readmeDialog.open){sceneRaf=0;previous=0;return}
- const dt=Math.min(.05,previous?(t-previous)/1000:.016);previous=t;drawElapsed+=dt;const drawDue=drawElapsed>=((innerWidth<700||window.matchMedia('(pointer:coarse)').matches)?1/20:1/24);if(drawDue)drawElapsed=0;bgBoost*=Math.exp(-dt*.8);bgClock+=dt*(1+bgBoost*.72);bgElapsed+=dt;aboutClock+=dt*.92;aboutElapsed+=dt;if(bgElapsed>(reduced?3:1/18)){if(milkSceneVisible&&!document.hidden)paintMilkBackdrop(reduced?0:bgClock);bgElapsed=0;}if(aboutElapsed>(reduced?3:1/20)){if(aboutSceneVisible&&!document.hidden)paintAboutBackdrop(reduced?0:aboutClock);aboutElapsed=0;}impulse*=Math.exp(-dt*1.5);const target=.60+impulse*.48;speed+=(target-speed)*(1-Math.exp(-dt*1.9));mouseX+=(mouseTX-mouseX)*(1-Math.exp(-dt*2));mouseY+=(mouseTY-mouseY)*(1-Math.exp(-dt*2));milk.tilt+=(milk.target-milk.tilt)*(1-Math.exp(-dt*2.2));milk.shake*=Math.exp(-dt*2.0);updateMilk(dt);for(const p of ports){if(!reduced)p.phase=(p.phase+dt*speed)%frameCount;if(drawDue&&(p.visible||t===0)&&!document.hidden)drawVoid(p)}if(drawDue&&milkSceneVisible&&!document.hidden)drawMilk(dt,reduced?0:t/1000);sceneRaf=requestAnimationFrame(tick)}
+const coarse=matchMedia('(pointer:coarse)');
+let frameInterval=1/24;
+function refreshFrameRate(){frameInterval=(innerWidth<700||coarse.matches)?1/20:1/24;}
+refreshFrameRate();coarse.addEventListener('change',refreshFrameRate);
+window.addEventListener('resize',()=>{refreshFrameRate();wakeScenes()},{passive:true});
+function sceneNeeded(){return !document.hidden&&!readmeDialog.open&&(milkSceneVisible||aboutSceneVisible||ports.some(p=>p.visible)||milk.stage!=='idle');}
+function wakeScenes(){if(!sceneRaf&&sceneNeeded()){previous=0;drawElapsed=1;bgElapsed=1;aboutElapsed=1;sceneRaf=requestAnimationFrame(tick);}}
+function tick(t){
+ sceneRaf=0;
+ if(!sceneNeeded()){previous=0;return;}
+ const dt=Math.min(.05,previous?(t-previous)/1000:.016);previous=t;
+ drawElapsed+=dt;const drawDue=drawElapsed>=frameInterval;if(drawDue)drawElapsed%=frameInterval;
+ bgBoost*=Math.exp(-dt*.8);bgClock+=dt*(1+bgBoost*.72);bgElapsed+=dt;aboutClock+=dt*.92;aboutElapsed+=dt;
+ if(bgElapsed>(reduced?3:1/18)){if(milkSceneVisible)paintMilkBackdrop(reduced?0:bgClock);bgElapsed=0;}
+ if(aboutElapsed>(reduced?3:1/20)){if(aboutSceneVisible)paintAboutBackdrop(reduced?0:aboutClock);aboutElapsed=0;}
+ impulse*=Math.exp(-dt*1.5);const target=.60+impulse*.48;speed+=(target-speed)*(1-Math.exp(-dt*1.9));
+ mouseX+=(mouseTX-mouseX)*(1-Math.exp(-dt*2));mouseY+=(mouseTY-mouseY)*(1-Math.exp(-dt*2));
+ milk.tilt+=(milk.target-milk.tilt)*(1-Math.exp(-dt*2.2));milk.shake*=Math.exp(-dt*2.0);updateMilk(dt);
+ for(const p of ports){if(!reduced)p.phase=(p.phase+dt*speed)%frameCount;if(drawDue&&p.visible)drawVoid(p);}
+ if(drawDue&&milkSceneVisible)drawMilk(dt,reduced?0:t/1000);
+ if(sceneNeeded())sceneRaf=requestAnimationFrame(tick);
+}
 
 // Small GitHub file browser: folders first, optional README preview, file navigation.
 // The site only reads public repositories. Existing project names remain the triggers.
@@ -1726,7 +1838,7 @@ repoBack.addEventListener('click',()=>{if(repoCurrent&&repoPath)browseRepoFolder
 readmeClose.addEventListener('click',closeRepoBrowser);
 readmeDialog.addEventListener('click',event=>{if(event.target===readmeDialog||event.target?.classList?.contains('readme-window'))closeRepoBrowser()});
 readmeDialog.addEventListener('cancel',event=>{event.preventDefault();closeRepoBrowser()});
-readmeDialog.addEventListener('close',()=>{unlockRepoBackgroundScroll();++repoNav;repoCurrent=null;clearTimeout(voidEntryTimer);stopReadmeCosmos();readmeDialog.classList.remove('is-entering','is-visible');repoTrigger?.focus({preventScroll:true});if(!sceneRaf)sceneRaf=requestAnimationFrame(tick)});
+readmeDialog.addEventListener('close',()=>{unlockRepoBackgroundScroll();++repoNav;repoCurrent=null;clearTimeout(voidEntryTimer);stopReadmeCosmos();readmeDialog.classList.remove('is-entering','is-visible');repoTrigger?.focus({preventScroll:true});wakeScenes()});
 // Enlarge either a README's embedded image or a selected image file.
 const repoImageLightbox=$('#repo-image-lightbox');
 const repoImageLightboxImage=$('#repo-image-lightbox-image');
@@ -1780,7 +1892,17 @@ repoPreviewContent.addEventListener('click',event=>{
   if(node){event.preventDefault();node.scrollIntoView({block:'nearest'})}
 });
 
-sceneRaf=requestAnimationFrame(tick);
+if('IntersectionObserver' in window){
+ const motionObserver=new IntersectionObserver(entries=>entries.forEach(e=>e.target.classList.toggle('motion-paused',!e.isIntersecting)),{rootMargin:'60px'});
+ [aboutScene,milkScene,...$$('.learning-panel')].forEach(el=>motionObserver.observe(el));
+}
+function syncVisibility(){
+ html.classList.toggle('document-hidden',document.hidden);
+ if(document.hidden){cancelAnimationFrame(sceneRaf);sceneRaf=0;previous=0;stopReadmeCosmos();}
+ else if(readmeDialog.open)startReadmeCosmos();else wakeScenes();
+}
+document.addEventListener('visibilitychange',syncVisibility);
+wakeScenes();
 })();
 </script>
 <script>
@@ -1797,27 +1919,32 @@ sceneRaf=requestAnimationFrame(tick);
   const palette=['#6d303d','#74303b','#52263e','#4a2533','#68313e','#8b4149'];
   function resize(){
     const rect=page.getBoundingClientRect(), screen=document.documentElement.clientWidth;
-    const gutters=[rect.left,screen-rect.right];
+    const gutters=[rect.left,screen-rect.right];let changed=false;
     for(const s of sides){
       // Use only the actual outer gutter. On phones preserve a 3px clear gap. No gradient mask.
       const gutter=Math.max(0,gutters[s.side]);
       const compact=screen<=700;
       const width=Math.max(0,Math.min(compact?12:180,Math.floor(gutter*(compact ? .80 : .60)),Math.floor(gutter-(compact?3:8))));
-      s.canvas.style.width=width+'px';
-      const step=width>=48?2:1;
-      s.w=Math.max(1,Math.round(width/step));
-      s.h=Math.max(1,Math.round(scene.clientHeight/step));
-      s.canvas.width=s.w;s.canvas.height=s.h;
-      s.ctx.imageSmoothingEnabled=false;
+      const step=width>=48?2:1,w=Math.max(1,Math.round(width/step)),h=Math.max(1,Math.round(scene.clientHeight/step));
+      if(s.canvas.style.width===width+'px'&&s.w===w&&s.h===h)continue;
+      s.canvas.style.width=width+'px';s.w=w;s.h=h;
+      s.canvas.width=w;s.canvas.height=h;s.ctx.imageSmoothingEnabled=false;changed=true;
     }
-    draw(elapsed);
+    if(changed)draw(elapsed);
   }
   // Integer-pixel lines, as on a small retro game framebuffer.
   function pixelLine(ctx,x0,y0,x1,y1,color){
     x0=Math.round(x0);y0=Math.round(y0);x1=Math.round(x1);y1=Math.round(y1);
     let dx=Math.abs(x1-x0),sx=x0<x1?1:-1,dy=-Math.abs(y1-y0),sy=y0<y1?1:-1,err=dx+dy;
     ctx.fillStyle=color;
-    while(true){ctx.fillRect(x0,y0,1,1);if(x0===x1&&y0===y1)break;const e=2*err;if(e>=dy){err+=dy;x0+=sx}if(e<=dx){err+=dx;y0+=sy}}
+    const vertical=-dy>=dx;let rx=x0,ry=y0,px=x0,py=y0;
+    function flush(){ctx.fillRect(Math.min(rx,px),Math.min(ry,py),Math.abs(px-rx)+1,Math.abs(py-ry)+1);}
+    while(true){
+      if((vertical&&x0!==rx)||(!vertical&&y0!==ry)){flush();rx=x0;ry=y0;}
+      px=x0;py=y0;
+      if(x0===x1&&y0===y1){flush();break;}
+      const e=2*err;if(e>=dy){err+=dy;x0+=sx}if(e<=dx){err+=dx;y0+=sy}
+    }
   }
   function drawSide(s,t){
     const {ctx,w,h,side}=s;ctx.clearRect(0,0,w,h);
@@ -1860,19 +1987,20 @@ sceneRaf=requestAnimationFrame(tick);
   }
   function draw(ms){for(const s of sides)drawSide(s,ms/1000)}
   function frame(now){
-    raf=0;if(reduced.matches||document.hidden)return;
+    raf=0;if(reduced.matches||document.hidden||document.getElementById('readme-dialog')?.open)return;
     if(last)elapsed+=Math.min(now-last,100);last=now;
     if(now-lastDraw>=1000/14){draw(elapsed);lastDraw=now}
     raf=requestAnimationFrame(frame);
   }
   function sync(){
     cancelAnimationFrame(raf);raf=0;last=0;resize();
-    if(!reduced.matches&&!document.hidden)raf=requestAnimationFrame(frame);
+    if(!reduced.matches&&!document.hidden&&!document.getElementById('readme-dialog')?.open)raf=requestAnimationFrame(frame);
   }
   reduced.addEventListener('change',sync);
   window.addEventListener('resize',sync,{passive:true});
   document.addEventListener('visibilitychange',sync);
-  if('ResizeObserver' in window)new ResizeObserver(sync).observe(page);
+  if('ResizeObserver' in window)new ResizeObserver(resize).observe(page);
+  const reader=document.getElementById('readme-dialog');if(reader)new MutationObserver(sync).observe(reader,{attributes:true,attributeFilter:['open']});
   sync();
 })();
 </script>
