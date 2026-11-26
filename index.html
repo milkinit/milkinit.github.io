@@ -12,6 +12,8 @@
 <link rel="icon" type="image/x-icon" href="assets/icon.png">
 <link rel="preload" as="image" href="assets/milkchan-closed.png">
 <link rel="preload" as="image" href="assets/milkchan-open.png">
+<link rel="preload" as="image" href="assets/cursor.png">
+<link rel="preload" as="image" href="assets/cursor2.png">
 <style>
 /* milkinit: one consistent fluid layout from small phones to television screens */
 :root{
@@ -28,7 +30,7 @@ body::after{content:"";position:fixed;z-index:10;inset:0;pointer-events:none;opa
    buttons, menus, search boxes, project links and their nested icons. */
 @media (pointer:fine){
   html, body, body *, body *::before, body *::after{
-    cursor:url("assets/cursor.png"),auto!important;
+    cursor:url("assets/cursor.png") 16 16,auto!important;
   }
 }
 ::selection{background:var(--dark-red);color:#fff}
